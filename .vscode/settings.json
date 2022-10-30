@@ -1,0 +1,9 @@
+{
+  "python.formatting.autopep8Args": [
+    "-aaa",
+    "--ignore=E226,W503,E251,E265,E266",
+    "--experimental",
+    "--max-line-length",
+    "80"
+  ],
+}
