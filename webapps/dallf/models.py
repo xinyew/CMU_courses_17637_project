@@ -5,7 +5,6 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    # TODO: make this a custom user model. Modify django settings
     bio = models.TextField()
     profile_image = models.FileField(null=True, upload_to='images/')
 
