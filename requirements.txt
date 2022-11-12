@@ -1,0 +1,4 @@
+autopep8
+Django==4.1.1
+social-auth-app-django
+djangorestframework==3.14.0
