@@ -2,6 +2,8 @@
 db.sqlite3
 migrations/*
 !migrations/__init__.py
+config.ini
+
 .DS_Store
 venv
 my_env
