@@ -14,7 +14,7 @@ class Label(models.Model):
         User,
         on_delete=models.PROTECT,
         related_name="labels")
-    text = models.CharField()
+    text = models.CharField(max_length=255)
 
 
 class ImageGroup(models.Model):
