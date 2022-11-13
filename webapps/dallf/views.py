@@ -1,5 +1,10 @@
 from django.shortcuts import render
 
+
+from PIL import Image
+import requests
+from io import BytesIO
+
 # Create your views here.
 
 
@@ -9,13 +14,6 @@ def generate_action(request):
                       'dallf/image_generation_page.html',
                       {"prompt_input": ""})
 
-    import replicate
-    from PIL import Image
-    import requests
-    from io import BytesIO
-    import os
-
-    os.system('export REPLICATE_API_TOKEN=31a40836d77dc82f8a589ff6af1d2a4222eed801')
     context = {}
 
     if "prompt_input" not in request.POST or not request.POST["prompt_input"]:
@@ -23,13 +21,40 @@ def generate_action(request):
                       'dallf/image_generation_page.html',
                       {"prompt_input": ""})
 
-    model = replicate.models.get("stability-ai/stable-diffusion")
-    print(request.POST["prompt_input"])
-    output = model.predict(prompt=request.POST["prompt_input"])
-    response = requests.get(output[0])
-    img = Image.open(BytesIO(response.content))
-    img.save("dallf/static/dallf/tmp.png")
+    generate_DallE(request)
     context["img"] = "dallf/static/dallf/tmp.png"
     context["prompt_input"] = request.POST["prompt_input"]
 
     return render(request, 'dallf/image_generation_page.html', context)
+
+
+def generate_stable_diffusion(request):
+    import replicate
+
+    model = replicate.models.get("stability-ai/stable-diffusion")
+    output = model.predict(prompt=request.POST["prompt_input"])
+    image_url = output[0]
+    image_response = requests.get(image_url)
+    img = Image.open(BytesIO(image_response.content))
+    img.save("dallf/static/dallf/tmp.png")
+
+
+def generate_DallE(request):
+    import openai
+
+    # response = openai.Image.create_edit(
+    #     image=open("sunlit_lounge.png", "rb"),
+    #     mask=open("mask.png", "rb"),
+    #     prompt="A sunlit indoor lounge area with a pool containing a flamingo",
+    #     n=1,
+    #     size="1024x1024"
+    # )
+    response = openai.Image.create(
+        prompt=request.POST["prompt_input"],
+        n=int(request.POST["num_input"]),
+        size=request.POST["size_input"]
+    )
+    image_url = response['data'][0]['url']
+    image_response = requests.get(image_url)
+    img = Image.open(BytesIO(image_response.content))
+    img.save("dallf/static/dallf/tmp.png")

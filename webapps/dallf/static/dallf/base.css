@@ -104,5 +104,13 @@ input {
 #id_prompt_input_div {
     display: flex;
     width: 100vw;
-    height: 80px;
+}
+
+#id_prompt_input_text {
+    width: 50vw;
+}
+
+.id_generated_1_img {
+    width: 50vw;
+    height: 50vw;
 }
