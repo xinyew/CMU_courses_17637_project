@@ -1,0 +1,90 @@
+{% extends 'dallf/base.html' %} {% comment %} {% block user-info %}
+<a href="{% url 'my_profile' %}" id="id_nav_profile" class="nav-element">
+  {{user.first_name}} {{user.last_name}}
+</a>
+{% endblock user-info %} {% block navigation %}
+<a
+  href="{% url 'global_stream' %}"
+  id="id_nav_global_stream"
+  class="nav-element"
+>
+  Global
+</a>
+<a
+  href="{% url 'follower_stream' %}"
+  id="id_nav_follower_stream"
+  class="nav-element"
+>
+  Follower
+</a>
+<a href="{% url 'logout' %}" id="id_nav_logout" class="nav-element"> Logout </a>
+{% endblock %} {% endcomment %} {% block content %}
+<div class="div_prompt_input" id="id_prompt_input_div">
+  <form action="" method="post">
+    <label for="id_prompt_input_text">Prompt: </label>
+    <input
+      type="text"
+      name="prompt_input"
+      id="id_prompt_input_text"
+      value="{{ prompt_input }}"
+    />
+    <br />
+    <br />
+    <label for="id_prompt_num_input">Number: </label>
+    <input
+      type="range"
+      min="1"
+      max="4"
+      value="1"
+      name="num_input"
+      id="id_prompt_num_input"
+    />
+    <br />
+    <br />
+    <label for="id_prompt_size_input">Size: </label>
+    <select name="size_input" id="id_prompt_size_input">
+      <option value="256x256">256x256</option>
+      <option value="512x512">512x512</option>
+      <option value="1024x1024">1024x1024</option>
+    </select>
+    <br />
+    <br />
+    <button type="submit" class="button" id="id_prompt_submit_button">
+      submit
+    </button>
+    {% csrf_token %}
+  </form>
+</div>
+<div class="div_generated_{{n}}_img" id="id_generated_img_div">
+  {% if len(img) >= 1 %} {% load static %}
+  <img
+    src="{% static 'dallf/tmp.png' %}"
+    alt="portrait"
+    id="id_generated_img_1"
+    class="img_{{n}}"
+  />
+  {% endif %} {% elif len(img) >= 2 %}
+  <img
+    src="{% static 'dallf/tmp.png' %}"
+    alt="portrait"
+    id="id_generated_img_2"
+    class="img_{{n}}"
+  />
+  {% endif %} {% elif len(img) >= 3 %}
+  <img
+    src="{% static 'dallf/tmp.png' %}"
+    alt="portrait"
+    id="id_generated_img_3"
+    class="img_{{n}}"
+  />
+  {% endif %} {% elif len(img) >= 4 %}
+  <img
+    src="{% static 'dallf/tmp.png' %}"
+    alt="portrait"
+    id="id_generated_img_4"
+    class="img_{{n}}"
+  />
+  {% endif %}
+</div>
+
+{% endblock %}

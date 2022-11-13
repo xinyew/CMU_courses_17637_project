@@ -1,0 +1,116 @@
+.body {
+    margin: 0 0 0 0;
+}
+.top-bar {
+    display: flex;
+    width: 100vw;
+    height: 80px;
+    background-color: black;
+    color: white;
+}
+
+.top-bar-title {
+    left: 0px;
+    font-size: xx-large;
+    font-weight: bold;
+    text-align: left;
+    width: 50vw;
+    padding: 25px 50px;
+}
+
+.top-bar-side {
+    right: 0px;
+    float: right;
+    width: 50vw;
+    font-size: medium;
+}
+
+
+.navigation-bar {
+    position: relative;
+    top: 20%;
+    font-size: medium;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+}
+
+.nav-element {
+    padding-right: 3vw;
+    float: right;
+    color: white;
+    text-decoration: none;
+}
+
+.page-title {
+    width: 70%;
+    font-size: xx-large;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+.content {
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+    font-size: x-large;
+    padding: 15px 50px;
+}
+
+.content-form {
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+    font-size: x-large;
+    padding: 15px 15px;
+}
+
+.form-field {
+    font-size: x-large;
+}
+
+.submit-button {
+    position: relative;
+    left: 45%;
+    font-size: large
+}
+
+input {
+    font-size: x-large;
+}
+
+.errorlist {
+    margin: 0 0 0 0;
+    font-size: large;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    color:red;
+}
+
+.post-comment {
+    position: relative;
+    left: 35px;
+}
+
+.date-time {
+    font-style: italic;
+}
+
+.button {
+    font-size: x-large;
+}
+
+#id_prompt_input_div {
+    display: flex;
+    width: 100vw;
+}
+
+#id_prompt_input_text {
+    width: 50vw;
+}
+
+.id_generated_1_img {
+    width: 50vw;
+    height: 50vw;
+}
