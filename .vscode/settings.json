@@ -10,5 +10,6 @@
   "files.trimTrailingWhitespace": true,
   "[python]": {
     "editor.formatOnSave": true
-  }
+  },
+  "html.format.templating": true,
 }

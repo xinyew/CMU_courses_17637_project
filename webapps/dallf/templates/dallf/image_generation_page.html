@@ -1,4 +1,8 @@
-{% extends 'dallf/base.html' %} {% comment %} {% block user-info %}
+{% extends 'dallf/base.html' %}
+
+{% load static %}
+
+{% comment %} {% block user-info %}
 <a href="{% url 'my_profile' %}" id="id_nav_profile" class="nav-element">
   {{user.first_name}} {{user.last_name}}
 </a>
@@ -6,15 +10,13 @@
 <a
   href="{% url 'global_stream' %}"
   id="id_nav_global_stream"
-  class="nav-element"
->
+  class="nav-element">
   Global
 </a>
 <a
   href="{% url 'follower_stream' %}"
   id="id_nav_follower_stream"
-  class="nav-element"
->
+  class="nav-element">
   Follower
 </a>
 <a href="{% url 'logout' %}" id="id_nav_logout" class="nav-element"> Logout </a>
@@ -26,8 +28,7 @@
       type="text"
       name="prompt_input"
       id="id_prompt_input_text"
-      value="{{ prompt_input }}"
-    />
+      value="{{ prompt_input }}" />
     <br />
     <br />
     <label for="id_prompt_num_input">Number: </label>
@@ -37,8 +38,7 @@
       max="4"
       value="1"
       name="num_input"
-      id="id_prompt_num_input"
-    />
+      id="id_prompt_num_input" />
     <br />
     <br />
     <label for="id_prompt_size_input">Size: </label>
@@ -56,34 +56,30 @@
   </form>
 </div>
 <div class="div_generated_{{n}}_img" id="id_generated_img_div">
-  {% if len(img) >= 1 %} {% load static %}
+  {% if img|length >= 1 %}
   <img
     src="{% static 'dallf/tmp.png' %}"
     alt="portrait"
     id="id_generated_img_1"
-    class="img_{{n}}"
-  />
-  {% endif %} {% elif len(img) >= 2 %}
+    class="img_{{n}}" />
+  {% elif img|length >= 2 %}
   <img
     src="{% static 'dallf/tmp.png' %}"
     alt="portrait"
     id="id_generated_img_2"
-    class="img_{{n}}"
-  />
-  {% endif %} {% elif len(img) >= 3 %}
+    class="img_{{n}}" />
+  {% elif img|length >= 3 %}
   <img
     src="{% static 'dallf/tmp.png' %}"
     alt="portrait"
     id="id_generated_img_3"
-    class="img_{{n}}"
-  />
-  {% endif %} {% elif len(img) >= 4 %}
+    class="img_{{n}}" />
+  {% elif img|length >= 4 %}
   <img
     src="{% static 'dallf/tmp.png' %}"
     alt="portrait"
     id="id_generated_img_4"
-    class="img_{{n}}"
-  />
+    class="img_{{n}}" />
   {% endif %}
 </div>
 
