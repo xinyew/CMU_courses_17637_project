@@ -2,6 +2,7 @@
 db.sqlite3
 **/migrations/*
 !**/migrations/__init__.py
+**/media/*
 config.ini
 
 .DS_Store
