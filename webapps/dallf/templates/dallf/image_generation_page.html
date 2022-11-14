@@ -1,4 +1,8 @@
-{% extends 'dallf/base.html' %} {% comment %} {% block user-info %}
+{% extends 'dallf/base.html' %}
+
+{% load static %}
+
+{% comment %} {% block user-info %}
 <a href="{% url 'my_profile' %}" id="id_nav_profile" class="nav-element">
   {{user.first_name}} {{user.last_name}}
 </a>
@@ -52,25 +56,25 @@
   </form>
 </div>
 <div class="div_generated_{{n}}_img" id="id_generated_img_div">
-  {% if img|length >= 1 %} {% load static %}
+  {% if img|length >= 1 %}
   <img
     src="{% static 'dallf/tmp.png' %}"
     alt="portrait"
     id="id_generated_img_1"
     class="img_{{n}}" />
-  {% endif %} {% elif img|length >= 2 %}
+  {% elif img|length >= 2 %}
   <img
     src="{% static 'dallf/tmp.png' %}"
     alt="portrait"
     id="id_generated_img_2"
     class="img_{{n}}" />
-  {% endif %} {% elif img|length >= 3 %}
+  {% elif img|length >= 3 %}
   <img
     src="{% static 'dallf/tmp.png' %}"
     alt="portrait"
     id="id_generated_img_3"
     class="img_{{n}}" />
-  {% endif %} {% elif img|length >= 4 %}
+  {% elif img|length >= 4 %}
   <img
     src="{% static 'dallf/tmp.png' %}"
     alt="portrait"
