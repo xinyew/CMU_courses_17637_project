@@ -51,9 +51,7 @@ def save_image_group(request, image_urls):
         img.file.save(
             name=urlparse(image_url).path.rsplit('/', 1)[-1],
             content=ContentFile(image_response.content)
-        )
-        # actually we don't need this line to save the object. Why?
-        # img.save()
+        )  # also saves img
 
 
 @login_required
