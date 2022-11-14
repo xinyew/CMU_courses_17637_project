@@ -8,7 +8,7 @@
   <br>
   {% for image in current_prompt.image_set.all %}
   <img
-    src="/{{MEDIA_URL}}{{image.file}}" />
+    src="{{image.file.url}}" />
   {% endfor %}
 </div>
 <div>
@@ -17,7 +17,7 @@
   {% for group in recent_prompts %}
   {% for image in group.image_set.all %}
   <img
-    src="/{{MEDIA_URL}}{{image.file}}" />
+    src="{{image.file.url}}" />
   {% endfor %}
   <br>
   {% endfor %}
@@ -27,7 +27,7 @@
   <br>
   {% for image in favorites.all %}
   <img
-    src="/{{MEDIA_URL}}{{image.file}}" />
+    src="{{image.file.url}}" />
   {% endfor %}
 </div>
 <div>
@@ -35,7 +35,7 @@
   <br>
   {% for image in label_image_set.all %}
   <img
-    src="/{{MEDIA_URL}}{{image.file}}" />
+    src="{{image.file.url}}" />
   {% endfor %}
 </div>
 {% endblock %}
