@@ -3,5 +3,5 @@ from dallf import views
 
 urlpatterns = [
     path('console/', views.console, name='console'),
-    path('favorite/', views.favorite_action, name='favorite')
+    path('favorite/', views.favorite_action, name='favorite'),
 ]
