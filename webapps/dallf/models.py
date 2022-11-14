@@ -19,15 +19,20 @@ class Label(models.Model):
 
 class ImageGroup(models.Model):
     prompt = models.TextField()
+    user = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        related_name="image_group_set"
+    )
+    date_created = models.DateTimeField(auto_now_add=True)
 
 
-class Image(models.Model):
+class UploadedImage(models.Model):
     file = models.FileField(null=True, upload_to='images/')
     favorited_by = models.ManyToManyField(User, related_name="favorites")
     labels = models.ManyToManyField(Label, related_name="image_set")
-    date_created = models.DateTimeField(auto_now_add=True)
     group = models.ForeignKey(
         ImageGroup,
         on_delete=models.PROTECT,
         related_name="image_set")
-    # prompt: go through imagegroup
+    # prompt, user, date_created: go through imagegroup
