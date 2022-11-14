@@ -99,6 +99,9 @@ def console(request):
             except Label.DoesNotExist:
                 pass
 
-    print(context["current_prompt"])
-    print(context["recent_images"])
     return render(request, 'dallf/console.html', context)
+
+
+@login_required
+def favorite_action(request):
+    image = UploadedImage.objects.filter()
