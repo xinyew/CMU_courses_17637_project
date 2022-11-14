@@ -26,6 +26,9 @@ class ImageGroup(models.Model):
     )
     date_created = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ('-date_created',)
+
 
 class UploadedImage(models.Model):
     file = models.FileField(null=True, upload_to='images/')
@@ -36,3 +39,6 @@ class UploadedImage(models.Model):
         on_delete=models.PROTECT,
         related_name="image_set")
     # prompt, user, date_created: go through imagegroup
+
+    class Meta:
+        ordering = ('group',)
