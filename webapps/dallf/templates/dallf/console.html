@@ -1,0 +1,68 @@
+{% extends 'dallf/base.html' %} {% block page-title %}Console{% endblock %}
+{% block content %}
+
+<div class="div_prompt_input" id="id_prompt_input_div">
+  <form action="" method="post">
+    <label for="id_prompt_input_text">Prompt: </label>
+    <input
+      type="text"
+      name="prompt_input"
+      id="id_prompt_input_text"
+      value="{{ prompt_input }}" />
+    <br />
+    <br />
+    <label for="id_prompt_num_input">Number: </label>
+    <input
+      type="range"
+      min="1"
+      max="4"
+      value="1"
+      name="num_input"
+      id="id_prompt_num_input" />
+    <br />
+    <br />
+    <label for="id_prompt_size_input">Size: </label>
+    <select name="size_input" id="id_prompt_size_input">
+      <option value="256x256">256x256</option>
+      <option value="512x512">512x512</option>
+      <option value="1024x1024">1024x1024</option>
+    </select>
+    <br />
+    <br />
+    <button type="submit" class="button" id="id_prompt_submit_button">
+      submit
+    </button>
+    {% csrf_token %}
+  </form>
+</div>
+
+<div>
+  Current Prompt
+  <br />
+  {% for image in current_prompt.image_set.all %}
+  <img src="{{image.file.url}}" />
+  {% endfor %}
+</div>
+<div>
+  Recent Prompts
+  <br />
+  {% for image in recent_images %}
+  <img src="{{image.file.url}}" width="256" height="256" />
+  {% endfor %}
+  <br />
+</div>
+<div>
+  Favorites
+  <br />
+  {% for image in favorites.all %}
+  <img src="{{image.file.url}}" />
+  {% endfor %}
+</div>
+<div>
+  Images with label
+  <br />
+  {% for image in label_image_set.all %}
+  <img src="{{image.file.url}}" />
+  {% endfor %}
+</div>
+{% endblock %}
