@@ -1,0 +1,22 @@
+{% extends 'dallf/base.html' %}
+{% block page-title %}
+Gallery
+{% endblock %}
+
+{% block navigation %}
+    <a href="{% url 'console' %}" class="nav-element">
+        console
+    </a>
+{% endblock %}
+
+{% block content %}
+
+<div class="grid-container">
+{% for image in images %}
+<div class="grid-item">
+<img src="{{image.file.url}}" width="256" height="256" />
+</div>
+{% endfor %}
+</div>
+
+{% endblock %}

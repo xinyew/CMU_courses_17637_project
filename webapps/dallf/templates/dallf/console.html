@@ -1,4 +1,11 @@
 {% extends 'dallf/base.html' %} {% block page-title %}Console{% endblock %}
+
+{% block navigation %}
+    <a href="{% url 'gallery' %}" class="nav-element">
+        gallery
+    </a>
+{% endblock %}
+
 {% block content %}
 
 <div class="div_prompt_input" id="id_prompt_input_div">
@@ -41,6 +48,20 @@
   <br />
   {% for image in current_prompt.image_set.all %}
   <img src="{{image.file.url}}" />
+  <br />
+  <form action="/favorite/" method="post">
+    <input type="hidden" name="image_id" value="{{image.id}}">
+    <button type="submit" class="button">Favorite</button>
+    {% csrf_token %}
+  </form>
+  <br />
+  <form action="/label/" method="post">
+    <input type="hidden" name="image_id" value="{{image.id}}" />
+    <input type="text" name="label_name" />
+    <button type="submit" class="button">Label</button>
+    {% csrf_token %}
+  </form>
+  <br />
   {% endfor %}
 </div>
 <div>
@@ -55,14 +76,19 @@
   Favorites
   <br />
   {% for image in favorites.all %}
-  <img src="{{image.file.url}}" />
+  <img src="{{image.file.url}}" width="256" height="256" />
   {% endfor %}
 </div>
 <div>
   Images with label
   <br />
-  {% for image in label_image_set.all %}
-  <img src="{{image.file.url}}" />
+  {% for label in label_image_set %}
+  {{label.text}}
+  <br />
+  {% for image in label.image_set.all %}
+  <img src="{{image.file.url}}" width="256" height="256" />
+  {% endfor %}
+  <br />
   {% endfor %}
 </div>
 {% endblock %}
