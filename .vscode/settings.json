@@ -12,4 +12,5 @@
     "editor.formatOnSave": true
   },
   "html.format.templating": true,
+  "dotenv.enableAutocloaking": true,
 }
