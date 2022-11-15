@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.files.base import ContentFile
 from django.contrib.auth.decorators import login_required
 
@@ -89,17 +89,44 @@ def console(request):
         else:
             context["recent_images"] = []
 
-        label = request.GET.get('label')
-        if label:
-            try:
-                context['label_image_set'] = \
-                    request.user.labels.get(text=label).image_set
-            except Label.DoesNotExist:
-                pass
+    context['label_image_set'] = []
+    for l in request.user.labels.all():
+        context['label_image_set'].append(l)
+
+    # label = request.GET.get('label')
+    # if label:
+    #     try:
+    #         context['label_image_set'] = \
+    #             request.user.labels.get(text=label).image_set
+    #     except Label.DoesNotExist:
+    #         pass
 
     return render(request, 'dallf/console.html', context)
 
 
+def gallery(request):
+    context = {}
+    context["images"] = []
+    for image in UploadedImage.objects.order_by('?')[:10]:
+        context["images"].append(image)
+    return render(request, 'dallf/gallery.html', context)
+
+
 @login_required
 def favorite_action(request):
-    image = UploadedImage.objects.filter()
+    image = UploadedImage.objects.get(id=int(request.POST["image_id"]))
+    image.favorited_by.add(request.user)
+    return redirect('/dallf/console/')
+
+
+@login_required
+def label_action(request):
+    image = UploadedImage.objects.get(id=int(request.POST["image_id"]))
+    label = Label.objects.get_or_create(
+        user=request.user, text=request.POST["label_name"])
+    # get_or_create is atomic
+    image.labels.add(label)
+    return redirect('/dallf/console/')
+
+# TODO validation
+# TODO exception handling for .get

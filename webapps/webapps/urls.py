@@ -21,7 +21,9 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.console),  # Temporary
+    path('', views.gallery),  # Temporary
     path('dallf/', include('dallf.urls')),
     path('oauth/', include('social_django.urls', namespace='social')),
+    path('favorite/', views.favorite_action, name='favorite'),
+    path('label/', views.label_action, name='label'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
