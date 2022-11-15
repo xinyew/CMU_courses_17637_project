@@ -128,7 +128,7 @@ USE_TZ = True
 
 
 # Used by the @login_required decorator to redirect to the login action
-LOGIN_URL = 'oauth/login/google-oauth2/'
+LOGIN_URL = '/oauth/login/google-oauth2/'
 
 # Default URL to redirect to after a user logs in.
 LOGIN_REDIRECT_URL = ''
