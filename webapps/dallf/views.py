@@ -114,21 +114,19 @@ def gallery(request):
 
 @login_required
 def favorite_action(request):
-    image = UploadedImage.objects.filter(id=int(request.POST["image_id"]))[0]
+    image = UploadedImage.objects.get(id=int(request.POST["image_id"]))
     image.favorited_by.add(request.user)
     return redirect('/dallf/console/')
 
 
 @login_required
 def label_action(request):
-    image = UploadedImage.objects.filter(id=int(request.POST["image_id"]))[0]
-    label = None
-    for l in request.user.labels.all():
-        if l.text == request.POST["label_name"]:
-            label = l
-            break
-    if label is None:
-        label = Label(user=request.user, text=request.POST["label_name"])
-        label.save()
+    image = UploadedImage.objects.get(id=int(request.POST["image_id"]))
+    label = Label.objects.get_or_create(
+        user=request.user, text=request.POST["label_name"])
+    # get_or_create is atomic
     image.labels.add(label)
     return redirect('/dallf/console/')
+
+# TODO validation
+# TODO exception handling for .get
