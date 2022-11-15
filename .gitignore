@@ -4,6 +4,8 @@ db.sqlite3
 !**/migrations/__init__.py
 **/media/*
 config.ini
+.env*
+!.env*.sample
 
 .DS_Store
 venv
