@@ -16,6 +16,12 @@ class Label(models.Model):
         related_name="labels")
     text = models.CharField(max_length=255)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=("user", "text"),
+                                    name="unique_label_text"),
+        ]
+
 
 class ImageGroup(models.Model):
     prompt = models.TextField()
