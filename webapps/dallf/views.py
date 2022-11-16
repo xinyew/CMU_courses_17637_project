@@ -122,7 +122,7 @@ def favorite_action(request):
 @login_required
 def label_action(request):
     image = UploadedImage.objects.get(id=int(request.POST["image_id"]))
-    label = Label.objects.get_or_create(
+    label, _ = Label.objects.get_or_create(
         user=request.user, text=request.POST["label_name"])
     # get_or_create is atomic
     image.labels.add(label)
