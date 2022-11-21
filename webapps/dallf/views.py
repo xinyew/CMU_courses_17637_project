@@ -1,21 +1,24 @@
+from django.http import HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
 from django.core.files.base import ContentFile
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_GET, require_POST
 
 from urllib.parse import urlparse
 import requests
 
 from .models import UploadedImage, ImageGroup, Label
+from .serializers import ImageGroupSerializer
 
 # Create your views here.
 
 
-def generate_stable_diffusion(request):
+def generate_stable_diffusion(request: HttpRequest):
     import replicate
 
     model = replicate.models.get("stability-ai/stable-diffusion")
     output = model.predict(prompt=request.POST["prompt_input"])
-    save_image_group(request, output)
+    return save_image_group(request, output)
 
 
 def generate_DallE(request):
@@ -33,11 +36,12 @@ def generate_DallE(request):
         n=int(request.POST["num_input"]),
         size=request.POST["size_input"]
     )
-    save_image_group(request,
-                     [image_obj['url'] for image_obj in response['data']])
+    return save_image_group(request,
+                            [image_obj['url']
+                             for image_obj in response['data']])
 
 
-def save_image_group(request, image_urls):
+def save_image_group(request: HttpRequest, image_urls):
     group = ImageGroup(
         prompt=request.POST["prompt_input"],
         user=request.user
@@ -52,10 +56,11 @@ def save_image_group(request, image_urls):
             name=urlparse(image_url).path.rsplit('/', 1)[-1],
             content=ContentFile(image_response.content)
         )  # also saves img
+    return group
 
 
 @login_required
-def console(request):
+def console(request: HttpRequest):
     context = {
         "prompt_input": "",
         "favorites": request.user.favorites,
@@ -104,7 +109,7 @@ def console(request):
     return render(request, 'dallf/console.html', context)
 
 
-def gallery(request):
+def gallery(request: HttpRequest):
     context = {}
     context["images"] = []
     for image in UploadedImage.objects.order_by('?')[:10]:
@@ -113,20 +118,37 @@ def gallery(request):
 
 
 @login_required
-def favorite_action(request):
+def favorite_action(request: HttpRequest):
     image = UploadedImage.objects.get(id=int(request.POST["image_id"]))
     image.favorited_by.add(request.user)
     return redirect('/dallf/console/')
 
 
 @login_required
-def label_action(request):
+def label_action(request: HttpRequest):
     image = UploadedImage.objects.get(id=int(request.POST["image_id"]))
     label, _ = Label.objects.get_or_create(
         user=request.user, text=request.POST["label_name"])
     # get_or_create is atomic
     image.labels.add(label)
     return redirect('/dallf/console/')
+
+
+@require_POST
+@login_required
+def generate_action(request: HttpRequest):
+    group = generate_DallE(request)
+    serializer = ImageGroupSerializer(group)
+    return JsonResponse(serializer.data)
+
+
+@require_GET
+@login_required
+def test_generate_action(request: HttpRequest):
+    group = request.user.image_group_set.all()[0]
+    serializer = ImageGroupSerializer(group)
+    return JsonResponse(serializer.data)
+
 
 # TODO validation
 # TODO exception handling for .get

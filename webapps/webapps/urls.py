@@ -27,4 +27,8 @@ urlpatterns = [
     path('gallery/', views.gallery, name='gallery'),
     path('favorite/', views.favorite_action, name='favorite'),
     path('label/', views.label_action, name='label'),
+    # API calls
+    path('images/generate/', views.generate_action, name='generate'),
+    # Testing
+    path('testing/generate/', views.test_generate_action, name='test_generate')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
