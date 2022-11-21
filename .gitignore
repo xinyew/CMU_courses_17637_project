@@ -11,3 +11,4 @@ config.ini
 venv
 my_env
 .idea
+.pylintrc

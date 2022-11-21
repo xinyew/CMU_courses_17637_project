@@ -13,4 +13,5 @@
   },
   "html.format.templating": true,
   "dotenv.enableAutocloaking": true,
+  "python.linting.cwd": "${workspaceRoot}/webapps"
 }
