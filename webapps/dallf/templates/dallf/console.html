@@ -1,17 +1,222 @@
-{% extends 'dallf/base.html' %} {% block page-title %}Console{% endblock %}
-
-{% block navigation %}
-<a class="nav-link" href="{% url 'gallery' %}">
-  Gallery
-</a>
-<a class="nav-link active" href="{% url 'console' %}">
-  Console
-</a>
+{% extends 'dallf/base.html' %}
+{% block page-title %}
+Dall-F Console
 {% endblock %}
 
 {% block content %}
+<div class="container" id="id_prompt_input_group">
+  <form>
+    <div>
+      <label for="id_prompt_input_text" id="id_prompt_text_label">
+        Start with a detailed description
+      </label>
+      <button
+        type="button"
+        class="btn btn-secondary"
+        id="id_feeling_lucky">
+        I'm feeling lucky
+      </button>
+    </div>
+    <div class="input-group mb-3 shadow-sm" id="id_prompt_input_bar">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="An Impressionist oil painting of sunflowers in a purple vase…"
+        aria-label="An Impressionist oil painting of sunflowers in a purple vase…"
+        aria-describedby="button-addon2" />
+      <button
+        class="btn btn-outline-secondary dropdown-toggle"
+        type="button"
+        data-bs-toggle="dropdown"
+        aria-expanded="false">
+        num
+      </button>
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item">1</a></li>
+        <li><a class="dropdown-item">2</a></li>
+        <li><a class="dropdown-item">3</a></li>
+        <li><a class="dropdown-item">4</a></li>
+      </ul>
+      <button
+        class="btn btn-outline-secondary dropdown-toggle"
+        type="button"
+        data-bs-toggle="dropdown"
+        aria-expanded="false">
+        size
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end">
+        <li><a class="dropdown-item">256x256</a></li>
+        <li><a class="dropdown-item">512x512</a></li>
+        <li><a class="dropdown-item">1024x1024</a></li>
+      </ul>
+      <button
+        class="btn btn-outline-secondary"
+        type="button"
+        id="button-addon2">
+        Generate
+      </button>
+    </div>
+  </form>
+</div>
 
-<div class="div_prompt_input" id="id_prompt_input_div">
+<div class="container">
+  <ul class="nav nav-tabs" id="id_console_tabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link active"
+        id="id_recent_tab"
+        data-bs-toggle="tab"
+        data-bs-target="#id_recent_pane"
+        type="button"
+        role="tab"
+        aria-controls="home-tab-pane"
+        aria-selected="true">
+        Recent
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link"
+        id="id_favorite_tab"
+        data-bs-toggle="tab"
+        data-bs-target="#id_favorite_pane"
+        type="button"
+        role="tab"
+        aria-controls="id_favorite_pane"
+        aria-selected="false">
+        Favorite
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link"
+        id="id_labels_tab"
+        data-bs-toggle="tab"
+        data-bs-target="#id_labels_pane"
+        type="button"
+        role="tab"
+        aria-controls="id_labels_pane"
+        aria-selected="false">
+        Labels
+      </button>
+    </li>
+  </ul>
+  <div class="tab-content">
+    <div
+      class="tab-pane fade show active"
+      id="id_recent_pane"
+      role="tabpanel"
+      aria-labelledby="id_recent_tab"
+      tabindex="0">
+      <div id="id_recent_gallery">
+        <div class="container gallery-container">
+          <div class="tz-gallery">
+            <div class="row">
+              <div class="col-sm-12 col-md-4">
+                <div class="img_wrap lightbox">
+                  <img src="{{recent_images.0.file.url}}" class="uploaded_img">
+                  <div class="img_overlay">
+                    <div class="image_prompt">{{recent_images.0.group.prompt}}</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6 col-md-4">
+                <div class="img_wrap lightbox">
+                  <img src="{{recent_images.5.file.url}}" class="uploaded_img">
+                  <!-- <div class="image_prompt">{{recent_images.5.group.prompt}}</div> -->
+                </div>
+              </div>
+              <div class="col-sm-6 col-md-4">
+                <div class="img_wrap lightbox">
+                  <img src="{{recent_images.2.file.url}}" class="uploaded_img">
+                </div>
+              </div>
+              <div class="col-sm-12 col-md-8">
+                <a class="lightbox" href="{{recent_images.2.file.url}}">
+                  <img src="{{recent_images.2.file.url}}" class="uploaded_img">
+                </a>
+              </div>
+              <div class=" col-sm-6 col-md-4">
+                <a class="lightbox" href="{{recent_images.3.file.url}}">
+                  <img src="{{recent_images.3.file.url}}" class="gallery_two_at_top uploaded_img">
+                </a>
+                <a class="lightbox gallery_two_at_bottom" href="{{recent_images.4.file.url}}">
+                  <img src="{{recent_images.4.file.url}}" class="gallery_two_at_bottom uploaded_img">
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="container gallery-container">
+          <div class="tz-gallery">
+            <div class="row">
+              <div class="col-sm-12 col-md-4">
+                <a class="lightbox" href="{{recent_images.6.file.url}}">
+                  <img src="{{recent_images.6.file.url}}" class="uploaded_img">
+                </a>
+              </div>
+              <div class="col-sm-6 col-md-4">
+                <a class="lightbox" href="{{recent_images.7.file.url}}">
+                  <img src="{{recent_images.7.file.url}}" class="uploaded_img">
+                </a>
+              </div>
+              <div class="col-sm-6 col-md-4">
+                <a class="lightbox" href="{{recent_images.8.file.url}}">
+                  <img src="{{recent_images.8.file.url}}" class="uploaded_img">
+                </a>
+              </div>
+              <div class="col-sm-6 col-md-4">
+                <a class="lightbox" href="{{recent_images.9.file.url}}">
+                  <img src="{{recent_images.9.file.url}}" class="gallery_two_at_top uploaded_img">
+                </a>
+                <a class="lightbox gallery_two_at_bottom" href="{{recent_images.10.file.url}}">
+                  <img src="{{recent_images.10.file.url}}" class="gallery_two_at_bottom uploaded_img">
+                </a>
+              </div>
+              <div class="col-sm-12 col-md-8">
+                <a class="lightbox" href="{{recent_images.11.file.url}}">
+                  <img src="{{recent_images.11.file.url}}" class="uploaded_img">
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="tab-pane fade"
+      id="id_favorite_pane"
+      role="tabpanel"
+      aria-labelledby="id_favorite_tab"
+      tabindex="0">
+      ...
+    </div>
+    <div
+      class="tab-pane fade"
+      id="id_labels_pane"
+      role="tabpanel"
+      aria-labelledby="id_labels_tab"
+      tabindex="0">
+      ...
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div style="height: 100vh;"></div>
+<div class="div_prompt_input container" id="id_prompt_input_div">
   <form action="" method="post">
     <label for="id_prompt_input_text">Prompt: </label>
     <input
@@ -46,52 +251,54 @@
   </form>
 </div>
 
-<div>
-  Current Prompt
-  <br />
-  {% for image in current_prompt.image_set.all %}
-  <img src="{{image.file.url}}" />
-  <br />
-  <form action="/favorite/" method="post">
-    <input type="hidden" name="image_id" value="{{image.id}}">
-    <button type="submit" class="button">Favorite</button>
-    {% csrf_token %}
-  </form>
-  <br />
-  <form action="/label/" method="post">
-    <input type="hidden" name="image_id" value="{{image.id}}" />
-    <input type="text" name="label_name" />
-    <button type="submit" class="button">Label</button>
-    {% csrf_token %}
-  </form>
-  <br />
-  {% endfor %}
-</div>
-<div>
-  Recent Prompts
-  <br />
-  {% for image in recent_images %}
-  <img src="{{image.file.url}}" width="256" height="256" />
-  {% endfor %}
-  <br />
-</div>
-<div>
-  Favorites
-  <br />
-  {% for image in favorites.all %}
-  <img src="{{image.file.url}}" width="256" height="256" />
-  {% endfor %}
-</div>
-<div>
-  Images with label
-  <br />
-  {% for label in label_image_set %}
-  {{label.text}}
-  <br />
-  {% for image in label.image_set.all %}
-  <img src="{{image.file.url}}" width="256" height="256" />
-  {% endfor %}
-  <br />
-  {% endfor %}
+<div class="container">
+  <div>
+    Current Prompt
+    <br />
+    {% for image in current_prompt.image_set.all %}
+    <img src="{{image.file.url}}" />
+    <br />
+    <form action="/favorite/" method="post">
+      <input type="hidden" name="image_id" value="{{image.id}}" />
+      <button type="submit" class="button">Favorite</button>
+      {% csrf_token %}
+    </form>
+    <br />
+    <form action="/label/" method="post">
+      <input type="hidden" name="image_id" value="{{image.id}}" />
+      <input type="text" name="label_name" />
+      <button type="submit" class="button">Label</button>
+      {% csrf_token %}
+    </form>
+    <br />
+    {% endfor %}
+  </div>
+  <div>
+    Recent Prompts
+    <br />
+    {% for image in recent_images %}
+    <img src="{{image.file.url}}" width="256" height="256" />
+    {% endfor %}
+    <br />
+  </div>
+  <div>
+    Favorites
+    <br />
+    {% for image in favorites.all %}
+    <img src="{{image.file.url}}" width="256" height="256" />
+    {% endfor %}
+  </div>
+  <div>
+    Images with label
+    <br />
+    {% for label in label_image_set %} {{label.text}}
+    <br />
+    {% for image in label.image_set.all %}
+    <img src="{{image.file.url}}" width="256" height="256" />
+    {% endfor %}
+    <br />
+    {% endfor %}
+
+  </div>
 </div>
 {% endblock %}
