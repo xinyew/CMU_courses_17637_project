@@ -5,8 +5,8 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    bio = models.TextField()
-    profile_image = models.FileField(null=True, upload_to='images/')
+    bio = models.TextField(default="")
+    profile_image = models.FileField(default="", upload_to='images/')
 
 
 class Label(models.Model):
