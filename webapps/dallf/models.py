@@ -48,3 +48,17 @@ class UploadedImage(models.Model):
 
     class Meta:
         ordering = ('group',)
+
+
+class Comment(models.Model):
+    # comment is made on a specific image
+    image = models.ForeignKey(
+        UploadedImage,
+        on_delete=models.PROTECT,
+        related_name="comments"
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        related_name="comments")
+    date_created = models.DateTimeField(auto_now_add=True)
