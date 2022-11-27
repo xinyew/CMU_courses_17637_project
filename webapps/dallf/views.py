@@ -3,6 +3,8 @@ from django.shortcuts import render, redirect
 from django.core.files.base import ContentFile
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_GET, require_POST
+from django.contrib.auth import logout
+from django.contrib.auth.views import logout_then_login
 
 from urllib.parse import urlparse
 import requests
@@ -148,6 +150,12 @@ def test_generate_action(request: HttpRequest):
     group = request.user.image_group_set.all()[0]
     serializer = ImageGroupSerializer(group)
     return JsonResponse(serializer.data)
+
+
+@require_POST
+@login_required
+def logout_action(request: HttpRequest):
+    return logout_then_login(request)
 
 
 # TODO validation

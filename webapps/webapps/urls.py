@@ -27,6 +27,7 @@ urlpatterns = [
     path('gallery/', views.gallery, name='gallery'),
     path('favorite/', views.favorite_action, name='favorite'),
     path('label/', views.label_action, name='label'),
+    path('logout/', views.logout_action, name='logout'),
     # API calls
     path('images/generate/', views.generate_action, name='generate'),
     # Testing

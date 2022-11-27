@@ -65,7 +65,10 @@
         <span class="navbar-text">
           <a href="#" id="id_username">Username</a>
         </span>
-        <button class="btn btn-sm btn-outline-secondary" type="submit">Logout</button>
+        <form action="{% url 'logout' %}" method="post">
+          <button class="btn btn-sm btn-outline-secondary" type="submit">Logout</button>
+          {% csrf_token %}
+        </form>
       </div>
     </div>
   </nav>
