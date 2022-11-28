@@ -129,7 +129,8 @@
     width: 100%;
     opacity: 0;
     transition: .5s ease;
-    background-color: #008CBA;
+    transition: opacity .2s, visibility .2s;
+    background: rgba(255, 255, 255, 0.9);
 }
 
 .img_wrap:hover .img_overlay {
@@ -138,7 +139,7 @@
 }
 
 .image_prompt {
-    color: white;
+    color: black;
     font-size: 20px;
     position: absolute;
     top: 50%;
@@ -147,4 +148,45 @@
     -ms-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
     text-align: center;
+}
+
+.image_buttons {
+    color: black;
+    font-size: 20px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    /* -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    text-align: center; */
+}
+
+.image_button {
+    padding-left: 3px;
+    padding-right: 3px;
+    opacity: 0.5;
+}
+
+.image_button_bundle {
+    display: flex;
+}
+
+/* actually I like this */
+.image_button_active {
+    display: none;
+    opacity: 1;
+}
+
+.image_button_bundle:hover .image_button_not_active {
+    display: none;
+    transition: .5s ease;
+    transition: opacity .2s, visibility .2s;
+}
+
+.image_button_bundle:hover .image_button_active {
+    display: block;
+    transition: .5s ease;
+    transition: opacity .2s, visibility .2s;
 }

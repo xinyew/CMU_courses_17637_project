@@ -1,4 +1,5 @@
 {% extends 'dallf/base.html' %}
+{% load static %}
 {% block page-title %}
 Dall-F Console
 {% endblock %}
@@ -101,6 +102,7 @@ Dall-F Console
       </button>
     </li>
   </ul>
+
   <div class="tab-content">
     <div
       class="tab-pane fade show active"
@@ -117,32 +119,146 @@ Dall-F Console
                   <img src="{{recent_images.0.file.url}}" class="uploaded_img">
                   <div class="img_overlay">
                     <div class="image_prompt">{{recent_images.0.group.prompt}}</div>
+                    <div class="image_buttons">
+                      <a href="#" class="image_button_bundle">
+                        <img
+                          src="{% static 'dallf/zoom.png' %}"
+                          width="20"
+                          height="20"
+                          class="image_button image_button_not_active"
+                          id="id_image_{{recent_images.0.id}}_zoom_not_active_button" />
+                        <img
+                          src="{% static 'dallf/zoom_active.png' %}"
+                          width="20"
+                          height="20"
+                          class="image_button image_button_active"
+                          id="id_image_{{recent_images.0.id}}_zoom_active_button" />
+                      </a>
+                      <a href="#" class="image_button_bundle">
+                        <img
+                          src="{% static 'dallf/favorite.png' %}"
+                          width="20"
+                          height="20"
+                          class="image_button image_button_not_active" />
+                        <img
+                          src="{% static 'dallf/favorite_active.png' %}"
+                          width="20"
+                          height="20"
+                          class="image_button image_button_active" />
+                      </a>
+                      <a href="#" class="image_button_bundle" onclick="clickLabelButton('{{recent_images.0.id}}')">
+                        <img
+                          src="{% static 'dallf/label.png' %}"
+                          width="20"
+                          height="20"
+                          class="image_button image_button_not_active" />
+                        <img
+                          src="{% static 'dallf/label_active.png' %}"
+                          width="20"
+                          height="20"
+                          class="image_button image_button_active" />
+
+                      </a>
+                      <a href="#" class="image_button_bundle">
+                        <img src="{% static 'dallf/discussion_board.png' %}"
+                          width="20"
+                          height="20"
+                          class="image_button image_button_not_active" />
+                        <img src="{% static 'dallf/discussion_board_active.png' %}"
+                          width="20"
+                          height="20"
+                          class="image_button image_button_active" />
+                      </a>
+                    </div>
+                  </div>
+                  <button
+                    id="id_image_{{recent_images.0.id}}_label_button"
+                    type="button"
+                    data-bs-toggle="modal"
+                    data-bs-target="#id_image_{{recent_images.0.id}}_label_popup"
+                    hidden>
+                    Label
+                  </button>
+                  <div
+                    class="modal"
+                    id="id_image_{{recent_images.0.id}}_label_popup"
+                    tabindex="-1"
+                    aria-labelledby="id_image_{{recent_images.0.id}}_label_popup_title"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h1
+                            class="modal-title fs-5"
+                            id="id_image_{{recent_images.0.id}}_label_popup_title">
+                            Modal title
+                          </h1>
+                          <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close">
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          ...
+                        </div>
+                        <div class="modal-footer">
+                          <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+                            Close
+                          </button>
+                          <button
+                            type="button"
+                            class="btn btn-primary">
+                            Save changes
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-6 col-md-4">
+                <div class="img_wrap lightbox">
+                  <img src="{{recent_images.5.file.url}}" class="uploaded_img">
+                  <div class="img_overlay">
+                    <div class="image_prompt">{{recent_images.5.group.prompt}}</div>
                   </div>
                 </div>
               </div>
               <div class="col-sm-6 col-md-4">
                 <div class="img_wrap lightbox">
-                  <img src="{{recent_images.5.file.url}}" class="uploaded_img">
-                  <!-- <div class="image_prompt">{{recent_images.5.group.prompt}}</div> -->
-                </div>
-              </div>
-              <div class="col-sm-6 col-md-4">
-                <div class="img_wrap lightbox">
                   <img src="{{recent_images.2.file.url}}" class="uploaded_img">
+                  <div class="img_overlay">
+                    <div class="image_prompt">{{recent_images.2.group.prompt}}</div>
+                  </div>
                 </div>
               </div>
               <div class="col-sm-12 col-md-8">
-                <a class="lightbox" href="{{recent_images.2.file.url}}">
-                  <img src="{{recent_images.2.file.url}}" class="uploaded_img">
-                </a>
+                <div class="img_wrap lightbox">
+                  <img src="{{recent_images.3.file.url}}" class="uploaded_img">
+                  <div class="img_overlay">
+                    <div class="image_prompt">{{recent_images.3.group.prompt}}</div>
+                  </div>
+                </div>
               </div>
               <div class=" col-sm-6 col-md-4">
-                <a class="lightbox" href="{{recent_images.3.file.url}}">
-                  <img src="{{recent_images.3.file.url}}" class="gallery_two_at_top uploaded_img">
-                </a>
-                <a class="lightbox gallery_two_at_bottom" href="{{recent_images.4.file.url}}">
-                  <img src="{{recent_images.4.file.url}}" class="gallery_two_at_bottom uploaded_img">
-                </a>
+                <div class="img_wrap lightbox">
+                  <img src="{{recent_images.4.file.url}}" class="uploaded_img gallery_two_at_top">
+                  <div class="img_overlay">
+                    <div class="image_prompt">{{recent_images.4.group.prompt}}</div>
+                  </div>
+                </div>
+                <div class="img_wrap lightbox">
+                  <img src="{{recent_images.1.file.url}}" class="uploaded_img gallery_two_at_bottom">
+                  <div class="img_overlay">
+                    <div class="image_prompt">{{recent_images.1.group.prompt}}</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
