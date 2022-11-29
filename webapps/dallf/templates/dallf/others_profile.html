@@ -1,31 +1,16 @@
-{% extends 'socialnetwork/loggedIn.html' %}
+{% extends 'dallf/profile_base.html' %}
+{% load static %}
 
-{% block page-title %}
-    Profile Page for {{profile.user.first_name}} {{profile.user.last_name}}
-{% endblock page-title %}
+{% block profile_button %}
 
-{% block content %}
-    <div>
-        {% if not profile.picture %}
-            {% load static %}
-            <img src="{% static 'socialnetwork/image-not-found.jpg' %}" alt="portrait" width="300" height="300" id="id_user_picture">
-        {% else %}
-            <img src="{% url 'photo' profile.user.id %}" alt="portrait" width="300" height="300" id="id_user_picture">
-        {% endif %}
-    </div>
-    <div>
-        <textarea id="id_user_bio" name="bio_text" rows="3" cols="40" readonly="true">{{ profile.bio }}</textarea>
-        <br>
-        {% if profile.user in request.user.profile.following.all %}
-            <form action="{% url 'unfollow' profile.user.id %}">
-                <input type="submit" value="unfollow" id="id_unfollow">
-                {% csrf_token %}
-            </form>
-        {% else %}
-            <form action="{% url 'follow' profile.user.id %}">
-                <input type="submit" value="follow" id="id_follow">
-                {% csrf_token %}
-            </form>
-        {% endif %}
-    </div>
-{% endblock content %}
+<button
+  class="btn btn-sm btn-outline-primary w-100"
+  id="id_profile_card_button"
+  type="button"
+  data-bs-toggle="modal"
+  data-bs-target="#id_edit_profile_popup"
+  onclick="clickEditProfileButton()">
+  Follow
+</button>
+
+{% endblock %}

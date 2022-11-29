@@ -133,4 +133,24 @@ def label_action(request):
 
 @login_required
 def my_profile(request):
-    return render(request, 'dallf/my_profile.html', {})
+    context = {}
+    context["images"] = []
+    for image in UploadedImage.objects.order_by('?')[:10]:
+        context["images"].append(image)
+    return render(request, 'dallf/my_profile.html', context)
+
+@login_required
+def others_profile(request):
+    context = {}
+    context["images"] = []
+    for image in UploadedImage.objects.order_by('?')[:10]:
+        context["images"].append(image)
+    return render(request, 'dallf/others_profile.html', context)
+
+@login_required
+def discussion_board(request):
+    context = {}
+    context["images"] = []
+    for image in UploadedImage.objects.order_by('?')[:10]:
+        context["images"].append(image)
+    return render(request, 'dallf/discussion_board.html', context)

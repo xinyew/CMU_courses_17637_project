@@ -6,3 +6,7 @@ function clickLabelButton(imageID) {
     document.getElementById(id).click()
     $(modal).modal('show')
 }
+
+function clickEditProfileButton() {
+    $('id_edit_profile_button').modal('show')
+}

@@ -1,107 +1,73 @@
-{% extends 'dallf/base.html' %}
+{% extends 'dallf/profile_base.html' %}
 {% load static %}
 
-{% block content %}
+{% block profile_button %}
 
-<!-- <div class="container" id="id_my_profile_card">
-    <div>
-        <img src="{% static 'dallf/not_found.jpg' %}" id="id_portrait_image">
-    </div>
-    <div>
-        <div>
 
-        </div>
-        <div id="id_profile_bio">
-            Hello, nice to meet you!Hello, nice to meet you!Hello, nice to meet you!Hello, nice to meet you!
-        </div>
-    </div>
-</div> -->
-
-<div class="container mt-5 d-flex justify-content-center">
-    <div class="profile_card p-3">
-        <div class="d-flex align-items-center">
-            <div class="image">
-                <img src="{% static 'dallf/not_found.jpg' %}" class="rounded" width="155">
-            </div>
-            <div class="ms-3 w-100">
-                <h4 class="mb-0 mt-0">Username</h4>
-                <div
-                    class="p-2 mt-2 bg-primary d-flex justify-content-between rounded text-white profile_stats"
-                    id="id_profile_card_stats">
-                    <div class="d-flex flex-column">
-                        <span class="profile_stats_class">Published</span>
-                        <span class="profile_stats_number">38</span>
-                    </div>
-                    <div class="d-flex flex-column">
-                        <span class="profile_stats_class">Followers</span>
-                        <span class="profile_stats_number">980</span>
-                    </div>
-                    <div class="d-flex flex-column">
-                        <button
-                            class="btn btn-sm btn-outline-primary w-100"
-                            id="id_profile_card_button">
-                            Edit Profile
-                        </button>
-                    </div>
-                </div>
-                <!-- <div class="button mt-2 d-flex flex-row align-items-center">
-                    <button class="btn btn-sm btn-outline-primary w-100">Chat</button>
-                    <button class="btn btn-sm btn-primary w-100 ml-2">Follow</button>
-                </div> -->
-                <div class="id_profile_bio mt-3" id="id_profile_bio">
-                    Hello, nice to meet you!Hello, nice to meet you!Hello, nice to meet you!Hello, nice to meet you!
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- <div class="container" id="id_my_profile_input_group">
-    <div class="input-group">
-        <input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
-        <button class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04">Button</button>
-    </div>
-    <div class="input-group">
-        <span class="input-group-text">
-            With textarea
-        </span>
-        <textarea class="form-control" aria-label="With textarea"></textarea>
-    </div>
-</div> -->
-
-<!--
-<div>
-    {% if not profile.picture %}
-    {% load static %}
-    <img src="{% static 'socialnetwork/image-not-found.jpg' %}" alt="portrait" width="300" height="300" id="id_user_picture">
-    {% else %}
-    <img src="{% url 'photo' profile.user.id %}" alt="portrait" width="300" height="300" id="id_user_picture">
-    {% endif %}
-</div>
-<div>
-    <form method="post" action="{% url 'my_profile' %}" enctype="multipart/form-data">
-        <table>
-            {{form}}
-        </table>
-        {% csrf_token %}
-        <button id="id_update_profile_button">
-            Submit
+<button
+  class="btn btn-sm btn-outline-primary w-100"
+  id="id_profile_card_button"
+  type="button"
+  data-bs-toggle="modal"
+  data-bs-target="#id_edit_profile_popup"
+  onclick="clickEditProfileButton()">
+  Edit Profile
+</button>
+<div
+  class="modal"
+  id="id_edit_profile_popup"
+  tabindex="-1"
+  aria-labelledby="id_edit_profile_popup"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1
+          class="modal-title fs-5"
+          id="id_edit_profile_popup_title">
+          Edit Profile
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close">
         </button>
-    </form>
+      </div>
+      <div class="modal-body">
+        <div class="input-group" id="id_portrait_upload">
+          <input
+            type="file"
+            class="form-control"
+            id="inputGroupFile04"
+            aria-describedby="inputGroupFileAddon04"
+            aria-label="Upload">
+        </div>
+        <div class="input-group">
+          <span class="input-group-text">
+            Bio
+          </span>
+          <textarea
+            class="form-control"
+            aria-label="Type your bio here">
+                                            </textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary btn_popup"
+          data-bs-dismiss="modal">
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary btn_popup">
+          Save changes
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
-<div>
-    <p>
-        You are following:
-    </p>
-    <ul>
-        {% for u in user.profile.following.all %}
-        <li>
 
-            <a href="{% url 'others_profile' u.id %}" id="id_profile_link_{{u}}">
-                {{u.first_name}} {{u.last_name}}
-            </a>
-        </li>
-        {% endfor %}
-    </ul>
-</div> -->
-{% endblock content %}
+{% endblock %}

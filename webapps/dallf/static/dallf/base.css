@@ -165,9 +165,10 @@ body {
 }
 
 .image_button {
-    padding-left: 3px;
-    padding-right: 3px;
     opacity: 0.5;
+    padding: 0;
+    margin-left: 2px;
+    margin-right: 2px;
 }
 
 .image_button_bundle {
@@ -287,4 +288,86 @@ body {
 
 .profile_stats_number {
     font-weight: 500;
+}
+
+#id_portrait_upload {
+    margin-bottom: 10px;
+}
+
+#id_recent_post_title,
+#id_recent_comment_title,
+#id_discussion_board_title {
+    padding-top: 100px;
+    padding-bottom: 20px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: 100;
+    font-size: 22px;
+    color: rgba(0, 0, 0, 0.7);
+}
+
+.post_wrap {
+    background-color: #fff;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    padding: 10px;
+}
+
+.post_post {
+    display: flex;
+    background-color: rgb(250, 250, 252);
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.post_comment {
+    display: flex;
+    background-color: rgb(250, 250, 252);
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.post_portrait {
+    padding-top: 8px;
+    padding-right: 10px;
+}
+
+.post_poster,
+.post_commenter {
+    text-decoration: none;
+    font-size: small;
+    color: rgba(0, 0, 0, 0.6);
+    font-weight: 700;
+}
+
+.date_time {
+    padding-left: 3px;
+    font-size: 11px;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.post_text {
+    color: rgba(0, 0, 0, 0.7);
+    padding-top: 5px;
+}
+
+.comment_text {
+    color: rgba(0, 0, 0, 0.7);
+    padding-top: 5px;
+}
+
+.post_comments {
+    margin-left: 60px;
+}
+
+
+.post_comment {
+    margin-top: 10px;
+}
+
+.discussion_board_image {
+    margin-top: 60px;
+}
+
+.comment_input_group {
+    margin-top: 10px;
 }
