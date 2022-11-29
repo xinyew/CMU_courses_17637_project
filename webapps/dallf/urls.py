@@ -4,4 +4,5 @@ from dallf import views
 urlpatterns = [
     path('console/', views.console, name='console'),
     path('gallery/', views.gallery, name='gallery'),
+    path('my_profile/', views.my_profile, name='my_profile')
 ]

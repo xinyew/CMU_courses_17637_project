@@ -130,3 +130,7 @@ def label_action(request):
 
 # TODO validation
 # TODO exception handling for .get
+
+@login_required
+def my_profile(request):
+    return render(request, 'dallf/my_profile.html', {})

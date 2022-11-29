@@ -112,14 +112,29 @@ Dall-F Console
       tabindex="0">
       <div id="id_recent_gallery">
         <div class="container gallery-container">
-          <div class="tz-gallery">
+          <div class="gallery-page">
             <div class="row">
               <div class="col-sm-12 col-md-4">
                 <div class="img_wrap lightbox">
                   <img src="{{recent_images.0.file.url}}" class="uploaded_img">
                   <div class="img_overlay">
                     <div class="image_prompt">{{recent_images.0.group.prompt}}</div>
+                    <a class="image_creator">creator name</a>
                     <div class="image_buttons">
+                      <a href="#" class="image_button_bundle">
+                        <img
+                          src="{% static 'dallf/share.png' %}"
+                          width="20"
+                          height="20"
+                          class="image_button image_button_not_active"
+                          id="id_image_{{recent_images.0.id}}_share_not_active_button" />
+                        <img
+                          src="{% static 'dallf/share_active.png' %}"
+                          width="20"
+                          height="20"
+                          class="image_button image_button_active"
+                          id="id_image_{{recent_images.0.id}}_share_active_button" />
+                      </a>
                       <a href="#" class="image_button_bundle">
                         <img
                           src="{% static 'dallf/zoom.png' %}"
@@ -157,7 +172,6 @@ Dall-F Console
                           width="20"
                           height="20"
                           class="image_button image_button_active" />
-
                       </a>
                       <a href="#" class="image_button_bundle">
                         <img src="{% static 'dallf/discussion_board.png' %}"
@@ -191,7 +205,7 @@ Dall-F Console
                           <h1
                             class="modal-title fs-5"
                             id="id_image_{{recent_images.0.id}}_label_popup_title">
-                            Modal title
+                            Adding Label
                           </h1>
                           <button
                             type="button"
@@ -201,18 +215,43 @@ Dall-F Console
                           </button>
                         </div>
                         <div class="modal-body">
-                          ...
+                          <div class="input-group">
+                            <input
+                              type="text"
+                              class="form-control"
+                              placeholder="Type label name or select from dropdown button"
+                              aria-label="Type label name or select from dropdown button">
+                            <button
+                              type="button"
+                              class="btn btn-outline-secondary">
+                              Add
+                            </button>
+                            <button
+                              type="button"
+                              class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
+                              data-bs-toggle="dropdown"
+                              aria-expanded="false">
+                              <span class="visually-hidden">
+                                Toggle Dropdown
+                              </span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                              <li><a class="dropdown-item" href="#">Cat</a></li>
+                              <li><a class="dropdown-item" href="#">Dog</a></li>
+                              <li><a class="dropdown-item" href="#">Bird</a></li>
+                            </ul>
+                          </div>
                         </div>
                         <div class="modal-footer">
                           <button
                             type="button"
-                            class="btn btn-secondary"
+                            class="btn btn-secondary btn_popup"
                             data-bs-dismiss="modal">
                             Close
                           </button>
                           <button
                             type="button"
-                            class="btn btn-primary">
+                            class="btn btn-primary btn_popup">
                             Save changes
                           </button>
                         </div>
@@ -221,7 +260,6 @@ Dall-F Console
                   </div>
                 </div>
               </div>
-
               <div class="col-sm-6 col-md-4">
                 <div class="img_wrap lightbox">
                   <img src="{{recent_images.5.file.url}}" class="uploaded_img">
@@ -263,37 +301,35 @@ Dall-F Console
             </div>
           </div>
         </div>
-        <div class="container gallery-container">
-          <div class="tz-gallery">
-            <div class="row">
-              <div class="col-sm-12 col-md-4">
-                <a class="lightbox" href="{{recent_images.6.file.url}}">
-                  <img src="{{recent_images.6.file.url}}" class="uploaded_img">
-                </a>
-              </div>
-              <div class="col-sm-6 col-md-4">
-                <a class="lightbox" href="{{recent_images.7.file.url}}">
-                  <img src="{{recent_images.7.file.url}}" class="uploaded_img">
-                </a>
-              </div>
-              <div class="col-sm-6 col-md-4">
-                <a class="lightbox" href="{{recent_images.8.file.url}}">
-                  <img src="{{recent_images.8.file.url}}" class="uploaded_img">
-                </a>
-              </div>
-              <div class="col-sm-6 col-md-4">
-                <a class="lightbox" href="{{recent_images.9.file.url}}">
-                  <img src="{{recent_images.9.file.url}}" class="gallery_two_at_top uploaded_img">
-                </a>
-                <a class="lightbox gallery_two_at_bottom" href="{{recent_images.10.file.url}}">
-                  <img src="{{recent_images.10.file.url}}" class="gallery_two_at_bottom uploaded_img">
-                </a>
-              </div>
-              <div class="col-sm-12 col-md-8">
-                <a class="lightbox" href="{{recent_images.11.file.url}}">
-                  <img src="{{recent_images.11.file.url}}" class="uploaded_img">
-                </a>
-              </div>
+        <div class="gallery-page">
+          <div class="row">
+            <div class="col-sm-12 col-md-4">
+              <a class="lightbox" href="{{recent_images.6.file.url}}">
+                <img src="{{recent_images.6.file.url}}" class="uploaded_img">
+              </a>
+            </div>
+            <div class="col-sm-6 col-md-4">
+              <a class="lightbox" href="{{recent_images.7.file.url}}">
+                <img src="{{recent_images.7.file.url}}" class="uploaded_img">
+              </a>
+            </div>
+            <div class="col-sm-6 col-md-4">
+              <a class="lightbox" href="{{recent_images.8.file.url}}">
+                <img src="{{recent_images.8.file.url}}" class="uploaded_img">
+              </a>
+            </div>
+            <div class="col-sm-6 col-md-4">
+              <a class="lightbox" href="{{recent_images.9.file.url}}">
+                <img src="{{recent_images.9.file.url}}" class="gallery_two_at_top uploaded_img">
+              </a>
+              <a class="lightbox gallery_two_at_bottom" href="{{recent_images.10.file.url}}">
+                <img src="{{recent_images.10.file.url}}" class="gallery_two_at_bottom uploaded_img">
+              </a>
+            </div>
+            <div class="col-sm-12 col-md-8">
+              <a class="lightbox" href="{{recent_images.11.file.url}}">
+                <img src="{{recent_images.11.file.url}}" class="uploaded_img">
+              </a>
             </div>
           </div>
         </div>
@@ -313,7 +349,32 @@ Dall-F Console
       role="tabpanel"
       aria-labelledby="id_labels_tab"
       tabindex="0">
-      ...
+      <div class="label_buttons">
+        <button type="button" class="btn btn-sm btn-primary label_button">Primary</button>
+        <button type="button" class="btn btn-sm btn-secondary label_button">Secondary</button>
+        <button type="button" class="btn btn-sm btn-success label_button">Success</button>
+        <button type="button" class="btn btn-sm btn-danger label_button">Danger</button>
+        <button type="button" class="btn btn-sm btn-warning label_button">Warning</button>
+        <button type="button" class="btn btn-sm btn-info label_button">Info</button>
+        <button type="button" class="btn btn-sm btn-light label_button">Light</button>
+        <button type="button" class="btn btn-sm btn-dark label_button">Dark</button>
+        <button type="button" class="btn btn-sm btn-primary label_button">Primary</button>
+        <button type="button" class="btn btn-sm btn-secondary label_button">Secondary</button>
+        <button type="button" class="btn btn-sm btn-success label_button">Success</button>
+        <button type="button" class="btn btn-sm btn-danger label_button">Danger</button>
+        <button type="button" class="btn btn-sm btn-warning label_button">Warning</button>
+        <button type="button" class="btn btn-sm btn-info label_button">Info</button>
+        <button type="button" class="btn btn-sm btn-light label_button">Light</button>
+        <button type="button" class="btn btn-sm btn-primary label_button">Primary</button>
+        <button type="button" class="btn btn-sm btn-secondary label_button">Secondary</button>
+        <button type="button" class="btn btn-sm btn-success label_button">Success</button>
+        <button type="button" class="btn btn-sm btn-danger label_button">Danger</button>
+        <button type="button" class="btn btn-sm btn-warning label_button">Warning</button>
+        <button type="button" class="btn btn-sm btn-info label_button">Info</button>
+        <button type="button" class="btn btn-sm btn-light label_button">Light</button>
+        <button type="button" class="btn btn-sm btn-dark label_button">Dark</button>
+        <button type="button" class="btn btn-sm btn-dark label_button">Dark</button>
+      </div>
     </div>
   </div>
 </div>
