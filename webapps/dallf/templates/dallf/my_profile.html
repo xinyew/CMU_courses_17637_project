@@ -1,42 +1,73 @@
-{% extends 'socialnetwork/loggedIn.html' %}
+{% extends 'dallf/profile_base.html' %}
+{% load static %}
 
-{% block page-title %}
-    Profile Page for {{user.first_name}} {{user.last_name}}
-{% endblock page-title %}
+{% block profile_button %}
 
-{% block content %}
-    <div>
-        {% if not profile.picture %}
-            {% load static %}
-            <img src="{% static 'socialnetwork/image-not-found.jpg' %}" alt="portrait" width="300" height="300" id="id_user_picture">
-        {% else %}
-            <img src="{% url 'photo' profile.user.id %}" alt="portrait" width="300" height="300" id="id_user_picture">
-        {% endif %}
-    </div>
-    <div>
-        <form method="post" action="{% url 'my_profile' %}" enctype="multipart/form-data">
-            <table>
-                {{form}}
-            </table>
-            {% csrf_token %}
-            <button id="id_update_profile_button">
-                Submit
-            </button>
-        </form>
-    </div>
-    <div>
-        <p>
-            You are following:
-        </p>
-        <ul>
-            {% for u in user.profile.following.all %}
-            <li>
 
-                <a href="{% url 'others_profile' u.id %}" id="id_profile_link_{{u}}">
-                    {{u.first_name}} {{u.last_name}}
-                </a>
-            </li>
-            {% endfor %}
-        </ul>
+<button
+  class="btn btn-sm btn-outline-primary w-100"
+  id="id_profile_card_button"
+  type="button"
+  data-bs-toggle="modal"
+  data-bs-target="#id_edit_profile_popup"
+  onclick="clickEditProfileButton()">
+  Edit Profile
+</button>
+<div
+  class="modal"
+  id="id_edit_profile_popup"
+  tabindex="-1"
+  aria-labelledby="id_edit_profile_popup"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1
+          class="modal-title fs-5"
+          id="id_edit_profile_popup_title">
+          Edit Profile
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close">
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group" id="id_portrait_upload">
+          <input
+            type="file"
+            class="form-control"
+            id="inputGroupFile04"
+            aria-describedby="inputGroupFileAddon04"
+            aria-label="Upload">
+        </div>
+        <div class="input-group">
+          <span class="input-group-text">
+            Bio
+          </span>
+          <textarea
+            class="form-control"
+            aria-label="Type your bio here">
+                                            </textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary btn_popup"
+          data-bs-dismiss="modal">
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary btn_popup">
+          Save changes
+        </button>
+      </div>
     </div>
-{% endblock content %}
+  </div>
+</div>
+
+{% endblock %}

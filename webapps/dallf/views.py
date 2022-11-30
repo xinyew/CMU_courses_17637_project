@@ -163,3 +163,27 @@ def logout_action(request: HttpRequest):
 
 # TODO validation
 # TODO exception handling for .get
+
+@login_required
+def my_profile(request):
+    context = {}
+    context["images"] = []
+    for image in UploadedImage.objects.order_by('?')[:10]:
+        context["images"].append(image)
+    return render(request, 'dallf/my_profile.html', context)
+
+@login_required
+def others_profile(request):
+    context = {}
+    context["images"] = []
+    for image in UploadedImage.objects.order_by('?')[:10]:
+        context["images"].append(image)
+    return render(request, 'dallf/others_profile.html', context)
+
+@login_required
+def discussion_board(request):
+    context = {}
+    context["images"] = []
+    for image in UploadedImage.objects.order_by('?')[:10]:
+        context["images"].append(image)
+    return render(request, 'dallf/discussion_board.html', context)
