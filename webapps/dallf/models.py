@@ -23,6 +23,8 @@ class User(AbstractUser):
     # Set to False when image generation is finished.
     generation_ongoing = models.BooleanField(default=False)
 
+    # TODO start_generation could fail, need to include can_generate() check in
+    # a transaction
     def start_generation(self):
         """Call when generation starts to change User's state
         """

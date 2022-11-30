@@ -11,7 +11,7 @@ from django.conf import settings
 from urllib.parse import urlparse
 import requests
 
-from .models import UploadedImage, ImageGroup, Label
+from .models import UploadedImage, ImageGroup, Label, User
 from .serializers import ImageGroupSerializer
 
 # Create your views here.
@@ -23,6 +23,8 @@ from .serializers import ImageGroupSerializer
 def generate_stable_diffusion(request: HttpRequest):
     import replicate
 
+    request.user.start_generation()
+
     model = replicate.models.get("stability-ai/stable-diffusion")
     output = model.predict(prompt=request.POST["prompt_input"])
     return save_image_group(request, output)
@@ -30,6 +32,8 @@ def generate_stable_diffusion(request: HttpRequest):
 
 def generate_DallE(request):
     import openai
+
+    request.user.start_generation()
 
     # response = openai.Image.create_edit(
     #     image=open("sunlit_lounge.png", "rb"),
@@ -63,6 +67,7 @@ def save_image_group(request: HttpRequest, image_urls):
             name=urlparse(image_url).path.rsplit('/', 1)[-1],
             content=ContentFile(image_response.content)
         )  # also saves img
+    request.user.finish_generation()
     return group
 
 
