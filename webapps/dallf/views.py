@@ -17,6 +17,9 @@ from .serializers import ImageGroupSerializer
 # Create your views here.
 
 
+# Utility methods for generation
+
+
 def generate_stable_diffusion(request: HttpRequest):
     import replicate
 
@@ -61,6 +64,9 @@ def save_image_group(request: HttpRequest, image_urls):
             content=ContentFile(image_response.content)
         )  # also saves img
     return group
+
+
+# Views
 
 
 @login_required
@@ -173,6 +179,7 @@ def my_profile(request):
         context["images"].append(image)
     return render(request, 'dallf/my_profile.html', context)
 
+
 @login_required
 def others_profile(request):
     context = {}
@@ -180,6 +187,7 @@ def others_profile(request):
     for image in UploadedImage.objects.order_by('?')[:10]:
         context["images"].append(image)
     return render(request, 'dallf/others_profile.html', context)
+
 
 @login_required
 def discussion_board(request):
