@@ -158,6 +158,7 @@ def test_generate_action(request: HttpRequest):
 @login_required
 def logout_action(request: HttpRequest):
     logout(request)
+    # Do this manually, because it seems to break otherwise due to redirection
     return redirect(settings.LOGIN_URL)
 
 
