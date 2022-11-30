@@ -5,8 +5,8 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    bio = models.TextField()
-    profile_image = models.FileField(null=True, upload_to='images/')
+    bio = models.TextField(default="")
+    profile_image = models.FileField(default="", upload_to='images/')
 
 
 class Label(models.Model):
@@ -15,6 +15,12 @@ class Label(models.Model):
         on_delete=models.PROTECT,
         related_name="labels")
     text = models.CharField(max_length=255)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=("user", "text"),
+                                    name="unique_label_text"),
+        ]
 
 
 class ImageGroup(models.Model):
@@ -42,3 +48,18 @@ class UploadedImage(models.Model):
 
     class Meta:
         ordering = ('group',)
+
+
+class Comment(models.Model):
+    # comment is made on a specific image
+    image = models.ForeignKey(
+        UploadedImage,
+        on_delete=models.PROTECT,
+        related_name="comments"
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        related_name="comments")
+    text = models.TextField()
+    date_created = models.DateTimeField(auto_now_add=True)
