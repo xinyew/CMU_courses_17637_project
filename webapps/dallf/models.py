@@ -13,13 +13,17 @@ GENERATION_TIMEOUT_SECONDS = 60
 GENERATION_TIMEOUT = timedelta(seconds=GENERATION_TIMEOUT_SECONDS)
 
 
+def _last_generated_default():
+    return timezone.now() - GENERATION_DELAY
+
+
 class User(AbstractUser):
     bio = models.TextField(default="")
     profile_image = models.FileField(default="", upload_to='images/')
     # Prevent users from generating images too quickly.
     # default ensures user can always generate right away
     last_generated = models.DateTimeField(
-        default=(lambda: timezone.now() - GENERATION_DELAY))
+        default=_last_generated_default)
     # Set to False when image generation is finished.
     generation_ongoing = models.BooleanField(default=False)
 
