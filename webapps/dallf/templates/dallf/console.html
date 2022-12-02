@@ -1,5 +1,6 @@
 {% extends 'dallf/base.html' %}
 {% load static %}
+
 {% block page-title %}
 Dall-F Console
 {% endblock %}
@@ -32,11 +33,17 @@ Dall-F Console
         aria-expanded="false">
         num
       </button>
-      <ul class="dropdown-menu">
-        <li><a class="dropdown-item">1</a></li>
-        <li><a class="dropdown-item">2</a></li>
-        <li><a class="dropdown-item">3</a></li>
-        <li><a class="dropdown-item">4</a></li>
+      <ul class="dropdown-menu dropdown_selection" id="dropdown_num"
+        onclick="
+        var target = event.target;
+        if (target instanceof Element && target.classList.contains('dropdown_selection__item')) {
+          target.classList.add('active');
+        }
+        ">
+        <li><a class="dropdown-item dropdown_selection__item">1</a></li>
+        <li><a class="dropdown-item dropdown_selection__item">2</a></li>
+        <li><a class="dropdown-item dropdown_selection__item">3</a></li>
+        <li><a class="dropdown-item dropdown_selection__item">4</a></li>
       </ul>
       <button
         class="btn btn-outline-secondary dropdown-toggle"
@@ -45,7 +52,7 @@ Dall-F Console
         aria-expanded="false">
         size
       </button>
-      <ul class="dropdown-menu dropdown-menu-end">
+      <ul class="dropdown-menu dropdown-menu-end" id="dropdown_size">
         <li><a class="dropdown-item">256x256</a></li>
         <li><a class="dropdown-item">512x512</a></li>
         <li><a class="dropdown-item">1024x1024</a></li>
@@ -53,7 +60,8 @@ Dall-F Console
       <button
         class="btn btn-outline-secondary"
         type="button"
-        id="button-addon2">
+        id="button-addon2"
+        onclick="click_generate();">
         Generate
       </button>
     </div>
@@ -111,7 +119,10 @@ Dall-F Console
       aria-labelledby="id_recent_tab"
       tabindex="0">
       <div id="id_recent_gallery">
-        <div class="container gallery-container">
+        {% include "dallf/image.html" with image=recent_images.0 %}
+        {% include "dallf/image.html" with image=recent_images.1 %}
+        {% include "dallf/image.html" with image=recent_images.2 %}
+        <!-- <div class="container gallery-container">
           <div class="gallery-page">
             <div class="row">
               <div class="col-sm-12 col-md-4">
@@ -332,7 +343,7 @@ Dall-F Console
               </a>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
     <div
