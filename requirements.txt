@@ -6,3 +6,4 @@ environs[django]
 Pillow
 replicate
 openai
+pylint==2.14.5
