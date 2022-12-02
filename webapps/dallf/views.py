@@ -11,10 +11,12 @@ from django.conf import settings
 from urllib.parse import urlparse
 import requests
 
-from .models import UploadedImage, ImageGroup, Label, User
+from .models import UploadedImage, ImageGroup, Label, User, GENERATION_TIMEOUT_SECONDS
 from .serializers import ImageGroupSerializer
 
-# Create your views here.
+# Fetching images once they're generated should not take a significant amount of
+# time.
+GET_IMAGE_TIMEOUT_SECONDS = 10
 
 
 # Utility methods for generation
@@ -45,7 +47,8 @@ def generate_DallE(request):
     response = openai.Image.create(
         prompt=request.POST["prompt_input"],
         n=int(request.POST["num_input"]),
-        size=request.POST["size_input"]
+        size=request.POST["size_input"],
+        request_timeout=GENERATION_TIMEOUT_SECONDS
     )
     return save_image_group(request,
                             [image_obj['url']
@@ -59,14 +62,20 @@ def save_image_group(request: HttpRequest, image_urls):
     )
     group.save()
     for image_url in image_urls:
-        image_response = requests.get(image_url)
-        img = UploadedImage(
-            group=group,
-        )
-        img.file.save(
-            name=urlparse(image_url).path.rsplit('/', 1)[-1],
-            content=ContentFile(image_response.content)
-        )  # also saves img
+        try:
+            image_response = requests.get(
+                image_url,
+                timeout=GET_IMAGE_TIMEOUT_SECONDS)
+        except requests.exceptions.Timeout:
+            pass
+        else:
+            img = UploadedImage(
+                group=group,
+            )
+            img.file.save(
+                name=urlparse(image_url).path.rsplit('/', 1)[-1],
+                content=ContentFile(image_response.content)
+            )  # also saves img
     request.user.finish_generation()
     return group
 
@@ -110,8 +119,8 @@ def console(request: HttpRequest):
             context["recent_images"] = []
 
     context['label_image_set'] = []
-    for l in request.user.labels.all():
-        context['label_image_set'].append(l)
+    for label in request.user.labels.all():
+        context['label_image_set'].append(label)
 
     # label = request.GET.get('label')
     # if label:
