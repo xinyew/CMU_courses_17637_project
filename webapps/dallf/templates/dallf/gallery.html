@@ -1,5 +1,5 @@
 {% extends 'dallf/base.html' %}
-{% load static %}
+
 {% block page-title %}
 Gallery
 {% endblock %}
@@ -107,9 +107,7 @@ Gallery
               <div
                 class="modal"
                 id="id_image_{{images.0.id}}_label_popup"
-                tabindex="-1"
-                aria-labelledby="id_image_{{images.0.id}}_label_popup_title"
-                aria-hidden="true">
+                tabindex="-1">
                 <div class="modal-dialog modal-dialog-centered">
                   <div class="modal-content">
                     <div class="modal-header">
@@ -121,8 +119,7 @@ Gallery
                       <button
                         type="button"
                         class="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Close">
+                        data-bs-dismiss="modal">
                       </button>
                     </div>
                     <div class="modal-body">
@@ -130,8 +127,7 @@ Gallery
                         <input
                           type="text"
                           class="form-control"
-                          placeholder="Type label name or select from dropdown button"
-                          aria-label="Type label name or select from dropdown button">
+                          placeholder="Type label name or select from dropdown button">
                         <button
                           type="button"
                           class="btn btn-outline-secondary">
@@ -140,8 +136,7 @@ Gallery
                         <button
                           type="button"
                           class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
-                          data-bs-toggle="dropdown"
-                          aria-expanded="false">
+                          data-bs-toggle="dropdown">
                           <span class="visually-hidden">
                             Toggle Dropdown
                           </span>
@@ -317,9 +312,7 @@ Gallery
               <div
                 class="modal"
                 id="id_image_{{images.0.id}}_label_popup"
-                tabindex="-1"
-                aria-labelledby="id_image_{{images.0.id}}_label_popup_title"
-                aria-hidden="true">
+                tabindex="-1">
                 <div class="modal-dialog modal-dialog-centered">
                   <div class="modal-content">
                     <div class="modal-header">
@@ -331,8 +324,7 @@ Gallery
                       <button
                         type="button"
                         class="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Close">
+                        data-bs-dismiss="modal">
                       </button>
                     </div>
                     <div class="modal-body">
@@ -340,8 +332,7 @@ Gallery
                         <input
                           type="text"
                           class="form-control"
-                          placeholder="Type label name or select from dropdown button"
-                          aria-label="Type label name or select from dropdown button">
+                          placeholder="Type label name or select from dropdown button">
                         <button
                           type="button"
                           class="btn btn-outline-secondary">
@@ -350,8 +341,7 @@ Gallery
                         <button
                           type="button"
                           class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
-                          data-bs-toggle="dropdown"
-                          aria-expanded="false">
+                          data-bs-toggle="dropdown">
                           <span class="visually-hidden">
                             Toggle Dropdown
                           </span>

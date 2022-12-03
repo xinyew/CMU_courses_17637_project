@@ -18,6 +18,10 @@
     "editor.tabSize": 2,
     "editor.detectIndentation": false,
   },
+  "[javascript]": {
+    "editor.tabSize": 2,
+    "editor.detectIndentation": false,
+  },
   "html.format.templating": true,
   "dotenv.enableAutocloaking": true,
   "python.linting.cwd": "${workspaceRoot}/webapps"

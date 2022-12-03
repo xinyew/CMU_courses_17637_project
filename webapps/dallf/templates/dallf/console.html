@@ -1,12 +1,23 @@
 {% extends 'dallf/base.html' %}
-{% load static %}
+
+
 {% block page-title %}
 Dall-F Console
 {% endblock %}
 
 {% block content %}
 <div class="container" id="id_prompt_input_group">
-  <form>
+  <form
+    action="#"
+    onsubmit="
+      'use strict';
+      console.log('Generate clicked');
+      let data = new FormData(this);
+      for (let entry of data.entries()) {
+        console.log(`${entry[0]}: ${entry[1]}`);
+      }
+      event.preventDefault();
+    ">
     <div>
       <label for="id_prompt_input_text" id="id_prompt_text_label">
         Start with a detailed description
@@ -21,38 +32,50 @@ Dall-F Console
     <div class="input-group mb-3 shadow-sm" id="id_prompt_input_bar">
       <input
         type="text"
+        name="prompt_input"
         class="form-control"
-        placeholder="An Impressionist oil painting of sunflowers in a purple vase…"
-        aria-label="An Impressionist oil painting of sunflowers in a purple vase…"
-        aria-describedby="button-addon2" />
+        placeholder="An Impressionist oil painting of sunflowers in a purple vase…" />
       <button
         class="btn btn-outline-secondary dropdown-toggle"
         type="button"
         data-bs-toggle="dropdown"
-        aria-expanded="false">
+        data-bs-auto-close="outside">
         num
       </button>
-      <ul class="dropdown-menu">
-        <li><a class="dropdown-item">1</a></li>
-        <li><a class="dropdown-item">2</a></li>
-        <li><a class="dropdown-item">3</a></li>
-        <li><a class="dropdown-item">4</a></li>
+      <ul class="dropdown-menu dropdown_selection" id="dropdown_num"
+        onclick="
+          'use strict';
+          var target = event.target;
+          if (target instanceof Element && target.classList.contains('dropdown_selection__item')) {
+            let old_target = document.querySelector('#dropdown_num .active');
+            if (old_target !== null) {
+              old_target.classList.remove('active');
+            }
+            target.classList.add('active');
+            this.nextElementSibling.value = target.textContent;
+          }
+        ">
+        <li><a class="dropdown-item dropdown_selection__item">1</a></li>
+        <li><a class="dropdown-item dropdown_selection__item">2</a></li>
+        <li><a class="dropdown-item dropdown_selection__item">3</a></li>
+        <li><a class="dropdown-item dropdown_selection__item">4</a></li>
       </ul>
+      <input name="num_input" type="hidden" />
       <button
         class="btn btn-outline-secondary dropdown-toggle"
         type="button"
         data-bs-toggle="dropdown"
-        aria-expanded="false">
+        data-bs-auto-close="outside">
         size
       </button>
-      <ul class="dropdown-menu dropdown-menu-end">
+      <ul class="dropdown-menu dropdown-menu-end" id="dropdown_size">
         <li><a class="dropdown-item">256x256</a></li>
         <li><a class="dropdown-item">512x512</a></li>
         <li><a class="dropdown-item">1024x1024</a></li>
       </ul>
       <button
         class="btn btn-outline-secondary"
-        type="button"
+        type="submit"
         id="button-addon2">
         Generate
       </button>
@@ -61,43 +84,34 @@ Dall-F Console
 </div>
 
 <div class="container">
-  <ul class="nav nav-tabs" id="id_console_tabs" role="tablist">
-    <li class="nav-item" role="presentation">
+  <ul class="nav nav-tabs" id="id_console_tabs">
+    <li class="nav-item">
       <button
         class="nav-link active"
         id="id_recent_tab"
         data-bs-toggle="tab"
         data-bs-target="#id_recent_pane"
-        type="button"
-        role="tab"
-        aria-controls="home-tab-pane"
-        aria-selected="true">
+        type="button">
         Recent
       </button>
     </li>
-    <li class="nav-item" role="presentation">
+    <li class="nav-item">
       <button
         class="nav-link"
         id="id_favorite_tab"
         data-bs-toggle="tab"
         data-bs-target="#id_favorite_pane"
-        type="button"
-        role="tab"
-        aria-controls="id_favorite_pane"
-        aria-selected="false">
+        type="button">
         Favorite
       </button>
     </li>
-    <li class="nav-item" role="presentation">
+    <li class="nav-item">
       <button
         class="nav-link"
         id="id_labels_tab"
         data-bs-toggle="tab"
         data-bs-target="#id_labels_pane"
-        type="button"
-        role="tab"
-        aria-controls="id_labels_pane"
-        aria-selected="false">
+        type="button">
         Labels
       </button>
     </li>
@@ -107,11 +121,14 @@ Dall-F Console
     <div
       class="tab-pane fade show active"
       id="id_recent_pane"
-      role="tabpanel"
-      aria-labelledby="id_recent_tab"
+
+
       tabindex="0">
       <div id="id_recent_gallery">
-        <div class="container gallery-container">
+        {% include "dallf/components/image.html" with image=recent_images.0 %}
+        {% include "dallf/components/image.html" with image=recent_images.1 %}
+        {% include "dallf/components/image.html" with image=recent_images.2 %}
+        <!-- <div class="container gallery-container">
           <div class="gallery-page">
             <div class="row">
               <div class="col-sm-12 col-md-4">
@@ -197,8 +214,8 @@ Dall-F Console
                     class="modal"
                     id="id_image_{{recent_images.0.id}}_label_popup"
                     tabindex="-1"
-                    aria-labelledby="id_image_{{recent_images.0.id}}_label_popup_title"
-                    aria-hidden="true">
+
+                   >
                     <div class="modal-dialog modal-dialog-centered">
                       <div class="modal-content">
                         <div class="modal-header">
@@ -211,7 +228,7 @@ Dall-F Console
                             type="button"
                             class="btn-close"
                             data-bs-dismiss="modal"
-                            aria-label="Close">
+                           >
                           </button>
                         </div>
                         <div class="modal-body">
@@ -220,7 +237,7 @@ Dall-F Console
                               type="text"
                               class="form-control"
                               placeholder="Type label name or select from dropdown button"
-                              aria-label="Type label name or select from dropdown button">
+                             >
                             <button
                               type="button"
                               class="btn btn-outline-secondary">
@@ -230,7 +247,7 @@ Dall-F Console
                               type="button"
                               class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
                               data-bs-toggle="dropdown"
-                              aria-expanded="false">
+                             >
                               <span class="visually-hidden">
                                 Toggle Dropdown
                               </span>
@@ -332,22 +349,22 @@ Dall-F Console
               </a>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
     <div
       class="tab-pane fade"
       id="id_favorite_pane"
-      role="tabpanel"
-      aria-labelledby="id_favorite_tab"
+
+
       tabindex="0">
       ...
     </div>
     <div
       class="tab-pane fade"
       id="id_labels_pane"
-      role="tabpanel"
-      aria-labelledby="id_labels_tab"
+
+
       tabindex="0">
       <div class="label_buttons">
         <button type="button" class="btn btn-sm btn-primary label_button">Primary</button>
