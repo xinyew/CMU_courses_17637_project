@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import UploadedImage, ImageGroup
+from .models import UploadedImage
 
 # These are serializers from Django Rest Framework, which work much like Django
 # forms and take similar arguments for customization. Outputs python
@@ -13,12 +13,4 @@ from .models import UploadedImage, ImageGroup
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = UploadedImage
-        fields = '__all__'
-
-
-class ImageGroupSerializer(serializers.ModelSerializer):
-    image_set = ImageSerializer(many=True)  # output a nested list
-
-    class Meta:
-        model = ImageGroup
         fields = '__all__'
