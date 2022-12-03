@@ -36,8 +36,13 @@ Dall-F Console
       </button>
       <ul class="dropdown-menu dropdown_selection" id="dropdown_num"
         onclick="
+        'use strict';
         var target = event.target;
         if (target instanceof Element && target.classList.contains('dropdown_selection__item')) {
+          let old_target = document.querySelector('#dropdown_num .active');
+          if (old_target !== null) {
+            old_target.classList.remove('active');
+          }
           target.classList.add('active');
         }
         ">

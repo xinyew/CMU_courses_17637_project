@@ -2,4 +2,13 @@
 
 function click_generate() {
   console.log("Generate clicked");
+  $.post(
+    "/console/generate/",
+    {
+
+    },
+    function (data) {
+
+    }
+  );
 }
