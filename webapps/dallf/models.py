@@ -81,6 +81,7 @@ class UploadedImage(models.Model):
         related_name="image_set"
     )
     date_created = models.DateTimeField(auto_now_add=True)
+    published = models.BooleanField(default=False)
 
     class Meta:
         ordering = ('-date_created',)
