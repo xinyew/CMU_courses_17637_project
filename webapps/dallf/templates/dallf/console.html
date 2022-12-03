@@ -7,7 +7,17 @@ Dall-F Console
 
 {% block content %}
 <div class="container" id="id_prompt_input_group">
-  <form>
+  <form
+    action="#"
+    onsubmit="
+      'use strict';
+      console.log('Generate clicked');
+      let data = new FormData(this);
+      for (let entry of data.entries()) {
+        console.log(`${entry[0]}: ${entry[1]}`);
+      }
+      event.preventDefault();
+    ">
     <div>
       <label for="id_prompt_input_text" id="id_prompt_text_label">
         Start with a detailed description
@@ -22,6 +32,7 @@ Dall-F Console
     <div class="input-group mb-3 shadow-sm" id="id_prompt_input_bar">
       <input
         type="text"
+        name="prompt_input"
         class="form-control"
         placeholder="An Impressionist oil painting of sunflowers in a purple vase…" />
       <button
@@ -33,21 +44,23 @@ Dall-F Console
       </button>
       <ul class="dropdown-menu dropdown_selection" id="dropdown_num"
         onclick="
-        'use strict';
-        var target = event.target;
-        if (target instanceof Element && target.classList.contains('dropdown_selection__item')) {
-          let old_target = document.querySelector('#dropdown_num .active');
-          if (old_target !== null) {
-            old_target.classList.remove('active');
+          'use strict';
+          var target = event.target;
+          if (target instanceof Element && target.classList.contains('dropdown_selection__item')) {
+            let old_target = document.querySelector('#dropdown_num .active');
+            if (old_target !== null) {
+              old_target.classList.remove('active');
+            }
+            target.classList.add('active');
+            this.nextElementSibling.value = target.textContent;
           }
-          target.classList.add('active');
-        }
         ">
         <li><a class="dropdown-item dropdown_selection__item">1</a></li>
         <li><a class="dropdown-item dropdown_selection__item">2</a></li>
         <li><a class="dropdown-item dropdown_selection__item">3</a></li>
         <li><a class="dropdown-item dropdown_selection__item">4</a></li>
       </ul>
+      <input name="num_input" type="hidden" />
       <button
         class="btn btn-outline-secondary dropdown-toggle"
         type="button"
@@ -62,9 +75,8 @@ Dall-F Console
       </ul>
       <button
         class="btn btn-outline-secondary"
-        type="button"
-        id="button-addon2"
-        onclick="click_generate();">
+        type="submit"
+        id="button-addon2">
         Generate
       </button>
     </div>
@@ -113,9 +125,9 @@ Dall-F Console
 
       tabindex="0">
       <div id="id_recent_gallery">
-        {% include "dallf/image.html" with image=recent_images.0 %}
-        {% include "dallf/image.html" with image=recent_images.1 %}
-        {% include "dallf/image.html" with image=recent_images.2 %}
+        {% include "dallf/components/image.html" with image=recent_images.0 %}
+        {% include "dallf/components/image.html" with image=recent_images.1 %}
+        {% include "dallf/components/image.html" with image=recent_images.2 %}
         <!-- <div class="container gallery-container">
           <div class="gallery-page">
             <div class="row">

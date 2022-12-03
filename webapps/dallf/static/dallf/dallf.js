@@ -1,14 +1,11 @@
 'use strict';
 
-function click_generate() {
-  console.log("Generate clicked");
+function generate() {
   $.post(
     "/console/generate/",
     {
-
     },
     function (data) {
-
     }
   );
 }
