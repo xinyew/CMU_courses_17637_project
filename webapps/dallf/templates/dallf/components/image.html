@@ -1,5 +1,5 @@
-<div class="img_wrap lightbox">
-  <img src="{{image.file.url}}" class="uploaded_img">
+<div class="img_wrap lightbox {{class}}">
+  <img src="{% if not image %}{% static 'dallf/not_found.jpg' %}{% else %}{{image.file.url}}{% endif %}" class="img-fluid">
   <div class="img_overlay">
     <div class="image_prompt">{{image.prompt}}</div>
     <a class="image_creator">creator name</a>
