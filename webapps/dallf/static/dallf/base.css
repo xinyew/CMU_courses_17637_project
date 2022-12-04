@@ -69,7 +69,7 @@ body {
     padding: 2px;
 }
 
-.gallery-page .lightbox img {
+.gallery-page .img_wrap img {
     width: 100%;
     border-radius: 0;
     position: relative;
@@ -90,6 +90,11 @@ body {
 
 .img_wrap {
     position: relative;
+}
+
+.img_wrap .img_wrap__img {
+    width: 100%;
+    height: auto;
 }
 
 .img_overlay {
