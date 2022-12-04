@@ -8,6 +8,8 @@ from django.contrib.auth import logout
 from django.contrib.auth.views import logout_then_login
 from django.conf import settings
 
+from rest_framework import serializers
+
 from urllib.parse import urlparse
 import requests
 
@@ -81,6 +83,13 @@ def save_image_group(request: HttpRequest, image_urls):
 # Views
 
 
+class GenerateParameterSerializer(serializers.Serializer):
+    prompt_input = serializers.CharField()
+    num_input = serializers.ChoiceField(choices=(1, 2, 3, 4))
+    size_input = serializers.ChoiceField(
+        choices=("256x256", "512x512", "1024x1024"))
+
+
 @login_required
 def console(request: HttpRequest):
     context = {
@@ -88,8 +97,10 @@ def console(request: HttpRequest):
         "favorites": request.user.favorites,
     }
 
-    if request.method == "POST" and "prompt_input" in request.POST and request.POST[
-            "prompt_input"]:
+    if request.method == "POST":
+        GenerateParameterSerializer(
+            data=request.POST
+        ).is_valid(raise_exception=True)
         generate_DallE(request)
 
         recent_images = list(

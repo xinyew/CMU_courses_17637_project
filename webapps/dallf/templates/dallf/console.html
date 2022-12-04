@@ -7,17 +7,8 @@ Dall-F Console
 
 {% block content %}
 <div class="container" id="id_prompt_input_group">
-  <form
-    action="#"
-    onsubmit="
-      'use strict';
-      console.log('Generate clicked');
-      let data = new FormData(this);
-      for (let entry of data.entries()) {
-        console.log(`${entry[0]}: ${entry[1]}`);
-      }
-      event.preventDefault();
-    ">
+  <form method="post">
+    {% csrf_token %}
     <div>
       <label for="id_prompt_input_text" id="id_prompt_text_label">
         Start with a detailed description
