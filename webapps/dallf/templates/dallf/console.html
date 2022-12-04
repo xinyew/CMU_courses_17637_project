@@ -7,7 +7,8 @@ Dall-F Console
 
 {% block content %}
 <div class="container" id="id_prompt_input_group">
-  <form method="post">
+  <form method="post" onsubmit="generate(this, event)"
+    onformdata="make_generate_form(event)">
     {% csrf_token %}
     <div>
       <label for="id_prompt_input_text" id="id_prompt_text_label">
@@ -24,6 +25,7 @@ Dall-F Console
       <input
         type="text"
         name="prompt_input"
+        required
         class="form-control"
         placeholder="An Impressionist oil painting of sunflowers in a purple vase…" />
       <button
@@ -34,24 +36,13 @@ Dall-F Console
         num
       </button>
       <ul class="dropdown-menu dropdown_selection" id="dropdown_num"
-        onclick="
-          'use strict';
-          var target = event.target;
-          if (target instanceof Element && target.classList.contains('dropdown_selection__item')) {
-            let old_target = document.querySelector('#dropdown_num .active');
-            if (old_target !== null) {
-              old_target.classList.remove('active');
-            }
-            target.classList.add('active');
-            this.nextElementSibling.value = target.textContent;
-          }
-        ">
+        onclick="click_dropdown(this, event);"
+        data-name="num_input">
         <li><a class="dropdown-item dropdown_selection__item">1</a></li>
         <li><a class="dropdown-item dropdown_selection__item">2</a></li>
         <li><a class="dropdown-item dropdown_selection__item">3</a></li>
         <li><a class="dropdown-item dropdown_selection__item">4</a></li>
       </ul>
-      <input name="num_input" type="hidden" />
       <button
         class="btn btn-outline-secondary dropdown-toggle"
         type="button"
@@ -59,10 +50,12 @@ Dall-F Console
         data-bs-auto-close="outside">
         size
       </button>
-      <ul class="dropdown-menu dropdown-menu-end" id="dropdown_size">
-        <li><a class="dropdown-item">256x256</a></li>
-        <li><a class="dropdown-item">512x512</a></li>
-        <li><a class="dropdown-item">1024x1024</a></li>
+      <ul class="dropdown-menu dropdown-menu-end dropdown_selection" id="dropdown_size"
+        onclick="click_dropdown(this, event);"
+        data-name="size_input">
+        <li><a class="dropdown-item dropdown_selection__item">256x256</a></li>
+        <li><a class="dropdown-item dropdown_selection__item">512x512</a></li>
+        <li><a class="dropdown-item dropdown_selection__item">1024x1024</a></li>
       </ul>
       <button
         class="btn btn-outline-secondary"

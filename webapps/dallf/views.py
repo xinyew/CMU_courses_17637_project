@@ -50,7 +50,6 @@ def generate_DallE(request):
         prompt=request.POST["prompt_input"],
         n=int(request.POST["num_input"]),
         size=request.POST["size_input"],
-        request_timeout=GENERATION_TIMEOUT_SECONDS
     )
     return save_image_group(request,
                             [image_obj['url']
