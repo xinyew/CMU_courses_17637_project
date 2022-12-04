@@ -100,3 +100,17 @@ class Comment(models.Model):
         related_name="comments")
     text = models.TextField()
     date_created = models.DateTimeField(auto_now_add=True)
+
+
+class Reply(models.Model):
+    # reply is made on a specific comment
+    user = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        related_name="replys")
+    comment = models.ForeignKey(
+        Comment,
+        on_delete=models.CASCADE,
+        related_name="replys")
+    text = models.CharField(max_length=200)
+    date_created = models.CharField(max_length=50)

@@ -1,5 +1,6 @@
-from django.http import HttpRequest, JsonResponse
-from django.shortcuts import render, redirect
+import json
+from django.http import HttpRequest, JsonResponse, HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
 from django.core.files.base import ContentFile
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
@@ -7,11 +8,12 @@ from django.views.decorators.http import require_GET, require_POST
 from django.contrib.auth import logout
 from django.contrib.auth.views import logout_then_login
 from django.conf import settings
+from django.utils import timezone, dateformat
 
 from urllib.parse import urlparse
 import requests
 
-from .models import UploadedImage, Label, User, GENERATION_TIMEOUT_SECONDS
+from .models import UploadedImage, Label, User, GENERATION_TIMEOUT_SECONDS, Comment, Reply
 from .serializers import ImageSerializer
 
 # Fetching images once they're generated should not take a significant amount of
@@ -195,3 +197,87 @@ def discussion_board(request):
     for image in UploadedImage.objects.order_by('?')[:10]:
         context["images"].append(image)
     return render(request, 'dallf/discussion_board.html', context)
+
+
+@login_required
+def get_discussion(request, image_id):
+    response_data = {}
+    response_data['comments'] = []
+    response_data['replies'] = []
+    for comment in Comment.objects.get(pk=image_id):
+        new_comment = {
+            'id': comment.id,
+            'text': comment.text,
+            'user_id': comment.user.id,
+            'first_name': comment.user.first_name,
+            'last_name': comment.user.last_name,
+            'date_created': comment.date_created
+        }
+        response_data['comments'].append(new_comment)
+        for reply in comment.replys.all():
+            new_reply = {
+                'id': reply.id,
+                'comment_id': comment.id,
+                'text': reply.text,
+                'user_id': reply.user.id,
+                'first_name': reply.user.first_name,
+                'last_name': reply.user.last_name,
+                'date_created': reply.date_created
+            }
+            response_data['replies'].append(new_reply)
+
+    response_json = json.dumps(response_data)
+    return HttpResponse(response_json, content_type='application/json')
+
+
+@require_POST
+@login_required
+def post_new_comment(request):
+    if 'discussion_reply_text' not in request.POST or not request.POST['discussion_reply_text']:
+        return _my_json_error_response(
+            message="You must enter something to comment",
+            status=400)
+    new_comment = Comment(
+        text=request.POST['discussion_reply_text'],
+        user=request.user,
+        date_created=dateformat.format(timezone.localtime(), "n/j/Y g:i A"))
+    new_comment.save()
+
+    return get_discussion(request)
+
+
+@require_POST
+@login_required
+def post_new_reply(request):
+    if 'reply_text' not in request.POST or not request.POST['reply_text']:
+        return _my_json_error_response(
+            message="You must enter something to reply",
+            status=400)
+
+    if 'comment_id' not in request.POST or not request.POST['comment_id']:
+        return _my_json_error_response(
+            message="You must specify the comment id to reply",
+            status=400)
+    try:
+        id = int(request.POST['comment_id'])
+    except BaseException:
+        return _my_json_error_response("The comment id must be numeric", 400)
+    if id > Comment.objects.all().order_by('-id')[0].id:
+        return _my_json_error_response("The comment id does not exist", 400)
+
+    comment = get_object_or_404(Comment, id=request.POST['comment_id'])
+    new_reply = Reply(
+        text=request.POST['reply_text'],
+        user=request.user,
+        comment=comment,
+        date_created=dateformat.format(timezone.localtime(), "n/j/Y g:i A"))
+    new_reply.save()
+
+
+def _my_json_error_response(message, status):
+    response_json = '{ "error": "' + message + '" }'
+    print(status)
+    return HttpResponse(
+        response_json,
+        content_type='application/json',
+        status=status)

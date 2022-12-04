@@ -296,69 +296,54 @@ body {
     color: rgba(0, 0, 0, 0.7);
 }
 
-.post_wrap {
+.discussion_wrap {
     background-color: #fff;
     border-radius: 10px;
     margin-bottom: 20px;
     padding: 10px;
 }
 
-.post_post {
+.discussion_reply,
+.discussion_comment {
     display: flex;
     background-color: rgb(250, 250, 252);
     border-radius: 10px;
     padding: 10px;
+    margin-top: 10px;
 }
 
-.post_comment {
-    display: flex;
-    background-color: rgb(250, 250, 252);
-    border-radius: 10px;
-    padding: 10px;
-}
-
-.post_portrait {
+.discussion_portrait {
     padding-top: 8px;
     padding-right: 10px;
 }
 
-.post_poster,
-.post_commenter {
+.discussion_commenter {
     text-decoration: none;
     font-size: small;
     color: rgba(0, 0, 0, 0.6);
     font-weight: 700;
 }
 
-.date_time {
+.discussion_date_time {
     padding-left: 3px;
     font-size: 11px;
     color: rgba(0, 0, 0, 0.5);
 }
 
-.post_text {
+.discussion_reply_text,
+.discussion_comment_text {
     color: rgba(0, 0, 0, 0.7);
     padding-top: 5px;
 }
 
-.comment_text {
-    color: rgba(0, 0, 0, 0.7);
-    padding-top: 5px;
-}
-
-.post_comments {
+.discussion_replies {
     margin-left: 60px;
-}
-
-
-.post_comment {
-    margin-top: 10px;
 }
 
 .discussion_board_image {
     margin-top: 60px;
 }
 
-.comment_input_group {
+.discussion_reply_input_group {
     margin-top: 10px;
 }
