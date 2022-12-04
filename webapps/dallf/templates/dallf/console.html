@@ -121,21 +121,43 @@ Dall-F Console
     <div
       class="tab-pane fade show active"
       id="id_recent_pane"
-
-
       tabindex="0">
-      <div id="id_recent_gallery">
-        {% include "dallf/components/image.html" with image=recent_images.0 %}
-        {% include "dallf/components/image.html" with image=recent_images.1 %}
-        {% include "dallf/components/image.html" with image=recent_images.2 %}
-        <!-- <div class="container gallery-container">
+      <div class="container pt-3" id="id_recent_gallery">
+        <div class="row row-cols-4 g-3">
+          <div class="col">
+            {% include "dallf/components/image.html" with image=recent_images.0 %}
+          </div>
+          <div class="col">
+            {% include "dallf/components/image.html" with image=recent_images.0 %}
+          </div>
+          <div class="col">
+            {% include "dallf/components/image.html" with image=recent_images.0 %}
+          </div>
+          <div class="col">
+            {% include "dallf/components/image.html" with image=recent_images.0 %}
+          </div>
+          <div class="col">
+            {% include "dallf/components/image.html" with image=recent_images.0 %}
+          </div>
+          <div class="col">
+            {% include "dallf/components/image.html" with image=recent_images.0 %}
+          </div>
+          <div class="col">
+            {% include "dallf/components/image.html" with image=recent_images.0 %}
+          </div>
+          <div class="col">
+            {% include "dallf/components/image.html" with image=recent_images.0 %}
+          </div>
+        </div>
+      </div>
+      <!-- <div class="container gallery-container">
           <div class="gallery-page">
             <div class="row">
               <div class="col-sm-12 col-md-4">
                 <div class="img_wrap lightbox">
                   <img src="{{recent_images.0.file.url}}" class="uploaded_img">
                   <div class="img_overlay">
-                    <div class="image_prompt">{{recent_images.0.group.prompt}}</div>
+                    <div class="image_prompt">{{recent_images.0.prompt}}</div>
                     <a class="image_creator">creator name</a>
                     <div class="image_buttons">
                       <a href="#" class="image_button_bundle">
@@ -281,7 +303,7 @@ Dall-F Console
                 <div class="img_wrap lightbox">
                   <img src="{{recent_images.5.file.url}}" class="uploaded_img">
                   <div class="img_overlay">
-                    <div class="image_prompt">{{recent_images.5.group.prompt}}</div>
+                    <div class="image_prompt">{{recent_images.5.prompt}}</div>
                   </div>
                 </div>
               </div>
@@ -289,7 +311,7 @@ Dall-F Console
                 <div class="img_wrap lightbox">
                   <img src="{{recent_images.2.file.url}}" class="uploaded_img">
                   <div class="img_overlay">
-                    <div class="image_prompt">{{recent_images.2.group.prompt}}</div>
+                    <div class="image_prompt">{{recent_images.2.prompt}}</div>
                   </div>
                 </div>
               </div>
@@ -297,7 +319,7 @@ Dall-F Console
                 <div class="img_wrap lightbox">
                   <img src="{{recent_images.3.file.url}}" class="uploaded_img">
                   <div class="img_overlay">
-                    <div class="image_prompt">{{recent_images.3.group.prompt}}</div>
+                    <div class="image_prompt">{{recent_images.3.prompt}}</div>
                   </div>
                 </div>
               </div>
@@ -305,13 +327,13 @@ Dall-F Console
                 <div class="img_wrap lightbox">
                   <img src="{{recent_images.4.file.url}}" class="uploaded_img gallery_two_at_top">
                   <div class="img_overlay">
-                    <div class="image_prompt">{{recent_images.4.group.prompt}}</div>
+                    <div class="image_prompt">{{recent_images.4.prompt}}</div>
                   </div>
                 </div>
                 <div class="img_wrap lightbox">
                   <img src="{{recent_images.1.file.url}}" class="uploaded_img gallery_two_at_bottom">
                   <div class="img_overlay">
-                    <div class="image_prompt">{{recent_images.1.group.prompt}}</div>
+                    <div class="image_prompt">{{recent_images.1.prompt}}</div>
                   </div>
                 </div>
               </div>
@@ -350,7 +372,7 @@ Dall-F Console
             </div>
           </div>
         </div> -->
-      </div>
+
     </div>
     <div
       class="tab-pane fade"

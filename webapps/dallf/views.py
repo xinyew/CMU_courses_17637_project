@@ -11,8 +11,8 @@ from django.conf import settings
 from urllib.parse import urlparse
 import requests
 
-from .models import UploadedImage, ImageGroup, Label, User, GENERATION_TIMEOUT_SECONDS
-from .serializers import ImageGroupSerializer
+from .models import UploadedImage, Label, User, GENERATION_TIMEOUT_SECONDS
+from .serializers import ImageSerializer
 
 # Fetching images once they're generated should not take a significant amount of
 # time.
@@ -56,11 +56,7 @@ def generate_DallE(request):
 
 
 def save_image_group(request: HttpRequest, image_urls):
-    group = ImageGroup(
-        prompt=request.POST["prompt_input"],
-        user=request.user
-    )
-    group.save()
+    group = []
     for image_url in image_urls:
         try:
             image_response = requests.get(
@@ -70,12 +66,14 @@ def save_image_group(request: HttpRequest, image_urls):
             pass
         else:
             img = UploadedImage(
-                group=group,
+                prompt=request.POST["prompt_input"],
+                user=request.user,
             )
             img.file.save(
                 name=urlparse(image_url).path.rsplit('/', 1)[-1],
                 content=ContentFile(image_response.content)
             )  # also saves img
+            group.append(img)
     request.user.finish_generation()
     return group
 
@@ -94,29 +92,16 @@ def console(request: HttpRequest):
             "prompt_input"]:
         generate_DallE(request)
 
-        recent_groups = list(
-            request.user.image_group_set.order_by('-date_created')[:5]
+        recent_images = list(
+            request.user.image_set.order_by('-date_created')[:5]
         )
-
         context["prompt_input"] = request.POST["prompt_input"]
-        context["current_prompt"] = recent_groups[0]
-        context["recent_images"] = []
-        for group in recent_groups[1:]:
-            for image in group.image_set.all():
-                context["recent_images"].append(image)
+        context["recent_images"] = recent_images
     else:
-        recent_groups = list(
-            request.user.image_group_set.order_by('-date_created')[:5]
+        recent_images = list(
+            request.user.image_set.order_by('-date_created')[:5]
         )
-
-        context["current_prompt"] = None
-        if len(recent_groups) >= 1:
-            context["recent_images"] = []
-            for group in recent_groups[0:]:
-                for image in group.image_set.all():
-                    context["recent_images"].append(image)
-        else:
-            context["recent_images"] = []
+        context["recent_images"] = recent_images
 
     context['label_image_set'] = []
     for label in request.user.labels.all():
@@ -162,15 +147,15 @@ def label_action(request: HttpRequest):
 @login_required
 def generate_action(request: HttpRequest):
     group = generate_DallE(request)
-    serializer = ImageGroupSerializer(group)
+    serializer = ImageSerializer(group, many=True)
     return JsonResponse(serializer.data)
 
 
 @require_GET
 @login_required
 def test_generate_action(request: HttpRequest):
-    group = request.user.image_group_set.all()[0]
-    serializer = ImageGroupSerializer(group)
+    group = request.user.image_set.all()[0]
+    serializer = ImageSerializer(group, many=True)
     return JsonResponse(serializer.data)
 
 
