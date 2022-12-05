@@ -34,7 +34,7 @@ def generate_stable_diffusion(request: HttpRequest):
 
     model = replicate.models.get("stability-ai/stable-diffusion")
     output = model.predict(prompt=request.POST["prompt_input"])
-    return save_image_group(request, output)
+    return save_generated_images(request, output)
 
 
 def generate_DallE(request):
@@ -54,12 +54,12 @@ def generate_DallE(request):
         n=int(request.POST["num_input"]),
         size=request.POST["size_input"],
     )
-    return save_image_group(request,
-                            [image_obj['url']
-                             for image_obj in response['data']])
+    return save_generated_images(request,
+                                 [image_obj['url']
+                                  for image_obj in response['data']])
 
 
-def save_image_group(request: HttpRequest, image_urls):
+def save_generated_images(request: HttpRequest, image_urls):
     group = []
     for image_url in image_urls:
         try:
