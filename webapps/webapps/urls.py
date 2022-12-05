@@ -36,5 +36,12 @@ urlpatterns = [
     # Testing
     path('testing/generate/', views.test_generate_action, name='test_generate'),
     # AJAX calls
-    path('get_discussion/<int:image_id>', views.get_discussion, name='get_discussion'),
+    path(
+        'get_discussion/<int:image_id>',
+        views.get_discussion,
+        name='get_discussion'),
+    path(
+        'get_profile_image/<int:user_id>',
+        views.get_profile_image,
+        name='get_profile_image')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

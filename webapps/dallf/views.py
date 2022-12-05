@@ -1,4 +1,5 @@
 import json
+import os
 from django.http import HttpRequest, JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.files.base import ContentFile
@@ -200,11 +201,51 @@ def discussion_board(request):
 
 
 @login_required
+def get_profile_image(request, user_id):
+    f = open(os.path.dirname(__file__) + '/static/dallf/not_found.jpg', 'rb')
+    image = f.read()
+    f.close()
+    return HttpResponse(image, content_type="image/jpeg")
+
+
+@login_required
 def get_discussion(request, image_id):
     response_data = {}
     response_data['comments'] = []
     response_data['replies'] = []
     for comment in Comment.objects.get(pk=image_id):
+        new_comment = {
+            'id': comment.id,
+            'text': comment.text,
+            'user_id': comment.user.id,
+            'first_name': comment.user.first_name,
+            'last_name': comment.user.last_name,
+            'date_created': comment.date_created
+        }
+        response_data['comments'].append(new_comment)
+        for reply in comment.replys.all():
+            new_reply = {
+                'id': reply.id,
+                'comment_id': comment.id,
+                'text': reply.text,
+                'user_id': reply.user.id,
+                'first_name': reply.user.first_name,
+                'last_name': reply.user.last_name,
+                'date_created': reply.date_created
+            }
+            response_data['replies'].append(new_reply)
+
+    response_json = json.dumps(response_data)
+    return HttpResponse(response_json, content_type='application/json')
+
+
+@login_required
+def get_recent_activities(request, user_id):
+    response_data = {}
+    response_data['comments'] = []
+    response_data['replies'] = []
+    num_activities_found = 0
+    for comment in Comment.objects.get(user=User.objects.get(pk=user_id)):
         new_comment = {
             'id': comment.id,
             'text': comment.text,

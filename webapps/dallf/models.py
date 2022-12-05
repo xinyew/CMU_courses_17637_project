@@ -18,7 +18,7 @@ def _last_generated_default():
 
 
 class User(AbstractUser):
-    bio = models.TextField(default="")
+    bio = models.TextField(default="", max_length=100)
     profile_image = models.FileField(default="", upload_to='images/')
     # Prevent users from generating images too quickly.
     # default ensures user can always generate right away
