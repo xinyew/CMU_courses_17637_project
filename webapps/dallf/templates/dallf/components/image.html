@@ -6,16 +6,13 @@
     <div class="image_buttons">
       {% if image.user == request.user %}
       <a href="#!" class="image_button_bundle"
+        {% if image.published %}
+        data-image_button_bundle--show_active
+        {% endif %}
         onclick="
           publish({{image.id}});
           event.preventDefault();
         ">
-        <img
-          src="{% static 'dallf/share.png' %}"
-          width="20"
-          height="20"
-          class="image_button image_button_not_active"
-          id="id_image_{{image.id}}_share_not_active_button" />
         <img
           src="{% static 'dallf/share_active.png' %}"
           width="20"
@@ -26,12 +23,6 @@
       {% endif %}
       <a href="#!" class="image_button_bundle">
         <img
-          src="{% static 'dallf/zoom.png' %}"
-          width="20"
-          height="20"
-          class="image_button image_button_not_active"
-          id="id_image_{{image.id}}_zoom_not_active_button" />
-        <img
           src="{% static 'dallf/zoom_active.png' %}"
           width="20"
           height="20"
@@ -39,11 +30,6 @@
           id="id_image_{{image.id}}_zoom_active_button" />
       </a>
       <a href="#!" class="image_button_bundle">
-        <img
-          src="{% static 'dallf/favorite.png' %}"
-          width="20"
-          height="20"
-          class="image_button image_button_not_active" />
         <img
           src="{% static 'dallf/favorite_active.png' %}"
           width="20"
@@ -53,21 +39,12 @@
       <a href="#!" class="image_button_bundle" data-bs-toggle="modal"
         data-bs-target="#id_image_{{image.id}}_label_popup">
         <img
-          src="{% static 'dallf/label.png' %}"
-          width="20"
-          height="20"
-          class="image_button image_button_not_active" />
-        <img
           src="{% static 'dallf/label_active.png' %}"
           width="20"
           height="20"
           class="image_button image_button_active" />
       </a>
       <a href="#!" class="image_button_bundle">
-        <img src="{% static 'dallf/discussion_board.png' %}"
-          width="20"
-          height="20"
-          class="image_button image_button_not_active" />
         <img src="{% static 'dallf/discussion_board_active.png' %}"
           width="20"
           height="20"

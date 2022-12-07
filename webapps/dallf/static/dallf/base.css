@@ -73,7 +73,6 @@ body {
     height: 100%;
     width: 100%;
     opacity: 0;
-    transition: .5s ease;
     transition: opacity .2s, visibility .2s;
     background: rgba(255, 255, 255, 0.9);
 }
@@ -105,41 +104,21 @@ body {
 }
 
 .image_buttons {
-    color: black;
-    font-size: 20px;
     position: absolute;
     bottom: 0;
     right: 0;
     display: flex;
+    gap: 4px;
 }
 
-.image_button {
-    opacity: 0.5;
-    padding: 0;
-    margin-left: 2px;
-    margin-right: 2px;
+.image_button_bundle .image_button_active {
+    transition: all 0.3s ease-out;
+    transition-property: opacity, filter;
 }
 
-.image_button_bundle {
-    display: flex;
-}
-
-/* actually I like this */
-.image_button_active {
-    display: none;
-    opacity: 1;
-}
-
-.image_button_bundle:hover .image_button_not_active {
-    display: none;
-    transition: .5s ease;
-    transition: opacity .2s, visibility .2s;
-}
-
-.image_button_bundle:hover .image_button_active {
-    display: block;
-    transition: .5s ease;
-    transition: opacity .2s, visibility .2s;
+.image_button_bundle:not(:hover) .image_button_active {
+    opacity: 50%;
+    filter: contrast(0%);
 }
 
 .btn_popup {
