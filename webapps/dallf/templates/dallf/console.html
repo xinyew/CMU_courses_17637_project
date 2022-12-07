@@ -5,6 +5,15 @@
 Dall-F Console
 {% endblock %}
 
+{% block navigation %}
+<a class="nav-link" href="{% url 'gallery' %}">
+  Gallery
+</a>
+<a class="nav-link active" href="{% url 'console' %}">
+  Console
+</a>
+{% endblock %}
+
 {% block content %}
 <div class="container my-5" id="id_prompt_input_group">
   <form method="post" onsubmit="generate(this, event)"
@@ -123,7 +132,7 @@ Dall-F Console
       class="tab-pane fade show active"
       id="id_recent_pane"
       tabindex="0">
-      <div class="container pt-3" id="id_recent_images">
+      <div class="container py-3" id="id_recent_images">
         <div class="row row-cols-4 g-3">
           {% for image in recent_images %}
           <div class="col">
