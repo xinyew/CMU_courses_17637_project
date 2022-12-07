@@ -172,22 +172,6 @@ def label_action(request: HttpRequest):
 
 @require_POST
 @login_required
-def generate_action(request: HttpRequest):
-    group = generate_DallE(request)
-    serializer = ImageSerializer(group, many=True)
-    return JsonResponse(serializer.data)
-
-
-@require_GET
-@login_required
-def test_generate_action(request: HttpRequest):
-    group = request.user.image_set.all()[0]
-    serializer = ImageSerializer(group, many=True)
-    return JsonResponse(serializer.data)
-
-
-@require_POST
-@login_required
 def logout_action(request: HttpRequest):
     logout(request)
     # Do this manually, because it seems to break otherwise due to redirection

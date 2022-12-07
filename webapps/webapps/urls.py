@@ -21,20 +21,16 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.gallery, name='home'),  # Temporary
+    path('', views.gallery, name='home'),
+    path('', views.gallery, name='gallery'),  # alias
     path('oauth/', include('social_django.urls', namespace='social')),
     path('console/', views.console, name='console'),
-    path('gallery/', views.gallery, name='gallery'),
     path('favorite/', views.favorite_action, name='favorite'),
     path('label/', views.label_action, name='label'),
     path('my_profile/', views.my_profile, name='my_profile'),
     path('others_profile/', views.others_profile, name='others_profile'),
     path('discussion_board/', views.discussion_board, name='discussion_board'),
     path('logout/', views.logout_action, name='logout'),
-    # API calls
-    path('images/generate/', views.generate_action, name='generate'),
-    # Testing
-    path('testing/generate/', views.test_generate_action, name='test_generate'),
     # AJAX calls
     path(
         'get_discussion/<int:image_id>',
