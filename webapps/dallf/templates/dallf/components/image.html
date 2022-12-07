@@ -4,7 +4,12 @@
     <div class="image_prompt">{{image.prompt}}</div>
     <a class="image_creator">{{image.user.get_full_name}}</a>
     <div class="image_buttons">
-      <a href="#" class="image_button_bundle">
+      {% if image.user == request.user %}
+      <a href="#!" class="image_button_bundle"
+        onclick="
+          publish({{image.id}});
+          event.preventDefault();
+        ">
         <img
           src="{% static 'dallf/share.png' %}"
           width="20"
@@ -18,7 +23,8 @@
           class="image_button image_button_active"
           id="id_image_{{image.id}}_share_active_button" />
       </a>
-      <a href="#" class="image_button_bundle">
+      {% endif %}
+      <a href="#!" class="image_button_bundle">
         <img
           src="{% static 'dallf/zoom.png' %}"
           width="20"
@@ -32,7 +38,7 @@
           class="image_button image_button_active"
           id="id_image_{{image.id}}_zoom_active_button" />
       </a>
-      <a href="#" class="image_button_bundle">
+      <a href="#!" class="image_button_bundle">
         <img
           src="{% static 'dallf/favorite.png' %}"
           width="20"
@@ -44,7 +50,7 @@
           height="20"
           class="image_button image_button_active" />
       </a>
-      <a href="#" class="image_button_bundle" data-bs-toggle="modal"
+      <a href="#!" class="image_button_bundle" data-bs-toggle="modal"
         data-bs-target="#id_image_{{image.id}}_label_popup">
         <img
           src="{% static 'dallf/label.png' %}"
@@ -57,7 +63,7 @@
           height="20"
           class="image_button image_button_active" />
       </a>
-      <a href="#" class="image_button_bundle">
+      <a href="#!" class="image_button_bundle">
         <img src="{% static 'dallf/discussion_board.png' %}"
           width="20"
           height="20"
@@ -115,9 +121,9 @@
               </span>
             </button>
             <ul class="dropdown-menu dropdown-menu-end">
-              <li><a class="dropdown-item" href="#">Cat</a></li>
-              <li><a class="dropdown-item" href="#">Dog</a></li>
-              <li><a class="dropdown-item" href="#">Bird</a></li>
+              <li><a class="dropdown-item" href="#!">Cat</a></li>
+              <li><a class="dropdown-item" href="#!">Dog</a></li>
+              <li><a class="dropdown-item" href="#!">Bird</a></li>
             </ul>
           </div>
         </div>

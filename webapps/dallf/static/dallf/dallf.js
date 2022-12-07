@@ -13,6 +13,13 @@ function click_dropdown(elem, event) {
 
 
 // AJAX calls
+
+
+function publish(id) {
+  console.log(id);
+}
+
+
 function getDiscussion() {
   // get the id of the only one element of discussions class from
   // <div id="id_discussions_{{recent_images.0.id}}" class="discussions">
