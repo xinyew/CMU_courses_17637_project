@@ -2,11 +2,6 @@
     font-weight: 500;
 }
 
-#id_prompt_input_group {
-    padding-top: 180px;
-    padding-bottom: 180px;
-}
-
 #id_username {
     color: rgba(0, 0, 0, 0.7);
     padding-left: 8px;
@@ -86,6 +81,11 @@ body {
 .nav-link {
     --bs-nav-link-hover-color: rgba(0, 0, 0, 0.5);
     --bs-nav-link-color: rgba(0, 0, 0, 0.3);
+}
+
+.last_generated_images_col {
+    max-width: 40%;
+    /* not too big */
 }
 
 .img_wrap {

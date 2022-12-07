@@ -6,9 +6,9 @@ Dall-F Console
 {% endblock %}
 
 {% block content %}
-<div class="container" id="id_prompt_input_group">
+<div class="container my-5" id="id_prompt_input_group">
   <form method="post" onsubmit="generate(this, event)"
-    onformdata="make_generate_form(event)">
+    onformdata="make_generate_form(this, event)">
     {% csrf_token %}
     <div>
       <label for="id_prompt_input_text" id="id_prompt_text_label">
@@ -60,11 +60,28 @@ Dall-F Console
       <button
         class="btn btn-outline-secondary"
         type="submit"
-        id="button-addon2">
-        Generate
+        id="generate_button"
+        {% if user.is_generating %}
+        disabled
+        {% endif %}>
+        {% if user.is_generating %}
+        <span id="generate_button__spinner" class="spinner-border spinner-border-sm"></span>
+        {% else %}
+        <span id="generate_button__text">Generate</span>
+        {% endif %}
       </button>
     </div>
   </form>
+</div>
+
+<div class="container my-5" id="id_last_generated_images">
+  <div class="row justify-content-evenly g-3">
+    {% for image in last_generated_images %}
+    <div class="col last_generated_images_col">
+      {% include "dallf/components/image.html" %}
+    </div>
+    {% endfor %}
+  </div>
 </div>
 
 <div class="container">
@@ -106,256 +123,15 @@ Dall-F Console
       class="tab-pane fade show active"
       id="id_recent_pane"
       tabindex="0">
-      <div class="container pt-3" id="id_recent_gallery">
+      <div class="container pt-3" id="id_recent_images">
         <div class="row row-cols-4 g-3">
+          {% for image in recent_images %}
           <div class="col">
-            {% include "dallf/components/image.html" with image=recent_images.0 %}
+            {% include "dallf/components/image.html" %}
           </div>
-          <div class="col">
-            {% include "dallf/components/image.html" with image=recent_images.0 %}
-          </div>
-          <div class="col">
-            {% include "dallf/components/image.html" with image=recent_images.0 %}
-          </div>
-          <div class="col">
-            {% include "dallf/components/image.html" with image=recent_images.0 %}
-          </div>
-          <div class="col">
-            {% include "dallf/components/image.html" with image=recent_images.0 %}
-          </div>
-          <div class="col">
-            {% include "dallf/components/image.html" with image=recent_images.0 %}
-          </div>
-          <div class="col">
-            {% include "dallf/components/image.html" with image=recent_images.0 %}
-          </div>
-          <div class="col">
-            {% include "dallf/components/image.html" with image=recent_images.0 %}
-          </div>
+          {% endfor %}
         </div>
       </div>
-      <!-- <div class="container gallery-container">
-          <div class="gallery-page">
-            <div class="row">
-              <div class="col-sm-12 col-md-4">
-                <div class="img_wrap lightbox">
-                  <img src="{{recent_images.0.file.url}}" class="uploaded_img">
-                  <div class="img_overlay">
-                    <div class="image_prompt">{{recent_images.0.prompt}}</div>
-                    <a class="image_creator">creator name</a>
-                    <div class="image_buttons">
-                      <a href="#" class="image_button_bundle">
-                        <img
-                          src="{% static 'dallf/share.png' %}"
-                          width="20"
-                          height="20"
-                          class="image_button image_button_not_active"
-                          id="id_image_{{recent_images.0.id}}_share_not_active_button" />
-                        <img
-                          src="{% static 'dallf/share_active.png' %}"
-                          width="20"
-                          height="20"
-                          class="image_button image_button_active"
-                          id="id_image_{{recent_images.0.id}}_share_active_button" />
-                      </a>
-                      <a href="#" class="image_button_bundle">
-                        <img
-                          src="{% static 'dallf/zoom.png' %}"
-                          width="20"
-                          height="20"
-                          class="image_button image_button_not_active"
-                          id="id_image_{{recent_images.0.id}}_zoom_not_active_button" />
-                        <img
-                          src="{% static 'dallf/zoom_active.png' %}"
-                          width="20"
-                          height="20"
-                          class="image_button image_button_active"
-                          id="id_image_{{recent_images.0.id}}_zoom_active_button" />
-                      </a>
-                      <a href="#" class="image_button_bundle">
-                        <img
-                          src="{% static 'dallf/favorite.png' %}"
-                          width="20"
-                          height="20"
-                          class="image_button image_button_not_active" />
-                        <img
-                          src="{% static 'dallf/favorite_active.png' %}"
-                          width="20"
-                          height="20"
-                          class="image_button image_button_active" />
-                      </a>
-                      <a href="#" class="image_button_bundle" onclick="clickLabelButton('{{recent_images.0.id}}')">
-                        <img
-                          src="{% static 'dallf/label.png' %}"
-                          width="20"
-                          height="20"
-                          class="image_button image_button_not_active" />
-                        <img
-                          src="{% static 'dallf/label_active.png' %}"
-                          width="20"
-                          height="20"
-                          class="image_button image_button_active" />
-                      </a>
-                      <a href="#" class="image_button_bundle">
-                        <img src="{% static 'dallf/discussion_board.png' %}"
-                          width="20"
-                          height="20"
-                          class="image_button image_button_not_active" />
-                        <img src="{% static 'dallf/discussion_board_active.png' %}"
-                          width="20"
-                          height="20"
-                          class="image_button image_button_active" />
-                      </a>
-                    </div>
-                  </div>
-                  <button
-                    id="id_image_{{recent_images.0.id}}_label_button"
-                    type="button"
-                    data-bs-toggle="modal"
-                    data-bs-target="#id_image_{{recent_images.0.id}}_label_popup"
-                    hidden>
-                    Label
-                  </button>
-                  <div
-                    class="modal"
-                    id="id_image_{{recent_images.0.id}}_label_popup"
-                    tabindex="-1"
-
-                   >
-                    <div class="modal-dialog modal-dialog-centered">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h1
-                            class="modal-title fs-5"
-                            id="id_image_{{recent_images.0.id}}_label_popup_title">
-                            Adding Label
-                          </h1>
-                          <button
-                            type="button"
-                            class="btn-close"
-                            data-bs-dismiss="modal"
-                           >
-                          </button>
-                        </div>
-                        <div class="modal-body">
-                          <div class="input-group">
-                            <input
-                              type="text"
-                              class="form-control"
-                              placeholder="Type label name or select from dropdown button"
-                             >
-                            <button
-                              type="button"
-                              class="btn btn-outline-secondary">
-                              Add
-                            </button>
-                            <button
-                              type="button"
-                              class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
-                              data-bs-toggle="dropdown"
-                             >
-                              <span class="visually-hidden">
-                                Toggle Dropdown
-                              </span>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                              <li><a class="dropdown-item" href="#">Cat</a></li>
-                              <li><a class="dropdown-item" href="#">Dog</a></li>
-                              <li><a class="dropdown-item" href="#">Bird</a></li>
-                            </ul>
-                          </div>
-                        </div>
-                        <div class="modal-footer">
-                          <button
-                            type="button"
-                            class="btn btn-secondary btn_popup"
-                            data-bs-dismiss="modal">
-                            Close
-                          </button>
-                          <button
-                            type="button"
-                            class="btn btn-primary btn_popup">
-                            Save changes
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 col-md-4">
-                <div class="img_wrap lightbox">
-                  <img src="{{recent_images.5.file.url}}" class="uploaded_img">
-                  <div class="img_overlay">
-                    <div class="image_prompt">{{recent_images.5.prompt}}</div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 col-md-4">
-                <div class="img_wrap lightbox">
-                  <img src="{{recent_images.2.file.url}}" class="uploaded_img">
-                  <div class="img_overlay">
-                    <div class="image_prompt">{{recent_images.2.prompt}}</div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-12 col-md-8">
-                <div class="img_wrap lightbox">
-                  <img src="{{recent_images.3.file.url}}" class="uploaded_img">
-                  <div class="img_overlay">
-                    <div class="image_prompt">{{recent_images.3.prompt}}</div>
-                  </div>
-                </div>
-              </div>
-              <div class=" col-sm-6 col-md-4">
-                <div class="img_wrap lightbox">
-                  <img src="{{recent_images.4.file.url}}" class="uploaded_img gallery_two_at_top">
-                  <div class="img_overlay">
-                    <div class="image_prompt">{{recent_images.4.prompt}}</div>
-                  </div>
-                </div>
-                <div class="img_wrap lightbox">
-                  <img src="{{recent_images.1.file.url}}" class="uploaded_img gallery_two_at_bottom">
-                  <div class="img_overlay">
-                    <div class="image_prompt">{{recent_images.1.prompt}}</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="gallery-page">
-          <div class="row">
-            <div class="col-sm-12 col-md-4">
-              <a class="lightbox" href="{{recent_images.6.file.url}}">
-                <img src="{{recent_images.6.file.url}}" class="uploaded_img">
-              </a>
-            </div>
-            <div class="col-sm-6 col-md-4">
-              <a class="lightbox" href="{{recent_images.7.file.url}}">
-                <img src="{{recent_images.7.file.url}}" class="uploaded_img">
-              </a>
-            </div>
-            <div class="col-sm-6 col-md-4">
-              <a class="lightbox" href="{{recent_images.8.file.url}}">
-                <img src="{{recent_images.8.file.url}}" class="uploaded_img">
-              </a>
-            </div>
-            <div class="col-sm-6 col-md-4">
-              <a class="lightbox" href="{{recent_images.9.file.url}}">
-                <img src="{{recent_images.9.file.url}}" class="gallery_two_at_top uploaded_img">
-              </a>
-              <a class="lightbox gallery_two_at_bottom" href="{{recent_images.10.file.url}}">
-                <img src="{{recent_images.10.file.url}}" class="gallery_two_at_bottom uploaded_img">
-              </a>
-            </div>
-            <div class="col-sm-12 col-md-8">
-              <a class="lightbox" href="{{recent_images.11.file.url}}">
-                <img src="{{recent_images.11.file.url}}" class="uploaded_img">
-              </a>
-            </div>
-          </div>
-        </div> -->
 
     </div>
     <div
@@ -401,104 +177,61 @@ Dall-F Console
     </div>
   </div>
 </div>
+{% endblock %}
 
+{% block scripts %}
+{{ block.super }}
+<script>
+  "use strict";
 
+  function set_spinner(state) {
+    let elem = document.getElementById("generate_button");
+    if (state) {
+      elem.innerHTML = '<span id="generate_button__spinner" class="spinner-border spinner-border-sm"></span>';
+    } else {
+      elem.innerHTML = '<span id="generate_button__text">Generate</span>';
+    }
+    elem.toggleAttribute("disabled", state);
+  }
 
+  function generate(form, event) {
+    event.preventDefault();
+    set_spinner(true);
+    console.log(form);
+    let data = new FormData(form);
+    console.log(data);
+    $.ajax("/console/", {
+      processData: false,
+      contentType: false,
+      method: "POST",
+      data: data,
+      success: function (response_data) {
+        let template = document.createElement('template');
+        template.innerHTML = response_data;
+        let response_document = template.content;
+        document.getElementById('id_last_generated_images').replaceWith(
+          response_document.getElementById('id_last_generated_images')
+        );
+        document.getElementById('id_recent_images').replaceWith(
+          response_document.getElementById('id_recent_images')
+        );
+        set_spinner(false);
+      },
+      error: function (request, error) {
+        console.log(request);
+        console.log(error);
+        set_spinner(false);
+      }
+    });
+  }
 
-
-
-
-
-
-
-
-
-
-
-<div style="height: 100vh;"></div>
-<div class="div_prompt_input container" id="id_prompt_input_div">
-  <form action="" method="post">
-    <label for="id_prompt_input_text">Prompt: </label>
-    <input
-      type="text"
-      name="prompt_input"
-      id="id_prompt_input_text"
-      value="{{ prompt_input }}" />
-    <br />
-    <br />
-    <label for="id_prompt_num_input">Number: </label>
-    <input
-      type="range"
-      min="1"
-      max="4"
-      value="1"
-      name="num_input"
-      id="id_prompt_num_input" />
-    <br />
-    <br />
-    <label for="id_prompt_size_input">Size: </label>
-    <select name="size_input" id="id_prompt_size_input">
-      <option value="256x256">256x256</option>
-      <option value="512x512">512x512</option>
-      <option value="1024x1024">1024x1024</option>
-    </select>
-    <br />
-    <br />
-    <button type="submit" class="button" id="id_prompt_submit_button">
-      submit
-    </button>
-    {% csrf_token %}
-  </form>
-</div>
-
-<div class="container">
-  <div>
-    Current Prompt
-    <br />
-    {% for image in current_prompt.image_set.all %}
-    <img src="{{image.file.url}}" />
-    <br />
-    <form action="/favorite/" method="post">
-      <input type="hidden" name="image_id" value="{{image.id}}" />
-      <button type="submit" class="button">Favorite</button>
-      {% csrf_token %}
-    </form>
-    <br />
-    <form action="/label/" method="post">
-      <input type="hidden" name="image_id" value="{{image.id}}" />
-      <input type="text" name="label_name" />
-      <button type="submit" class="button">Label</button>
-      {% csrf_token %}
-    </form>
-    <br />
-    {% endfor %}
-  </div>
-  <div>
-    Recent Prompts
-    <br />
-    {% for image in recent_images %}
-    <img src="{{image.file.url}}" width="256" height="256" />
-    {% endfor %}
-    <br />
-  </div>
-  <div>
-    Favorites
-    <br />
-    {% for image in favorites.all %}
-    <img src="{{image.file.url}}" width="256" height="256" />
-    {% endfor %}
-  </div>
-  <div>
-    Images with label
-    <br />
-    {% for label in label_image_set %} {{label.text}}
-    <br />
-    {% for image in label.image_set.all %}
-    <img src="{{image.file.url}}" width="256" height="256" />
-    {% endfor %}
-    <br />
-    {% endfor %}
-
-  </div>
-</div>
+  function make_generate_form(form, event) {
+    let data = event.formData;
+    let elems_to_add = form.querySelectorAll('.dropdown_selection');
+    for (let elem of elems_to_add) {
+      let text = elem.querySelector('.dropdown_selection__item.active').textContent;
+      data.set(elem.dataset.name, text);
+    }
+  }
+</script>
 {% endblock %}

@@ -1,0 +1,7 @@
+<div class="row justify-content-evenly g-3">
+  {% for image in last_generated_images %}
+  <div class="col last_generated_images_col">
+    {% include "dallf/components/image.html" %}
+  </div>
+  {% endfor %}
+</div>

@@ -2,7 +2,7 @@
   <img src="{% if not image %}{% static 'dallf/not_found.jpg' %}{% else %}{{image.file.url}}{% endif %}" class="img_wrap__img">
   <div class="img_overlay">
     <div class="image_prompt">{{image.prompt}}</div>
-    <a class="image_creator">creator name</a>
+    <a class="image_creator">{{image.user.get_full_name}}</a>
     <div class="image_buttons">
       <a href="#" class="image_button_bundle">
         <img

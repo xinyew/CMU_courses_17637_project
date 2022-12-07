@@ -1,6 +1,6 @@
 import json
 import os
-from django.http import HttpRequest, JsonResponse, HttpResponse
+from django.http import HttpRequest, JsonResponse, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.files.base import ContentFile
 from django.contrib.auth.decorators import login_required
@@ -16,21 +16,16 @@ from rest_framework import serializers
 from urllib.parse import urlparse
 import requests
 
-from .models import UploadedImage, Label, User, GENERATION_TIMEOUT_SECONDS, Comment, Reply
+from .models import UploadedImage, Label, User, Comment, Reply
 from .serializers import ImageSerializer
-
-# Fetching images once they're generated should not take a significant amount of
-# time.
-GET_IMAGE_TIMEOUT_SECONDS = 10
 
 
 # Utility methods for generation
 
 
+# Unused (fallback in case DallE fails)
 def generate_stable_diffusion(request: HttpRequest):
     import replicate
-
-    request.user.start_generation()
 
     model = replicate.models.get("stability-ai/stable-diffusion")
     output = model.predict(prompt=request.POST["prompt_input"])
@@ -39,8 +34,7 @@ def generate_stable_diffusion(request: HttpRequest):
 
 def generate_DallE(request):
     import openai
-
-    request.user.start_generation()
+    import openai.error
 
     # response = openai.Image.create_edit(
     #     image=open("sunlit_lounge.png", "rb"),
@@ -49,11 +43,15 @@ def generate_DallE(request):
     #     n=1,
     #     size="1024x1024"
     # )
-    response = openai.Image.create(
-        prompt=request.POST["prompt_input"],
-        n=int(request.POST["num_input"]),
-        size=request.POST["size_input"],
-    )
+    try:
+        response = openai.Image.create(
+            prompt=request.POST["prompt_input"],
+            n=int(request.POST["num_input"]),
+            size=request.POST["size_input"],
+        )
+    except openai.error.OpenAIError:
+        raise RuntimeError
+
     return save_generated_images(request,
                                  [image_obj['url']
                                   for image_obj in response['data']])
@@ -65,7 +63,7 @@ def save_generated_images(request: HttpRequest, image_urls):
         try:
             image_response = requests.get(
                 image_url,
-                timeout=GET_IMAGE_TIMEOUT_SECONDS)
+                timeout=10)
         except requests.exceptions.Timeout:
             pass
         else:
@@ -78,7 +76,6 @@ def save_generated_images(request: HttpRequest, image_urls):
                 content=ContentFile(image_response.content)
             )  # also saves img
             group.append(img)
-    request.user.finish_generation()
     return group
 
 
@@ -100,19 +97,36 @@ def console(request: HttpRequest):
     }
 
     if request.method == "POST":
-        GenerateParameterSerializer(
-            data=request.POST
-        ).is_valid(raise_exception=True)
-        generate_DallE(request)
+        try:
+            GenerateParameterSerializer(
+                data=request.POST
+            ).is_valid(raise_exception=True)
+        except serializers.ValidationError as e:
+            print(e)
+            return HttpResponseBadRequest()
+
+        try:
+            request.user.start_generation()
+        except RuntimeError:
+            return HttpResponseBadRequest()
 
         recent_images = list(
-            request.user.image_set.order_by('-date_created')[:5]
+            request.user.image_set.all()[:40]
         )
-        context["prompt_input"] = request.POST["prompt_input"]
+        try:
+            last_generated_images = generate_DallE(request)
+        except RuntimeError:
+            return HttpResponseBadRequest()
+
+        request.user.finish_generation()
+
+        context['last_generated_images'] = last_generated_images
         context["recent_images"] = recent_images
+
+        return render(request, 'dallf/console_generate.html', context)
     else:
         recent_images = list(
-            request.user.image_set.order_by('-date_created')[:5]
+            request.user.image_set.all()[:40]
         )
         context["recent_images"] = recent_images
 
@@ -313,7 +327,7 @@ def post_new_reply(request):
         id = int(request.POST['comment_id'])
     except BaseException:
         return _my_json_error_response("The comment id must be numeric", 400)
-    if id > Comment.objects.all().order_by('-id')[0].id:
+    if id > Comment.objects.all().order_by('-date_created')[0].id:
         return _my_json_error_response("The comment id does not exist", 400)
 
     comment = get_object_or_404(Comment, id=request.POST['comment_id'])

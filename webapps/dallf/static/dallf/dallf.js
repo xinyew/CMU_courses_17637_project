@@ -1,23 +1,5 @@
 'use strict';
 
-function generate(form, event) {
-  event.preventDefault();
-  let data = new FormData(form);
-  $.ajax("/console/", {
-    processData: false,
-    contentType: false,
-    method: "POST",
-    data: data,
-    success: function (response_data) {
-      console.log(response_data);
-    },
-    error: function (request, error) {
-      console.log(request);
-      console.log(error);
-    }
-  });
-}
-
 function click_dropdown(elem, event) {
   var target = event.target;
   if (target instanceof Element && target.classList.contains('dropdown_selection__item')) {
@@ -26,15 +8,6 @@ function click_dropdown(elem, event) {
       old_target.classList.remove('active');
     }
     target.classList.add('active');
-    elem.dataset.text = target.textContent;
-  }
-}
-
-function make_generate_form(event) {
-  let data = event.formData;
-  let elems_to_add = document.querySelectorAll('.dropdown_selection');
-  for (let elem of elems_to_add) {
-    data.set(elem.dataset.name, elem.dataset.text);
   }
 }
 
@@ -43,61 +16,61 @@ function make_generate_form(event) {
 function getDiscussion() {
   // get the id of the only one element of discussions class from
   // <div id="id_discussions_{{recent_images.0.id}}" class="discussions">
-  let imageID = ($('.discussions')[0].id).split('_')[2]
+  let imageID = ($('.discussions')[0].id).split('_')[2];
 
-  let xhr = new XMLHttpRequest()
+  let xhr = new XMLHttpRequest();
   xhr.onreadystatechange = function () {
     if (this.readyState != 4) {
-      return
+      return;
     }
-    updateDiscussionBoard(xhr)
-  }
-  xhr.open("GET", "/get_discussion/" + imageID, true)
-  xhr.send()
+    updateDiscussionBoard(xhr);
+  };
+  xhr.open("GET", "/get_discussion/" + imageID, true);
+  xhr.send();
 }
 
 
 function updateDiscussionBoard(xhr) {
   if (xhr.status == 200) {
-    let response = JSON.parse(xhr.responseText)
-    updateDiscussions(response)
-    return
+    let response = JSON.parse(xhr.responseText);
+    updateDiscussions(response);
+    return;
   }
 
   if (xhr.status == 0) {
-    displayError("Cannot connect to server")
-    return
+    displayError("Cannot connect to server");
+    return;
   }
 
   if (!xhr.getResponseHeader('content-type') == 'application/json') {
-    displayError("Received status:" + xhr.status)
-    return
+    displayError("Received status:" + xhr.status);
+    return;
   }
 
-  let response = JSON.parse(xhr.responseText)
+  let response = JSON.parse(xhr.responseText);
   if (response.hasOwnProperty('error')) {
-    displayError(response.error)
-    return
+    displayError(response.error);
+    return;
   }
 }
 
 function displayError(message) {
-  $('#id_discussion_post_error').html(message)
+  $('#id_discussion_post_error').html(message);
 }
 
 function updateDiscussions(response) {
   // get the id of the only one element of discussions class from
   // <div id="id_discussions_{{recent_images.0.id}}" class="discussions">
-  let image_id = ($('.discussions')[0].id).split('_')[2]
+  let image_id = ($('.discussions')[0].id).split('_')[2];
   $(response.comments).each(function () {
-    let is_new_comment = true
-    let comment_id = this.id
-    let new_item_id = "id_discussion_wrap_" + comment_id
+    let is_new_comment = true;
+    let comment_id = this.id;
+    let new_item_id = "id_discussion_wrap_" + comment_id;
     $(".discussion_wrap").each(function () {
       if (new_item_id == this.id) {
-        is_new_comment = false
+        is_new_comment = false;
       }
-    })
+    });
     if (is_new_comment) {
       $("#id_discussions").prepend(
         `
@@ -157,18 +130,18 @@ function updateDiscussions(response) {
           </div>
         </div>
         `
-      )
+      );
     }
-  })
+  });
   $(response.replies).each(function () {
-    let is_new_reply = true
-    let reply_id = this.id
-    let new_reply_id = `id_discussion_reply_${reply_id}`
+    let is_new_reply = true;
+    let reply_id = this.id;
+    let new_reply_id = `id_discussion_reply_${reply_id}`;
     $(".discussion_reply").each(function () {
       if (new_reply_id == this.id) {
-        is_new_reply = false
+        is_new_reply = false;
       }
-    })
+    });
     if (is_new_reply) {
       $(`#id_discussion_replies_${comment_id}`).append(
         `
@@ -191,60 +164,60 @@ function updateDiscussions(response) {
           </div>
         </div>
         `
-      )
+      );
     }
-  })
+  });
 }
 
 function commentNew(click_id) {
-  let commentTextInputID = '#id_discussion_comment_text'
-  let commentTextElement = $(commentTextInputID)
-  let commentText = commentTextElement.val()
-  commentTextElement.val('')
-  displayError('')
+  let commentTextInputID = '#id_discussion_comment_text';
+  let commentTextElement = $(commentTextInputID);
+  let commentText = commentTextElement.val();
+  commentTextElement.val('');
+  displayError('');
 
-  let xhr = new XMLHttpRequest()
+  let xhr = new XMLHttpRequest();
   xhr.onreadystatechange = function () {
     if (this.readyState != 4) {
-      return
+      return;
     }
-    updateDiscussionBoard(xhr)
-    xhr.open("POST", "/new_comment", true)
-    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
-    xhr.send("comment_text=" + commentText + "&image_id=" + click_id + "&csrfmiddlewaretoken=" + getCSRFToken())
-  }
+    updateDiscussionBoard(xhr);
+    xhr.open("POST", "/new_comment", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.send("comment_text=" + commentText + "&image_id=" + click_id + "&csrfmiddlewaretoken=" + getCSRFToken());
+  };
 }
 
 function replyNew(image_id, comment_id) {
-  let replyTextInputID = '#id_discussion_' + comment_id + '_reply_text'
-  let replyTextElement = $(replyTextInputID)
-  let replyText = replyTextElement.val()
-  replyTextElement.val('')
-  displayError('')
+  let replyTextInputID = '#id_discussion_' + comment_id + '_reply_text';
+  let replyTextElement = $(replyTextInputID);
+  let replyText = replyTextElement.val();
+  replyTextElement.val('');
+  displayError('');
 
-  let xhr = new XMLHttpRequest()
+  let xhr = new XMLHttpRequest();
   xhr.onreadystatechange = function () {
     if (this.readyState != 4) {
-      return
+      return;
     }
-    updateDiscussionBoard(xhr)
-    xhr.open("POST", "/new_reply", true)
-    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
-    xhr.send("reply_text=" + replyText + "&image_id=" + image_id + "&comment_id=" + comment_id + "&csrfmiddlewaretoken=" + getCSRFToken())
-  }
+    updateDiscussionBoard(xhr);
+    xhr.open("POST", "/new_reply", true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.send("reply_text=" + replyText + "&image_id=" + image_id + "&comment_id=" + comment_id + "&csrfmiddlewaretoken=" + getCSRFToken());
+  };
 }
 
 function getFollowers() {
-    let xhr = new XMLHttpRequest()
-    xhr.onreadystatechange = function () {
-        if (this.readyState != 4) {
-            return
-        }
-        updateProfilePage(xhr)
+  let xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function () {
+    if (this.readyState != 4) {
+      return;
     }
+    updateProfilePage(xhr);
+  };
 
-    xhr.open("GET", "/get_follower", true)
-    xhr.send()
+  xhr.open("GET", "/get_follower", true);
+  xhr.send();
 }
 
 function updateProfilePage() {
@@ -252,11 +225,11 @@ function updateProfilePage() {
 }
 
 function getCSRFToken() {
-  let cookies = document.cookie.split(";")
+  let cookies = document.cookie.split(";");
   for (let i = 0; i < cookies.length; i++) {
-    let c = cookies[i].trim()
+    let c = cookies[i].trim();
     if (c.startsWith("csrftoken=")) {
-      return c.substring("csrftoken=".length, c.length)
+      return c.substring("csrftoken=".length, c.length);
     }
   }
   return "unknown";
