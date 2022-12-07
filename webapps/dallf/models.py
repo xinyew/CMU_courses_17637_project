@@ -26,7 +26,8 @@ class User(AbstractUser):
     generation_ongoing = models.BooleanField(default=False)
 
     def start_generation(self):
-        """Call when generation starts to change User's state
+        """Call when generation starts to change User's state. May fail, raising
+        RuntimeError.
         """
         with transaction.atomic():
             if self.is_generating():
