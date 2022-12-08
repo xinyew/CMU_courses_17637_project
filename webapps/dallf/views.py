@@ -53,18 +53,16 @@ def generate_DallE(request):
     except openai.error.OpenAIError:
         raise RuntimeError
 
-    return save_generated_images(request,
-                                 [image_obj['url']
-                                  for image_obj in response['data']])
+    return save_generated_images(
+        request,
+        [image_obj['url'] for image_obj in response['data']])
 
 
 def save_generated_images(request: HttpRequest, image_urls):
     group = []
     for image_url in image_urls:
         try:
-            image_response = requests.get(
-                image_url,
-                timeout=10)
+            image_response = requests.get(image_url, timeout=10)
         except requests.exceptions.Timeout:
             pass
         else:
@@ -99,16 +97,15 @@ def console(request: HttpRequest):
 
     if request.method == "POST":
         try:
-            GenerateParameterSerializer(
-                data=request.POST
-            ).is_valid(raise_exception=True)
+            GenerateParameterSerializer(data=request.POST) \
+                .is_valid(raise_exception=True)
         except serializers.ValidationError as e:
             print(e)
             return HttpResponseBadRequest()
 
         try:
             request.user.start_generation()
-        except RuntimeError:
+        except RuntimeError:  # not a great name
             return HttpResponseBadRequest()
 
         recent_images = list(
@@ -166,9 +163,7 @@ def publish_unpublish_action(request: HttpRequest, image_id: int):
     if not image.user == request.user:
         return HttpResponseBadRequest()
     try:
-        serializer = PublishParameterSerializer(
-            data=request.POST
-        )
+        serializer = PublishParameterSerializer(data=request.POST)
         serializer.is_valid(raise_exception=True)
     except serializers.ValidationError:
         return HttpResponseBadRequest()
@@ -187,9 +182,7 @@ class FavoriteParameterSerializer(serializers.Serializer):
 def favorite_action(request: HttpRequest, image_id: int):
     image = get_object_or_404(UploadedImage, id=image_id)
     try:
-        serializer = FavoriteParameterSerializer(
-            data=request.POST
-        )
+        serializer = FavoriteParameterSerializer(data=request.POST)
         serializer.is_valid(raise_exception=True)
     except serializers.ValidationError:
         return HttpResponseBadRequest()
@@ -219,9 +212,6 @@ def logout_action(request: HttpRequest):
     # Do this manually, because it seems to break otherwise due to redirection
     return redirect(settings.LOGIN_URL)
 
-
-# TODO validation
-# TODO exception handling for .get
 
 @login_required
 def my_profile(request):
@@ -351,7 +341,7 @@ def post_new_reply(request):
             status=400)
     try:
         id = int(request.POST['comment_id'])
-    except BaseException:
+    except Exception:
         return _my_json_error_response("The comment id must be numeric", 400)
     if id > Comment.objects.all().order_by('-date_created')[0].id:
         return _my_json_error_response("The comment id does not exist", 400)
