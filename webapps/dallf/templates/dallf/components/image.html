@@ -1,5 +1,5 @@
 <div class="img_wrap {{class}}">
-  <img src="{% if not image %}{% static 'dallf/not_found.jpg' %}{% else %}{{image.file.url}}{% endif %}" class="img_wrap__img">
+  <img src="{{image.file.url}}" class="img_wrap__img">
   <div class="img_overlay">
     <div class="image_prompt">{{image.prompt}}</div>
     <a class="image_creator">{{image.user.get_full_name}}</a>
@@ -21,7 +21,7 @@
           id="id_image_{{image.id}}_share_active_button" />
       </a>
       {% endif %}
-      <a href="#!" class="image_button_bundle">
+      <a href="{{image.file.url}}" target="_blank" class="image_button_bundle">
         <img
           src="{% static 'dallf/zoom_active.png' %}"
           width="20"
@@ -51,7 +51,7 @@
           height="20"
           class="image_button image_button_active" />
       </a>
-      <a href="#!" class="image_button_bundle">
+      <a href="{% url 'get_discussion' image_id=image.id %}" class="image_button_bundle">
         <img src="{% static 'dallf/discussion_board_active.png' %}"
           width="20"
           height="20"

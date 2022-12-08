@@ -31,20 +31,20 @@ urlpatterns = [
     path('logout/', views.logout_action, name='logout'),
     # AJAX calls
     path(
-        'images/<int:image_id>/publish',
+        'images/<int:image_id>/publish/',
         views.publish_unpublish_action,
         name='publish'),
     path(
-        'images/<int:image_id>/favorite',
+        'images/<int:image_id>/favorite/',
         views.favorite_action,
         name='favorite'),
-    path('images/<int:image_id>/label', views.label_action, name='label'),
+    path('images/<int:image_id>/label/', views.label_action, name='label'),
     path(
-        'images/<int:image_id>/get_discussion',
+        'images/<int:image_id>/discussion/',
         views.get_discussion,
         name='get_discussion'),
     path(
-        'users/<int:user_id>/get_profile_image',
+        'users/<int:user_id>/profile_image/',
         views.get_profile_image,
         name='get_profile_image')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
