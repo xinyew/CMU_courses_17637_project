@@ -33,12 +33,7 @@ body {
     height: 45px;
 }
 
-.dropdown-toggle {
-    --bs-btn-border-color: rgba(0, 0, 0, 0.2);
-    --bs-btn-bg: rgb(255, 255, 255);
-}
-
-.btn {
+.btn-outline-secondary {
     --bs-btn-border-color: rgba(0, 0, 0, 0.2);
     --bs-btn-bg: rgb(255, 255, 255);
 }

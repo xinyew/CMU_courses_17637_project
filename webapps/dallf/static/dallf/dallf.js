@@ -1,6 +1,7 @@
 'use strict';
 
-function click_dropdown(elem, event) {
+function click_dropdown(event) {
+  var elem = event.currentTarget;
   var target = event.target;
   if (target instanceof Element && target.classList.contains('dropdown_selection__item')) {
     let old_target = elem.querySelector('.dropdown_selection__item.active');
@@ -12,12 +13,23 @@ function click_dropdown(elem, event) {
 }
 
 
+function process_dropdowns(event) {
+  var form = event.currentTarget;
+  let data = event.formData;
+  let elems_to_add = form.querySelectorAll('.dropdown_selection');
+  for (let elem of elems_to_add) {
+    let text = elem.querySelector('.dropdown_selection__item.active').textContent;
+    data.set(elem.dataset.name, text);
+  }
+}
+
+
 // AJAX calls
 
 
 function publish(elem, id) {
   let state = elem.hasAttribute('data-image_button_bundle--show_active');
-  $.ajax(`/images/${id}/publish`, {
+  $.ajax(`/images/${id}/publish/`, {
     type: "POST",
     data: {
       publish: !state,
@@ -32,7 +44,7 @@ function publish(elem, id) {
 
 function favorite(elem, id) {
   let state = elem.hasAttribute('data-image_button_bundle--show_active');
-  $.ajax(`/images/${id}/favorite`, {
+  $.ajax(`/images/${id}/favorite/`, {
     type: "POST",
     data: {
       favorite: !state,
@@ -41,6 +53,21 @@ function favorite(elem, id) {
     success: function () {
       elem.toggleAttribute('data-image_button_bundle--show_active', !state);
     }
+  });
+}
+
+
+function label(form, event, id) {
+  let data = new FormData(form);
+  data.set(event.submitter.name, event.submitter.value);
+  data.set("csrfmiddlewaretoken", CSRF_TOKEN);
+  $.ajax(`/images/${id}/label/`, {
+    processData: false,
+    contentType: false,
+    method: "POST",
+    data: data,
+    success: function () {
+    },
   });
 }
 
@@ -57,7 +84,7 @@ function getDiscussion() {
     }
     updateDiscussionBoard(xhr);
   };
-  xhr.open("GET", "/get_discussion/" + imageID, true);
+  xhr.open("GET", `images/${imageID}/discussion`, true);
   xhr.send();
 }
 

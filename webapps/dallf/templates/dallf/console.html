@@ -16,8 +16,8 @@ Dall-F Console
 
 {% block content %}
 <div class="container my-5" id="id_prompt_input_group">
-  <form method="post" onsubmit="generate(this, event)"
-    onformdata="make_generate_form(this, event)">
+  <form method="post" onsubmit="generate(event);"
+    onformdata="process_dropdowns(event)">
     {% csrf_token %}
     <div>
       <label for="id_prompt_input_text" id="id_prompt_text_label">
@@ -45,7 +45,7 @@ Dall-F Console
         num
       </button>
       <ul class="dropdown-menu dropdown_selection" id="dropdown_num"
-        onclick="click_dropdown(this, event);"
+        onclick="click_dropdown(event);"
         data-name="num_input">
         <li><a class="dropdown-item active dropdown_selection__item">1</a></li>
         <li><a class="dropdown-item dropdown_selection__item">2</a></li>
@@ -60,7 +60,7 @@ Dall-F Console
         size
       </button>
       <ul class="dropdown-menu dropdown-menu-end dropdown_selection" id="dropdown_size"
-        onclick="click_dropdown(this, event);"
+        onclick="click_dropdown(event);"
         data-name="size_input">
         <li><a class="dropdown-item active dropdown_selection__item">256x256</a></li>
         <li><a class="dropdown-item dropdown_selection__item">512x512</a></li>
@@ -141,47 +141,18 @@ Dall-F Console
           {% endfor %}
         </div>
       </div>
-
     </div>
     <div
       class="tab-pane fade"
       id="id_favorite_pane"
-
-
       tabindex="0">
-      ...
     </div>
     <div
       class="tab-pane fade"
       id="id_labels_pane"
-
-
       tabindex="0">
       <div class="label_buttons">
-        <button type="button" class="btn btn-sm btn-primary label_button">Primary</button>
-        <button type="button" class="btn btn-sm btn-secondary label_button">Secondary</button>
-        <button type="button" class="btn btn-sm btn-success label_button">Success</button>
-        <button type="button" class="btn btn-sm btn-danger label_button">Danger</button>
-        <button type="button" class="btn btn-sm btn-warning label_button">Warning</button>
-        <button type="button" class="btn btn-sm btn-info label_button">Info</button>
-        <button type="button" class="btn btn-sm btn-light label_button">Light</button>
-        <button type="button" class="btn btn-sm btn-dark label_button">Dark</button>
-        <button type="button" class="btn btn-sm btn-primary label_button">Primary</button>
-        <button type="button" class="btn btn-sm btn-secondary label_button">Secondary</button>
-        <button type="button" class="btn btn-sm btn-success label_button">Success</button>
-        <button type="button" class="btn btn-sm btn-danger label_button">Danger</button>
-        <button type="button" class="btn btn-sm btn-warning label_button">Warning</button>
-        <button type="button" class="btn btn-sm btn-info label_button">Info</button>
-        <button type="button" class="btn btn-sm btn-light label_button">Light</button>
-        <button type="button" class="btn btn-sm btn-primary label_button">Primary</button>
-        <button type="button" class="btn btn-sm btn-secondary label_button">Secondary</button>
-        <button type="button" class="btn btn-sm btn-success label_button">Success</button>
-        <button type="button" class="btn btn-sm btn-danger label_button">Danger</button>
-        <button type="button" class="btn btn-sm btn-warning label_button">Warning</button>
-        <button type="button" class="btn btn-sm btn-info label_button">Info</button>
-        <button type="button" class="btn btn-sm btn-light label_button">Light</button>
-        <button type="button" class="btn btn-sm btn-dark label_button">Dark</button>
-        <button type="button" class="btn btn-sm btn-dark label_button">Dark</button>
+        <button type="button" class="btn btn-sm btn-outline-secondary label_button">L</button>
       </div>
     </div>
   </div>
@@ -193,6 +164,8 @@ Dall-F Console
 <script>
   "use strict";
 
+  // document.getElementById("id_favorite_pane").addEventListener(show.bs.tab)
+
   function set_spinner(state) {
     let elem = document.getElementById("generate_button");
     if (state) {
@@ -203,12 +176,11 @@ Dall-F Console
     elem.toggleAttribute("disabled", state);
   }
 
-  function generate(form, event) {
+  function generate(event) {
     event.preventDefault();
+    var form = event.currentTarget;
     set_spinner(true);
-    console.log(form);
     let data = new FormData(form);
-    console.log(data);
     $.ajax("/console/", {
       processData: false,
       contentType: false,
@@ -232,15 +204,6 @@ Dall-F Console
         set_spinner(false);
       }
     });
-  }
-
-  function make_generate_form(form, event) {
-    let data = event.formData;
-    let elems_to_add = form.querySelectorAll('.dropdown_selection');
-    for (let elem of elems_to_add) {
-      let text = elem.querySelector('.dropdown_selection__item.active').textContent;
-      data.set(elem.dataset.name, text);
-    }
   }
 </script>
 {% endblock %}

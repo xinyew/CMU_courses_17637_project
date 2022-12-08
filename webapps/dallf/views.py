@@ -18,7 +18,7 @@ from rest_framework import serializers
 from urllib.parse import urlparse
 import requests
 
-from .models import UploadedImage, Label, User, Comment, Reply
+from .models import UploadedImage, Label, User, Comment, Reply, accessible_by
 
 
 # Utility methods for generation
@@ -109,9 +109,7 @@ def console(request: HttpRequest):
         except RuntimeError:  # not a great name
             return HttpResponseBadRequest()
 
-        recent_images = list(
-            request.user.image_set.all()[:40]
-        )
+        recent_images = request.user.image_set.all()[:40]
         try:
             last_generated_images = generate_DallE(request)
         except RuntimeError:
@@ -124,10 +122,10 @@ def console(request: HttpRequest):
 
         return render(request, 'dallf/console_generate.html', context)
     else:
-        recent_images = list(
-            request.user.image_set.all()[:40]
-        )
+        recent_images = request.user.image_set.all()[:40]
         context["recent_images"] = recent_images
+        favorite_images = request.user.favorites.all()
+        context["favorite_images"] = favorite_images
 
     context['label_image_set'] = []
     for label in request.user.labels.all():
@@ -182,7 +180,10 @@ class FavoriteParameterSerializer(serializers.Serializer):
 @require_POST
 @login_required
 def favorite_action(request: HttpRequest, image_id: int):
-    image = get_object_or_404(UploadedImage, id=image_id)
+    image = get_object_or_404(
+        UploadedImage,
+        accessible_by(request.user),
+        id=image_id)
     try:
         serializer = FavoriteParameterSerializer(data=request.POST)
         serializer.is_valid(raise_exception=True)
@@ -196,16 +197,42 @@ def favorite_action(request: HttpRequest, image_id: int):
     return HttpResponse(status=HTTPStatus.NO_CONTENT)
 
 
+class LabelParameterSerializer(serializers.Serializer):
+    label_name = serializers.CharField()
+    set_label = serializers.BooleanField()
+
+
 @require_POST
 @login_required
 def label_action(request: HttpRequest, image_id: int):
-    # TODO
-    image = get_object_or_404(UploadedImage, id=image_id)
-    label, _ = Label.objects.get_or_create(
-        user=request.user, text=request.POST["label_name"])
-    # get_or_create is atomic
-    image.labels.add(label)
-    return redirect('/dallf/console/')
+    image = get_object_or_404(
+        UploadedImage,
+        # accessible_by(request.user),
+        id=image_id)
+    try:
+        serializer = LabelParameterSerializer(data=request.POST)
+        serializer.is_valid(raise_exception=True)
+    except serializers.ValidationError as e:
+        return HttpResponseBadRequest()
+    validated_data = serializer.validated_data
+    if validated_data["set_label"]:
+        label, created = Label.objects.get_or_create(
+            user=request.user,
+            text=validated_data["label_name"]
+        )
+        # get_or_create is atomic
+        image.labels.add(label)
+        if not created:
+            label.save()  # update modified
+    else:
+        label = get_object_or_404(
+            Label,
+            user=request.user,
+            text=validated_data["label_name"]
+        )
+        image.labels.remove(label)
+        label.save()  # update modified
+    return HttpResponse(status=HTTPStatus.NO_CONTENT)
 
 
 @require_POST

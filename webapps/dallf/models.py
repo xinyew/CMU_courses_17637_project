@@ -1,4 +1,5 @@
 from django.db import models, transaction
+from django.db.models import Q
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 from datetime import timedelta
@@ -51,6 +52,13 @@ class User(AbstractUser):
             self.generation_ongoing
             and timezone.now() - self.last_generated < GENERATION_DELAY
         )
+
+
+def accessible_by(user):
+    """Returns an argument to UploadedImage.filter(). True for images that are
+    accessible by the given user.
+    """
+    return Q(user=user) | Q(published=True)
 
 
 class Label(models.Model):

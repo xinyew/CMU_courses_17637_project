@@ -1,0 +1,9 @@
+<div class="container py-3" id="id_favorite_images">
+  <div class="row row-cols-4 g-3">
+    {% for image in favorite_images %}
+    <div class="col">
+      {% include "dallf/components/image.html" %}
+    </div>
+    {% endfor %}
+  </div>
+</div>

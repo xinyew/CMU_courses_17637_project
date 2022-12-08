@@ -72,7 +72,11 @@
     id="id_image_{{image.id}}_label_popup"
     tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
+      <form class="modal-content"
+        onsubmit="
+          event.preventDefault();
+          label(this, event, {{image.id}});
+        ">
         <div class="modal-header">
           <h1
             class="modal-title fs-5"
@@ -89,6 +93,7 @@
           <div class="input-group">
             <input
               type="text"
+              name="label_name"
               class="form-control"
               placeholder="Type label name or select from dropdown button">
             <button
@@ -96,19 +101,36 @@
               class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
               data-bs-toggle="dropdown">
             </button>
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li><a class="dropdown-item" href="#!">Cat</a></li>
-              <li><a class="dropdown-item" href="#!">Dog</a></li>
-              <li><a class="dropdown-item" href="#!">Bird</a></li>
+            <ul class="dropdown-menu dropdown-menu-end"
+              onclick="
+                var target = event.target;
+                if (target instanceof Element && target.classList.contains('dropdown_selection__item')) {
+                  this.parentElement.querySelector('input[name=\'label_name\']').value = target.textContent;
+                }
+              ">
+              {% for label in request.user.labels.all %}
+              <li><a class="dropdown-item dropdown_selection__item" href="#!">{{label.text}}</a></li>
+              {% endfor %}
             </ul>
-            <button
-              type="button"
-              class="btn btn-outline-secondary">
-              Add
-            </button>
           </div>
         </div>
-      </div>
+        <div class="modal-footer">
+          <button
+            type="submit"
+            name="set_label"
+            value="true"
+            class="btn btn-primary">
+            Add
+          </button>
+          <button
+            type="submit"
+            name="set_label"
+            value="false"
+            class="btn btn-danger">
+            Remove
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
