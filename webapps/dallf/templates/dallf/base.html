@@ -25,9 +25,10 @@
         type="button"
         data-bs-toggle="collapse"
         data-bs-target="#navbarSupportedContent">
+        <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <div class="navbar-nav me-auto mb-2 mb-lg-0">
           {% block navigation %}
           <a class="nav-link" href="{% url 'gallery' %}">
             Gallery
@@ -36,14 +37,20 @@
             Console
           </a>
           {% endblock %}
-        </ul>
+        </div>
+        {% if request.user.is_authenticated %}
         <span class="navbar-text">
-          <a href="{% url 'my_profile' %}" id="id_username">{{request.user.get_full_name|default:'Log in'}}</a>
+          <a href="{% url 'my_profile' %}" class="px-2" id="id_username">{{request.user.get_full_name}}</a>
         </span>
-        <form action="{% url 'logout' %}" method="post">
+        <form action="{% url 'logout' %}" method="post" class="px-2">
           <button class="btn btn-sm btn-outline-secondary" type="submit">Log out</button>
           {% csrf_token %}
         </form>
+        {% else %}
+        <span class="navbar-text px-2">
+          <a href="{% url 'my_profile' %}" id="id_username">Log in</a>
+        </span>
+        {% endif %}
       </div>
     </div>
   </nav>
