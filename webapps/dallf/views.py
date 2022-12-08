@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.core.files.base import ContentFile
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
-from django.views.decorators.http import require_GET, require_POST
+from django.views.decorators.http import require_GET, require_POST, require_http_methods
 from django.contrib.auth import logout
 from django.contrib.auth.views import logout_then_login
 from django.conf import settings
@@ -88,6 +88,7 @@ class GenerateParameterSerializer(serializers.Serializer):
         choices=("256x256", "512x512", "1024x1024"))
 
 
+@require_http_methods(["GET", "POST"])
 @login_required
 def console(request: HttpRequest):
     context = {
@@ -143,6 +144,7 @@ def console(request: HttpRequest):
     return render(request, 'dallf/console.html', context)
 
 
+@require_GET
 def gallery(request: HttpRequest):
     context = {}
     context["images"] = []
@@ -217,6 +219,7 @@ def logout_action(request: HttpRequest):
 # TODO check validation for the below
 
 
+@require_GET
 @login_required
 def my_profile(request):
     context = {}
@@ -226,6 +229,7 @@ def my_profile(request):
     return render(request, 'dallf/my_profile.html', context)
 
 
+@require_GET
 @login_required
 def others_profile(request):
     context = {}
@@ -235,6 +239,7 @@ def others_profile(request):
     return render(request, 'dallf/others_profile.html', context)
 
 
+@require_GET
 @login_required
 def discussion_board(request):
     context = {}
@@ -244,6 +249,7 @@ def discussion_board(request):
     return render(request, 'dallf/discussion_board.html', context)
 
 
+@require_GET
 @login_required
 def get_profile_image(request, user_id):
     f = open(os.path.dirname(__file__) + '/static/dallf/not_found.jpg', 'rb')
@@ -252,6 +258,7 @@ def get_profile_image(request, user_id):
     return HttpResponse(image, content_type="image/jpeg")
 
 
+@require_GET
 @login_required
 def get_discussion(request, image_id):
     response_data = {}
@@ -283,6 +290,7 @@ def get_discussion(request, image_id):
     return HttpResponse(response_json, content_type='application/json')
 
 
+@require_GET
 @login_required
 def get_recent_activities(request, user_id):
     response_data = {}
