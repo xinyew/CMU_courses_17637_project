@@ -59,8 +59,10 @@ class Label(models.Model):
         on_delete=models.PROTECT,
         related_name="labels")
     text = models.CharField(max_length=255)
+    date_modified = models.DateTimeField(auto_now=True)
 
     class Meta:
+        ordering = ('-date_modified',)
         constraints = [
             models.UniqueConstraint(fields=("user", "text"),
                                     name="unique_label_text"),
