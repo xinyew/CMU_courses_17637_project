@@ -197,6 +197,7 @@ def favorite_action(request: HttpRequest, image_id: int):
 @require_POST
 @login_required
 def label_action(request: HttpRequest, image_id: int):
+    # TODO
     image = get_object_or_404(UploadedImage, id=image_id)
     label, _ = Label.objects.get_or_create(
         user=request.user, text=request.POST["label_name"])
