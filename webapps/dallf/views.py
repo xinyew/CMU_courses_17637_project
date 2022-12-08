@@ -213,6 +213,9 @@ def logout_action(request: HttpRequest):
     return redirect(settings.LOGIN_URL)
 
 
+# TODO check validation for the below
+
+
 @login_required
 def my_profile(request):
     context = {}
