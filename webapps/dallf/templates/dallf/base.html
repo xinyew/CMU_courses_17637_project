@@ -38,10 +38,10 @@
           {% endblock %}
         </ul>
         <span class="navbar-text">
-          <a href="{% url 'my_profile' %}" id="id_username">{{request.user.get_full_name}}</a>
+          <a href="{% url 'my_profile' %}" id="id_username">{{request.user.get_full_name|default:'Log in'}}</a>
         </span>
         <form action="{% url 'logout' %}" method="post">
-          <button class="btn btn-sm btn-outline-secondary" type="submit">Logout</button>
+          <button class="btn btn-sm btn-outline-secondary" type="submit">Log out</button>
           {% csrf_token %}
         </form>
       </div>
