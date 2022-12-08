@@ -60,6 +60,9 @@
     src="https://code.jquery.com/jquery-3.6.1.min.js"
     integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
     crossorigin="anonymous"></script>
+  <script>
+    const CSRF_TOKEN = "{{ csrf_token|escapejs }}";
+  </script>
   <script
     src="{% static 'dallf/dallf.js' %}?v={% now 'U' %}"
     type="text/javascript"></script>

@@ -15,8 +15,33 @@ function click_dropdown(elem, event) {
 // AJAX calls
 
 
-function publish(id) {
-  console.log(id);
+function publish(elem, id) {
+  let state = elem.hasAttribute('data-image_button_bundle--show_active');
+  $.ajax(`/images/${id}/publish`, {
+    type: "POST",
+    data: {
+      publish: !state,
+      csrfmiddlewaretoken: CSRF_TOKEN,
+    },
+    success: function () {
+      elem.toggleAttribute('data-image_button_bundle--show_active', !state);
+    }
+  });
+}
+
+
+function favorite(elem, id) {
+  let state = elem.hasAttribute('data-image_button_bundle--show_active');
+  $.ajax(`/images/${id}/favorite`, {
+    type: "POST",
+    data: {
+      favorite: !state,
+      csrfmiddlewaretoken: CSRF_TOKEN,
+    },
+    success: function () {
+      elem.toggleAttribute('data-image_button_bundle--show_active', !state);
+    }
+  });
 }
 
 

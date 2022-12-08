@@ -1,3 +1,4 @@
+from http import HTTPStatus
 import json
 import os
 from django.http import HttpRequest, JsonResponse, HttpResponse, HttpResponseBadRequest
@@ -10,6 +11,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.views import logout_then_login
 from django.conf import settings
 from django.utils import timezone, dateformat
+from django import forms
 
 from rest_framework import serializers
 
@@ -17,7 +19,6 @@ from urllib.parse import urlparse
 import requests
 
 from .models import UploadedImage, Label, User, Comment, Reply
-from .serializers import ImageSerializer
 
 
 # Utility methods for generation
@@ -153,16 +154,56 @@ def gallery(request: HttpRequest):
     return render(request, 'dallf/gallery.html', context)
 
 
-@login_required
-def favorite_action(request: HttpRequest):
-    image = UploadedImage.objects.get(id=int(request.POST["image_id"]))
-    image.favorited_by.add(request.user)
-    return redirect('/dallf/console/')
+class PublishParameterSerializer(serializers.Serializer):
+    publish = serializers.BooleanField()
 
 
+@require_POST
 @login_required
-def label_action(request: HttpRequest):
-    image = UploadedImage.objects.get(id=int(request.POST["image_id"]))
+def publish_unpublish_action(request: HttpRequest, image_id: int):
+    image = get_object_or_404(UploadedImage, id=image_id)
+    if not image.user == request.user:
+        return HttpResponseBadRequest()
+    try:
+        serializer = PublishParameterSerializer(
+            data=request.POST
+        )
+        serializer.is_valid(raise_exception=True)
+    except serializers.ValidationError:
+        return HttpResponseBadRequest()
+    validated_data = serializer.validated_data
+    image.published = validated_data["publish"]
+    image.save()
+    return HttpResponse(status=HTTPStatus.NO_CONTENT)
+
+
+class FavoriteParameterSerializer(serializers.Serializer):
+    favorite = serializers.BooleanField()
+
+
+@require_POST
+@login_required
+def favorite_action(request: HttpRequest, image_id: int):
+    image = get_object_or_404(UploadedImage, id=image_id)
+    try:
+        serializer = FavoriteParameterSerializer(
+            data=request.POST
+        )
+        serializer.is_valid(raise_exception=True)
+    except serializers.ValidationError:
+        return HttpResponseBadRequest()
+    validated_data = serializer.validated_data
+    if validated_data["favorite"]:
+        image.favorited_by.add(request.user)
+    else:
+        image.favorited_by.remove(request.user)
+    return HttpResponse(status=HTTPStatus.NO_CONTENT)
+
+
+@require_POST
+@login_required
+def label_action(request: HttpRequest, image_id: int):
+    image = get_object_or_404(UploadedImage, id=image_id)
     label, _ = Label.objects.get_or_create(
         user=request.user, text=request.POST["label_name"])
     # get_or_create is atomic

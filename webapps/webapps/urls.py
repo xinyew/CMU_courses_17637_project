@@ -25,19 +25,26 @@ urlpatterns = [
     path('', views.gallery, name='gallery'),  # alias
     path('oauth/', include('social_django.urls', namespace='social')),
     path('console/', views.console, name='console'),
-    path('favorite/', views.favorite_action, name='favorite'),
-    path('label/', views.label_action, name='label'),
     path('my_profile/', views.my_profile, name='my_profile'),
     path('others_profile/', views.others_profile, name='others_profile'),
     path('discussion_board/', views.discussion_board, name='discussion_board'),
     path('logout/', views.logout_action, name='logout'),
     # AJAX calls
     path(
-        'get_discussion/<int:image_id>',
+        'images/<int:image_id>/publish',
+        views.publish_unpublish_action,
+        name='publish'),
+    path(
+        'images/<int:image_id>/favorite',
+        views.favorite_action,
+        name='favorite'),
+    path('images/<int:image_id>/label', views.label_action, name='label'),
+    path(
+        'images/<int:image_id>/get_discussion',
         views.get_discussion,
         name='get_discussion'),
     path(
-        'get_profile_image/<int:user_id>',
+        'users/<int:user_id>/get_profile_image',
         views.get_profile_image,
         name='get_profile_image')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -10,7 +10,7 @@
         data-image_button_bundle--show_active
         {% endif %}
         onclick="
-          publish({{image.id}});
+          publish(this, {{image.id}});
           event.preventDefault();
         ">
         <img
@@ -30,7 +30,13 @@
           id="id_image_{{image.id}}_zoom_active_button" />
       </a>
       <a href="#!" class="image_button_bundle"
-        data-image_button_bundle--show_active>
+        {% if image in request.user.favorites.all %}
+        data-image_button_bundle--show_active
+        {% endif %}
+        onclick="
+          favorite(this, {{image.id}});
+          event.preventDefault();
+        ">
         <img
           src="{% static 'dallf/favorite_active.png' %}"
           width="20"

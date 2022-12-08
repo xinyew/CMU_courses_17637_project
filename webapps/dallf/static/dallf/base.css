@@ -112,23 +112,22 @@ body {
 }
 
 .image_button_bundle .image_button_active {
-    transition: all 0.3s ease-out;
+    transition: all 0.2s ease-out;
     transition-property: opacity, filter;
 }
 
-.image_button_bundle:not(:hover) .image_button_active {
+.image_button_bundle:not([data-image_button_bundle--show_active]) .image_button_active {
     opacity: 0.5;
     filter: contrast(0%);
 }
 
-.image_button_bundle:not(:hover)[data-image_button_bundle--show_active] .image_button_active {
+.image_button_bundle:hover:not([data-image_button_bundle--show_active]) .image_button_active {
+    opacity: 0.8;
+}
+
+.image_button_bundle[data-image_button_bundle--show_active] .image_button_active {
     opacity: 1;
     filter: none;
-}
-
-.image_button_bundle:hover[data-image_button_bundle--show_active] .image_button_active {
-    opacity: 0.5;
-    filter: contrast(0%);
 }
 
 .btn_popup {
