@@ -149,7 +149,8 @@ def console(request: HttpRequest):
 def gallery(request: HttpRequest):
     context = {}
     context["images"] = []
-    for image in UploadedImage.objects.order_by('?')[:10]:
+    for image in UploadedImage.objects.filter(published=True) \
+                                      .order_by('?')[:10]:
         context["images"].append(image)
     return render(request, 'dallf/gallery.html', context)
 
