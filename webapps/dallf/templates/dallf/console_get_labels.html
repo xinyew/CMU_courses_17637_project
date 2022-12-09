@@ -1,4 +1,4 @@
-<div id="id_label_buttons" class="label_buttons">
+<div id="id_label_buttons" class="d-flex justify-content-center gap-3 text-center label_buttons">
   {% for label in labels %}
   <button type="button" class="btn btn-sm btn-outline-secondary label_button">{{label.text}} <span class="badge text-bg-secondary">{{label.image_set.count}}</span></button>
   {% endfor %}
