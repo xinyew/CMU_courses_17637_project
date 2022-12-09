@@ -36,6 +36,26 @@ body {
 .btn-outline-secondary {
     --bs-btn-border-color: rgba(0, 0, 0, 0.2);
     --bs-btn-bg: rgb(255, 255, 255);
+    --bs-btn-disabled-border-color: rgba(0, 0, 0, 0.1);
+}
+
+.spinner_if_disabled {
+    position: relative;
+}
+
+.spinner_on {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+}
+
+.spinner_if_disabled:not(:disabled) .spinner_on {
+    display: none;
+}
+
+.spinner_if_disabled:disabled .spinner_off {
+    visibility: hidden;
 }
 
 .nav-link {
@@ -81,7 +101,7 @@ body {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    translate: -50% -50%;
     text-align: center;
 }
 

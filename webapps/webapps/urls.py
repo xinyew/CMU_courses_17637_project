@@ -25,6 +25,15 @@ urlpatterns = [
     path('', views.gallery, name='gallery'),  # alias
     path('oauth/', include('social_django.urls', namespace='social')),
     path('console/', views.console, name='console'),
+    path('console/generate/', views.console_generate, name='console_generate'),
+    path(
+        'console/get_favorites/',
+        views.console_get_favorites,
+        name='console_get_favorites'),
+    path(
+        'console/get_labels/',
+        views.console_get_labels,
+        name='console_get_labels'),
     path('my_profile/', views.my_profile, name='my_profile'),
     path('others_profile/', views.others_profile, name='others_profile'),
     path('discussion_board/', views.discussion_board, name='discussion_board'),

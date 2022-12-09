@@ -75,7 +75,7 @@ def save_generated_images(request: HttpRequest, image_urls):
                 content=ContentFile(image_response.content)
             )  # also saves img
             group.append(img)
-    return group
+    return reversed(group)
 
 
 # Views
@@ -88,48 +88,17 @@ class GenerateParameterSerializer(serializers.Serializer):
         choices=("256x256", "512x512", "1024x1024"))
 
 
-@require_http_methods(["GET", "POST"])
+@require_GET
 @login_required
 def console(request: HttpRequest):
-    context = {
-        "prompt_input": "",
-        "favorites": request.user.favorites,
-    }
+    context = {}
 
-    if request.method == "POST":
-        try:
-            GenerateParameterSerializer(data=request.POST) \
-                .is_valid(raise_exception=True)
-        except serializers.ValidationError as e:
-            print(e)
-            return HttpResponseBadRequest()
+    recent_images = request.user.image_set.all()[:40]
+    context["recent_images"] = recent_images
 
-        try:
-            request.user.start_generation()
-        except RuntimeError:  # not a great name
-            return HttpResponseBadRequest()
-
-        recent_images = request.user.image_set.all()[:40]
-        try:
-            last_generated_images = generate_DallE(request)
-        except RuntimeError:
-            return HttpResponseBadRequest()
-
-        request.user.finish_generation()
-
-        context['last_generated_images'] = last_generated_images
-        context["recent_images"] = recent_images
-
-        return render(request, 'dallf/console_generate.html', context)
-    else:
-        recent_images = request.user.image_set.all()[:40]
-        context["recent_images"] = recent_images
-        favorite_images = request.user.favorites.all()
-        context["favorite_images"] = favorite_images
-
-    context['label_image_set'] = []
-    for label in request.user.labels.all():
-        context['label_image_set'].append(label)
+    # context['label_image_set'] = []
+    # for label in request.user.labels.all():
+    #     context['label_image_set'].append(label)
 
     # label = request.GET.get('label')
     # if label:
@@ -142,13 +111,65 @@ def console(request: HttpRequest):
     return render(request, 'dallf/console.html', context)
 
 
+@require_POST
+def console_generate(request: HttpRequest):
+    context = {}
+
+    try:
+        GenerateParameterSerializer(data=request.POST) \
+            .is_valid(raise_exception=True)
+    except serializers.ValidationError as e:
+        print(e)
+        return HttpResponseBadRequest()
+
+    try:
+        request.user.start_generation()
+    except RuntimeError:  # not a great name
+        return HttpResponseBadRequest()
+
+    # Evaluate this query early
+    recent_images = list(
+        request.user.image_set.all()[:40]
+    )
+    try:
+        last_generated_images = generate_DallE(request)
+    except RuntimeError:
+        return HttpResponseBadRequest()
+
+    request.user.finish_generation()
+
+    context['last_generated_images'] = last_generated_images
+    context["recent_images"] = recent_images
+
+    return render(request, 'dallf/console_generate.html', context)
+
+
+@require_GET
+def console_get_favorites(request: HttpRequest):
+    context = {}
+
+    favorite_images = request.user.favorites.all()
+    context["favorite_images"] = favorite_images
+
+    return render(request, 'dallf/console_get_favorites.html', context)
+
+
+@require_GET
+def console_get_labels(request: HttpRequest):
+    context = {}
+
+    labels = request.user.labels.all()
+    context["labels"] = labels
+
+    return render(request, 'dallf/console_get_labels.html', context)
+
+
 @require_GET
 def gallery(request: HttpRequest):
     context = {}
-    context["images"] = []
-    for image in UploadedImage.objects.filter(published=True) \
-                                      .order_by('?')[:10]:
-        context["images"].append(image)
+    context["images"] = \
+        UploadedImage.objects.filter(published=True) \
+        .order_by('?')[:10]
     return render(request, 'dallf/gallery.html', context)
 
 

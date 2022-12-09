@@ -67,17 +67,16 @@ Dall-F Console
         <li><a class="dropdown-item dropdown_selection__item">1024x1024</a></li>
       </ul>
       <button
-        class="btn btn-outline-secondary"
+        class="btn btn-outline-secondary spinner_if_disabled"
         type="submit"
         id="generate_button"
         {% if user.is_generating %}
         disabled
         {% endif %}>
-        {% if user.is_generating %}
-        <span id="generate_button__spinner" class="spinner-border spinner-border-sm"></span>
-        {% else %}
-        <span id="generate_button__text">Generate</span>
-        {% endif %}
+        <div class="spinner_on">
+          <span id="generate_button__spinner" class="spinner-border spinner-border-sm"></span>
+        </div>
+        <span id="generate_button__text" class="spinner_off">Generate</span>
       </button>
     </div>
   </form>
@@ -146,14 +145,13 @@ Dall-F Console
       class="tab-pane fade"
       id="id_favorite_pane"
       tabindex="0">
+      <div class="container py-3" id="id_favorite_images"></div>
     </div>
     <div
       class="tab-pane fade"
       id="id_labels_pane"
       tabindex="0">
-      <div class="label_buttons">
-        <button type="button" class="btn btn-sm btn-outline-secondary label_button">L</button>
-      </div>
+      <div id="id_label_buttons" class="label_buttons"></div>
     </div>
   </div>
 </div>
@@ -164,7 +162,35 @@ Dall-F Console
 <script>
   "use strict";
 
-  // document.getElementById("id_favorite_pane").addEventListener(show.bs.tab)
+  document.getElementById("id_favorite_tab").addEventListener('show.bs.tab', event => {
+    let elem = document.getElementById('id_favorite_images');
+    elem.replaceChildren();
+    $.ajax("{% url 'console_get_favorites' %}", {
+      success: function (response_data) {
+        let template = document.createElement('template');
+        template.innerHTML = response_data;
+        let response_document = template.content;
+        elem.replaceWith(
+          response_document.getElementById('id_favorite_images')
+        );
+      },
+    });
+  });
+
+  document.getElementById("id_labels_tab").addEventListener('show.bs.tab', event => {
+    let elem = document.getElementById('id_label_buttons');
+    elem.replaceChildren();
+    $.ajax("{% url 'console_get_labels' %}", {
+      success: function (response_data) {
+        let template = document.createElement('template');
+        template.innerHTML = response_data;
+        let response_document = template.content;
+        elem.replaceWith(
+          response_document.getElementById('id_label_buttons')
+        );
+      },
+    });
+  });
 
   function set_spinner(state) {
     let elem = document.getElementById("generate_button");
@@ -181,7 +207,7 @@ Dall-F Console
     var form = event.currentTarget;
     set_spinner(true);
     let data = new FormData(form);
-    $.ajax("/console/", {
+    $.ajax("{% url 'console_generate' %}", {
       processData: false,
       contentType: false,
       method: "POST",
@@ -198,9 +224,7 @@ Dall-F Console
         );
         set_spinner(false);
       },
-      error: function (request, error) {
-        console.log(request);
-        console.log(error);
+      error: function () {
         set_spinner(false);
       }
     });
