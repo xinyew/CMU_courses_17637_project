@@ -198,11 +198,6 @@ Dall-F Console
 
   function set_spinner(state) {
     let elem = document.getElementById("generate_button");
-    if (state) {
-      elem.innerHTML = '<span id="generate_button__spinner" class="spinner-border spinner-border-sm"></span>';
-    } else {
-      elem.innerHTML = '<span id="generate_button__text">Generate</span>';
-    }
     elem.toggleAttribute("disabled", state);
   }
 
