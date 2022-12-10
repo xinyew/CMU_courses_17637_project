@@ -21,18 +21,39 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.gallery, name='home'),  # Temporary
+    path('', views.gallery, name='home'),
+    path('', views.gallery, name='gallery'),  # alias
     path('oauth/', include('social_django.urls', namespace='social')),
     path('console/', views.console, name='console'),
-    path('gallery/', views.gallery, name='gallery'),
-    path('favorite/', views.favorite_action, name='favorite'),
-    path('label/', views.label_action, name='label'),
+    path('console/generate/', views.console_generate, name='console_generate'),
+    path(
+        'console/get_favorites/',
+        views.console_get_favorites,
+        name='console_get_favorites'),
+    path(
+        'console/get_labels/',
+        views.console_get_labels,
+        name='console_get_labels'),
     path('my_profile/', views.my_profile, name='my_profile'),
     path('others_profile/', views.others_profile, name='others_profile'),
     path('discussion_board/', views.discussion_board, name='discussion_board'),
     path('logout/', views.logout_action, name='logout'),
-    # API calls
-    path('images/generate/', views.generate_action, name='generate'),
-    # Testing
-    path('testing/generate/', views.test_generate_action, name='test_generate')
+    # AJAX calls
+    path(
+        'images/<int:image_id>/publish/',
+        views.publish_unpublish_action,
+        name='publish'),
+    path(
+        'images/<int:image_id>/favorite/',
+        views.favorite_action,
+        name='favorite'),
+    path('images/<int:image_id>/label/', views.label_action, name='label'),
+    path(
+        'images/<int:image_id>/discussion/',
+        views.get_discussion,
+        name='get_discussion'),
+    path(
+        'users/<int:user_id>/profile_image/',
+        views.get_profile_image,
+        name='get_profile_image')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

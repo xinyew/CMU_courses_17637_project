@@ -50,7 +50,7 @@
                 <div class="image_prompt">{{images.0.prompt}}</div>
                 <a class="image_creator">creator name</a>
                 <div class="image_buttons">
-                  <a href="#" class="image_button_bundle">
+                  <a href="#!" class="image_button_bundle">
                     <img
                       src="{% static 'dallf/share.png' %}"
                       width="20"
@@ -64,7 +64,7 @@
                       class="image_button image_button_active"
                       id="id_image_{{images.0.id}}_share_active_button" />
                   </a>
-                  <a href="#" class="image_button_bundle">
+                  <a href="#!" class="image_button_bundle">
                     <img
                       src="{% static 'dallf/zoom.png' %}"
                       width="20"
@@ -78,7 +78,7 @@
                       class="image_button image_button_active"
                       id="id_image_{{images.0.id}}_zoom_active_button" />
                   </a>
-                  <a href="#" class="image_button_bundle">
+                  <a href="#!" class="image_button_bundle">
                     <img
                       src="{% static 'dallf/favorite.png' %}"
                       width="20"
@@ -90,7 +90,7 @@
                       height="20"
                       class="image_button image_button_active" />
                   </a>
-                  <a href="#" class="image_button_bundle" onclick="clickLabelButton('{{images.0.id}}')">
+                  <a href="#!" class="image_button_bundle" onclick="clickLabelButton('{{images.0.id}}')">
                     <img
                       src="{% static 'dallf/label.png' %}"
                       width="20"
@@ -102,7 +102,7 @@
                       height="20"
                       class="image_button image_button_active" />
                   </a>
-                  <a href="#" class="image_button_bundle">
+                  <a href="#!" class="image_button_bundle">
                     <img src="{% static 'dallf/discussion_board.png' %}"
                       width="20"
                       height="20"
@@ -155,14 +155,11 @@
                           type="button"
                           class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split"
                           data-bs-toggle="dropdown">
-                          <span class="visually-hidden">
-                            Toggle Dropdown
-                          </span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
-                          <li><a class="dropdown-item" href="#">Cat</a></li>
-                          <li><a class="dropdown-item" href="#">Dog</a></li>
-                          <li><a class="dropdown-item" href="#">Bird</a></li>
+                          <li><a class="dropdown-item" href="#!">Cat</a></li>
+                          <li><a class="dropdown-item" href="#!">Dog</a></li>
+                          <li><a class="dropdown-item" href="#!">Bird</a></li>
                         </ul>
                       </div>
                     </div>
@@ -219,116 +216,58 @@
     Recent activities
   </div>
   <div id="id_recent_comments">
-    <div class="post_wrap">
-      <div class="post_post">
-        <div class="post_portrait">
+    <div class="discussion_wrap">
+      <div class="discussion_comment">
+        <div class="discussion_portrait">
           <img src="{% static 'dallf/not_found.jpg' %}" class="rounded" width="40">
         </div>
-        <div class="post_content">
-          <div class="post_information">
-            <a href="#" class="post_poster">
+        <div class="discussion_comment_content">
+          <div class="discussion_post_information">
+            <a href="#!" class="discussion_commenter">
               Poster Name
             </a>
-            <span class="date_time">
+            <span class="discussion_date_time">
               2:14 PM, Nov 20, 2022
             </span>
           </div>
-          <div class="post_text">
+          <div class="discussion_comment_text">
             This image is really impressive, how did you do that?
           </div>
         </div>
       </div>
-      <div class="post_comments">
-        <div class="post_comment">
-          <div class="post_portrait">
+      <div class="discussion_replies">
+        <div class="discussion_reply">
+          <div class="discussion_portrait">
             <img src="{% static 'dallf/not_found.jpg' %}" class="rounded" width="40">
           </div>
-          <div class="comment_content">
-            <div class="comment_information">
-              <a href="#" class="post_commenter">
+          <div class="discussion_reply_content">
+            <div class="discussion_post_information">
+              <a href="#!" class="discussion_commenter">
                 Commenter Name
               </a>
-              <span class="date_time">
+              <span class="discussion_date_time">
                 2:16 PM, Nov 20, 2022
               </span>
             </div>
-            <div class="comment_text">
+            <div class="discussion_reply_text">
               It is not so hard, you can do this...
             </div>
           </div>
         </div>
-        <div class="post_comment">
-          <div class="post_portrait">
+        <div class="discussion_reply">
+          <div class="discussion_portrait">
             <img src="{% static 'dallf/not_found.jpg' %}" class="rounded" width="40">
           </div>
-          <div class="comment_content">
-            <div class="comment_information">
-              <a href="#" class="post_commenter">
+          <div class="discussion_reply_content">
+            <div class="discussion_post_information">
+              <a href="#!" class="discussion_commenter">
                 Commenter Name
               </a>
-              <span class="date_time">
+              <span class="discussion_date_time">
                 2:16 PM, Nov 20, 2022
               </span>
             </div>
-            <div class="comment_text">
-              Thanks a lot!
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="post_wrap">
-      <div class="post_post">
-        <div class="post_portrait">
-          <img src="{% static 'dallf/not_found.jpg' %}" class="rounded" width="40">
-        </div>
-        <div class="post_content">
-          <div class="post_information">
-            <a href="#" class="post_poster">
-              Poster Name
-            </a>
-            <span class="date_time">
-              2:14 PM, Nov 20, 2022
-            </span>
-          </div>
-          <div class="post_text">
-            This image is really impressive, how did you do that?
-          </div>
-        </div>
-      </div>
-      <div class="post_comments">
-        <div class="post_comment">
-          <div class="post_portrait">
-            <img src="{% static 'dallf/not_found.jpg' %}" class="rounded" width="40">
-          </div>
-          <div class="comment_content">
-            <div class="comment_information">
-              <a href="#" class="post_commenter">
-                Commenter Name
-              </a>
-              <span class="date_time">
-                2:16 PM, Nov 20, 2022
-              </span>
-            </div>
-            <div class="comment_text">
-              It is not so hard, you can do this...
-            </div>
-          </div>
-        </div>
-        <div class="post_comment">
-          <div class="post_portrait">
-            <img src="{% static 'dallf/not_found.jpg' %}" class="rounded" width="40">
-          </div>
-          <div class="comment_content">
-            <div class="comment_information">
-              <a href="#" class="post_commenter">
-                Commenter Name
-              </a>
-              <span class="date_time">
-                2:16 PM, Nov 20, 2022
-              </span>
-            </div>
-            <div class="comment_text">
+            <div class="discussion_reply_text">
               Thanks a lot!
             </div>
           </div>
@@ -338,52 +277,4 @@
   </div>
 </div>
 
-<!-- <div class="container" id="id_my_profile_input_group">
-    <div class="input-group">
-        <input type="file" class="form-control" id="inputGroupFile04">
-        <button class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04">Button</button>
-    </div>
-    <div class="input-group">
-        <span class="input-group-text">
-            With textarea
-        </span>
-        <textarea class="form-control"></textarea>
-                                        </div>
-                                    </div> -->
-
-<!--
-<div>
-    {% if not profile.picture %}
-
-    <img src="{% static 'socialnetwork/image-not-found.jpg' %}" alt="portrait" width="300" height="300" id="id_user_picture">
-    {% else %}
-    <img src="{% url 'photo' profile.user.id %}" alt="portrait" width="300" height="300" id="id_user_picture">
-    {% endif %}
-</div>
-<div>
-    <form method="post" action="{% url 'my_profile' %}" enctype="multipart/form-data">
-        <table>
-            {{form}}
-        </table>
-        {% csrf_token %}
-        <button id="id_update_profile_button">
-            Submit
-        </button>
-    </form>
-</div>
-<div>
-    <p>
-        You are following:
-    </p>
-    <ul>
-        {% for u in user.profile.following.all %}
-        <li>
-
-            <a href="{% url 'others_profile' u.id %}" id="id_profile_link_{{u}}">
-                {{u.first_name}} {{u.last_name}}
-            </a>
-        </li>
-        {% endfor %}
-    </ul>
-</div> -->
 {% endblock content %}

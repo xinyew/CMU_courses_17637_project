@@ -19,43 +19,38 @@
 <body class="body">
   <nav class="navbar navbar-expand-lg bg-light shadow-sm" id="id_nav">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#" id="id_title">Dall-F</a>
+      <a class="navbar-brand" href="{% url 'home' %}" id="id_title">Dall-F</a>
       <button
         class="navbar-toggler"
         type="button"
         data-bs-toggle="collapse"
         data-bs-target="#navbarSupportedContent">
+        <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <!-- <a class="nav-link active" href="#">Gallery</a> -->
-            <a class="nav-link" href="#">Gallery</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Console</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a
-              class="nav-link dropdown-toggle"
-              href="#"
-
-              data-bs-toggle="dropdown">
-              About
-            </a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">People</a></li>
-              <li><a class="dropdown-item" href="#">Usage</a></li>
-            </ul>
-          </li>
-        </ul>
+        <div class="navbar-nav me-auto mb-2 mb-lg-0">
+          {% block navigation %}
+          <a class="nav-link" href="{% url 'gallery' %}">
+            Gallery
+          </a>
+          <a class="nav-link" href="{% url 'console' %}">
+            Console
+          </a>
+          {% endblock %}
+        </div>
+        {% if request.user.is_authenticated %}
         <span class="navbar-text">
-          <a href="#" id="id_username">Username</a>
+          <a href="{% url 'my_profile' %}" class="px-2" id="id_username">{{request.user.get_full_name}}</a>
         </span>
-        <form action="{% url 'logout' %}" method="post">
-          <button class="btn btn-sm btn-outline-secondary" type="submit">Logout</button>
+        <form action="{% url 'logout' %}" method="post" class="px-2">
+          <button class="btn btn-sm btn-outline-secondary" type="submit">Log out</button>
           {% csrf_token %}
         </form>
+        {% else %}
+        <span class="navbar-text px-2">
+          <a href="{% url 'my_profile' %}" id="id_username">Log in</a>
+        </span>
+        {% endif %}
       </div>
     </div>
   </nav>
@@ -72,9 +67,14 @@
     src="https://code.jquery.com/jquery-3.6.1.min.js"
     integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
     crossorigin="anonymous"></script>
+  <script>
+    const CSRF_TOKEN = "{{ csrf_token|escapejs }}";
+  </script>
   <script
     src="{% static 'dallf/dallf.js' %}?v={% now 'U' %}"
     type="text/javascript"></script>
+  {% block scripts %}
+  {% endblock %}
 </body>
 
 </html>
