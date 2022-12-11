@@ -38,19 +38,17 @@
           </a>
           {% endblock %}
         </div>
-        {% if request.user.is_authenticated %}
-        <span class="navbar-text">
-          <a href="{% url 'my_profile' %}" class="px-2" id="id_username">{{request.user.get_full_name}}</a>
-        </span>
-        <form action="{% url 'logout' %}" method="post" class="px-2">
-          <button class="btn btn-sm btn-outline-secondary" type="submit">Log out</button>
-          {% csrf_token %}
-        </form>
-        {% else %}
-        <span class="navbar-text px-2">
+        <div class="navbar-nav">
+          {% if request.user.is_authenticated %}
+          <a class="nav-link" href="{% url 'my_profile' %}" id="id_username">{{request.user.get_full_name}}</a>
+          <form class="d-flex align-items-center px-lg-2" action="{% url 'logout' %}" method="post">
+            <button class="btn btn-sm btn-outline-secondary" type="submit">Log out</button>
+            {% csrf_token %}
+          </form>
+          {% else %}
           <a href="{% url 'my_profile' %}" id="id_username">Log in</a>
-        </span>
-        {% endif %}
+          {% endif %}
+        </div>
       </div>
     </div>
   </nav>
