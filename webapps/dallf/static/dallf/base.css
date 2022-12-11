@@ -3,7 +3,7 @@
 }
 
 #id_username {
-    color: rgba(0, 0, 0, 0.7);
+    color: var(--bs-navbar-active-color);
     text-decoration: none;
 }
 
@@ -17,7 +17,7 @@ body {
 
 .input-group {
     background-color: transparent;
-    border-radius: 0.375rem;
+    border-radius: var(--bs-btn-border-radius);
 }
 
 #id_prompt_input_group {
