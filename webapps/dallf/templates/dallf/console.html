@@ -19,7 +19,7 @@ Dall-F Console
   <form method="post" onsubmit="generate(event);"
     onformdata="process_dropdowns(event)">
     {% csrf_token %}
-    <div>
+    <div id="id_prompt_label_div" class="gap-2">
       <label for="id_prompt_input_text" id="id_prompt_text_label">
         Start with a detailed description
       </label>
@@ -145,11 +145,11 @@ Dall-F Console
       id="id_labels_pane"
       tabindex="0">
       <!-- TODO Example -->
-      <div class="container-fluid py-3 pt-5" id="id_recent_images">
+      <div class="container-fluid py-3 pt-5">
         <div class="row mb-5">
           <div id="id_label_buttons"></div>
         </div>
-        <div class="row row-cols-4">
+        <div class="row row-cols-4 g-3">
           {% for image in recent_images %}
           <div class="col">
             {% include "dallf/components/image.html" %}
