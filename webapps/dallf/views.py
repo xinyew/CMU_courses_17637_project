@@ -94,6 +94,11 @@ def console(request: HttpRequest):
     context = {}
 
     recent_images = request.user.image_set.all()[:40]
+
+    favorite_images = request.user.favorites.all()
+    labeled_images = UploadedImage.objects.filter(labels__user=request.user)
+    context["favorite_images"] = favorite_images
+    context['labeled_images'] = labeled_images
     context["recent_images"] = recent_images
 
     # context['label_image_set'] = []
@@ -138,6 +143,10 @@ def console_generate(request: HttpRequest):
 
     request.user.finish_generation()
 
+    favorite_images = request.user.favorites.all()
+    labeled_images = UploadedImage.objects.filter(labels__user=request.user)
+    context["favorite_images"] = favorite_images
+    context['labeled_images'] = labeled_images
     context['last_generated_images'] = last_generated_images
     context["recent_images"] = recent_images
 
@@ -149,7 +158,9 @@ def console_get_favorites(request: HttpRequest):
     context = {}
 
     favorite_images = request.user.favorites.all()
+    labeled_images = UploadedImage.objects.filter(labels__user=request.user)
     context["favorite_images"] = favorite_images
+    context['labeled_images'] = labeled_images
 
     return render(request, 'dallf/console_get_favorites.html', context)
 
@@ -162,6 +173,24 @@ def console_get_labels(request: HttpRequest):
     context["labels"] = labels
 
     return render(request, 'dallf/console_get_labels.html', context)
+
+
+@require_GET
+def label_get_images(request: HttpRequest, label_id: int):
+    print('here')
+    context = {}
+
+    label = get_object_or_404(request.user.labels, id=label_id)
+    context["images"] = label.image_set.all()
+
+    favorite_images = request.user.favorites.all()
+    labeled_images = UploadedImage.objects.filter(labels__user=request.user)
+    context["favorite_images"] = favorite_images
+    context['labeled_images'] = labeled_images
+
+    result = render(request, 'dallf/console_label_get_images.html', context)
+    print(result)
+    return result
 
 
 @require_GET
@@ -253,7 +282,11 @@ def label_action(request: HttpRequest, image_id: int):
         )
         image.labels.remove(label)
         label.save()  # update modified
-    return HttpResponse(status=HTTPStatus.NO_CONTENT)
+
+    context = {}
+    context["label"] = label
+
+    return render(request, 'dallf/console_single_label.html', context)
 
 
 @require_POST

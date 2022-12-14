@@ -2,7 +2,7 @@
   <div class="row row-cols-4 g-3">
     {% for image in favorite_images %}
     <div class="col">
-      {% include "dallf/components/image.html" %}
+      {% include "dallf/components/image.html" with id_suffix='_favorites' %}
     </div>
     {% endfor %}
   </div>
