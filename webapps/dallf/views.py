@@ -1,7 +1,7 @@
 from http import HTTPStatus
 import json
 import os
-from django.http import HttpRequest, JsonResponse, HttpResponse, HttpResponseBadRequest
+from django.http import HttpRequest, JsonResponse, HttpResponse, HttpResponseBadRequest,Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.files.base import ContentFile
 from django.contrib.auth.decorators import login_required
@@ -287,14 +287,7 @@ def others_profile(request):
     return render(request, 'dallf/others_profile.html', context)
 
 
-@require_GET
-@login_required
-def discussion_board(request):
-    context = {}
-    context["images"] = []
-    for image in UploadedImage.objects.order_by('?')[:10]:
-        context["images"].append(image)
-    return render(request, 'dallf/discussion_board.html', context)
+
 
 
 @require_GET
@@ -308,10 +301,24 @@ def get_profile_image(request, user_id):
 
 @require_GET
 @login_required
+def discussion_board(request, image_id):
+    context = {}
+    image = get_object_or_404(UploadedImage, pk=image_id)
+    if not image:
+        raise Http404
+    context["image"] = image
+    return render(request, 'dallf/discussion_board.html', context)
+
+@require_GET
+@login_required
 def get_discussion(request, image_id):
     response_data = {}
     response_data['comments'] = []
     response_data['replies'] = []
+    try:
+        Comment.objects.get(pk=image_id)
+    except:
+       return HttpResponse(json.dumps(response_data), content_type='application/json')
     for comment in Comment.objects.get(pk=image_id):
         new_comment = {
             'id': comment.id,
