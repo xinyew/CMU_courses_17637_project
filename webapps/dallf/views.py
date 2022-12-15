@@ -209,9 +209,7 @@ class PublishParameterSerializer(serializers.Serializer):
 @require_POST
 @login_required
 def publish_unpublish_action(request: HttpRequest, image_id: int):
-    image = get_object_or_404(UploadedImage, id=image_id)
-    if not image.user == request.user:
-        return HttpResponseBadRequest()
+    image = get_object_or_404(UploadedImage, id=image_id, user=request.user)
     try:
         serializer = PublishParameterSerializer(data=request.POST)
         serializer.is_valid(raise_exception=True)
@@ -326,9 +324,10 @@ def my_profile(request):
 @login_required
 def others_profile(request, user_id):
     user = get_object_or_404(User, id=user_id)
-    if not user:
-        raise Http404
+    if request.user.id == user_id:
+        return redirect('my_profile')
     context = {}
+    context['user'] = user
     context["recent_pubs"] = []
     published_num = 0
     for image in user.image_set.all():
@@ -342,8 +341,6 @@ def others_profile(request, user_id):
 @login_required
 def get_portrait(request, user_id):
     user = get_object_or_404(User, id=user_id)
-    if not user:
-        raise Http404
 
     return HttpResponse(
         user.profile_image,
@@ -354,9 +351,10 @@ def get_portrait(request, user_id):
 @login_required
 def discussion_board(request, image_id):
     context = {}
-    image = get_object_or_404(UploadedImage, pk=image_id)
-    if not image:
-        raise Http404
+    image = get_object_or_404(
+        UploadedImage,
+        accessible_by(request.user),
+        id=image_id)
     context["image"] = image
     return render(request, 'dallf/discussion_board.html', context)
 
@@ -484,8 +482,6 @@ def reply_new(request):
 @require_POST
 def follow_unfollow(request, user_id):
     user = get_object_or_404(User, id=user_id)
-    if not user:
-        raise Http404
     if user not in request.user.following.all():
         request.user.following.add(user)
     else:
