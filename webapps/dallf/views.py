@@ -351,10 +351,6 @@ def get_discussion(request, image_id):
     response_data = {}
     response_data['comments'] = []
     response_data['replies'] = []
-    try:
-        Comment.objects.get(pk=image_id)
-    except:
-       return HttpResponse(json.dumps(response_data), content_type='application/json')
     for comment in Comment.objects.all():
         if comment.image.id != image_id:
             continue
@@ -390,7 +386,7 @@ def get_recent_activities(request, user_id):
     response_data['comments'] = []
     response_data['replies'] = []
     num_activities_found = 0
-    for comment in Comment.objects.get(user=User.objects.get(pk=user_id)):
+    for comment in User.objects.get(id=user_id).comments.all():
         new_comment = {
             'id': comment.id,
             'text': comment.text,
@@ -413,6 +409,7 @@ def get_recent_activities(request, user_id):
             response_data['replies'].append(new_reply)
 
     response_json = json.dumps(response_data)
+    print(response_data)
     return HttpResponse(response_json, content_type='application/json')
 
 

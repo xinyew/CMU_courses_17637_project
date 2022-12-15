@@ -74,4 +74,9 @@ urlpatterns = [
         views.get_portrait,
         name='get_portrait'
     ),
+    path(
+        'get_activities/<int:user_id>',
+        views.get_recent_activities,
+        name='get_activities'
+    )
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
