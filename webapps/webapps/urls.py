@@ -69,4 +69,9 @@ urlpatterns = [
         views.reply_new,
         name='reply_new'
     ),
+    path(
+        'get_portrait/<int:user_id>',
+        views.get_portrait,
+        name='get_portrait'
+    ),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

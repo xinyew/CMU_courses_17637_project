@@ -267,14 +267,20 @@ def logout_action(request: HttpRequest):
 # TODO check validation for the below
 
 
-@require_GET
 @login_required
 def my_profile(request):
-    context = {}
-    context["images"] = []
-    for image in UploadedImage.objects.order_by('?')[:10]:
-        context["images"].append(image)
-    return render(request, 'dallf/my_profile.html', context)
+    if request.method == 'GET':
+        context = {}
+        context["images"] = []
+        for image in UploadedImage.objects.order_by('?')[:10]:
+            context["images"].append(image)
+        return render(request, 'dallf/my_profile.html', context)
+    if request.POST['upload_bio']:
+        request.user.bio = request.POST['upload_bio']
+    if request.FILES['upload_photo']:
+        request.user.profile_image = request.FILES['upload_photo']
+    request.user.save()
+    return render(request, 'dallf/my_profile.html', {'user': request.user})
 
 
 @require_GET
@@ -286,7 +292,13 @@ def others_profile(request):
         context["images"].append(image)
     return render(request, 'dallf/others_profile.html', context)
 
+@login_required
+def get_portrait(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    if not user:
+        raise Http404
 
+    return HttpResponse(user.profile_image, content_type='image/png')
 
 
 
