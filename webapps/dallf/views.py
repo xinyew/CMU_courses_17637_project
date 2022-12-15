@@ -381,10 +381,9 @@ def get_recent_activities(request, user_id):
     return HttpResponse(response_json, content_type='application/json')
 
 
-# @require_POST
+@require_POST
 @login_required
 def comment_new(request):
-    print(request.POST)
     if 'comment_text' not in request.POST or 'image_id' not in request.POST or \
         not request.POST['comment_text'] or not request.POST['image_id']:
         return _my_json_error_response("You must enter something to comment.", status=400)
@@ -410,27 +409,28 @@ def comment_new(request):
 
 @require_POST
 @login_required
-def new_reply(request):
-    if 'comment_text' not in request.POST or 'image_id' not in request.POST or \
-        not request.POST['comment_text'] or not request.POST['image_id']:
-        return _my_json_error_response("You must enter something to comment.", status=400)
+def reply_new(request):
+    if 'reply_text' not in request.POST  or not request.POST['reply_text'] or \
+        'comment_id' not in request.POST or not request.POST['comment_id']:
+        return _my_json_error_response("You must enter something to reply.", status=400)
 
     try:
-        id = int(request.POST['image_id'])
+        comment_id = int(request.POST['comment_id'])
     except Exception:
-        return _my_json_error_response("The image id must be numeric", 400)
+        return _my_json_error_response("The comment id and comment id must be numeric", 400)
 
-    if id > Comment.objects.all().order_by('-date_created')[0].id:
-        return _my_json_error_response("The image id does not exist", 400)
+    comment = get_object_or_404(Comment, id=comment_id)
+    if not comment:
+        return _my_json_error_response("The comment id does not exist", 400)
 
-    comment = get_object_or_404(Comment, id=request.POST['image_id'])
     new_reply = Reply(
-        text=request.POST['comment_text'],
+        text=request.POST['reply_text'],
         user=request.user,
         comment=comment,
         date_created=dateformat.format(timezone.localtime(), "n/j/Y g:i A"))
     new_reply.save()
-
+    print(comment.replys)
+    return get_discussion(request)
 
 def _my_json_error_response(message, status):
     response_json = '{ "error": "' + message + '" }'

@@ -150,7 +150,7 @@ function updateDiscussions(response) {
                 class="btn btn-outline-secondary"
                 type="button"
                 id="id_discussion_${comment_id}_reply_button"
-                onclick="replyNew(${image_id}, ${comment_id})">
+                onclick="replyNew(${comment_id})">
                 Reply
               </button>
             </div>
@@ -216,8 +216,7 @@ function commentNew() {
   xhr.send("comment_text=" + commentText + "&image_id=" + click_id + "&csrfmiddlewaretoken=" + getCSRFToken());
 }
 
-function replyNew() {
-  let image_id = ($('.image_button_active')[0].id).split('_')[2];
+function replyNew(comment_id) {
   let replyTextInputID = '#id_discussion_' + comment_id + '_reply_text';
   let replyTextElement = $(replyTextInputID);
   let replyText = replyTextElement.val();
@@ -231,9 +230,9 @@ function replyNew() {
     }
     updateDiscussionBoard(xhr);
   };
-  xhr.open("POST", "/new_reply", true);
+  xhr.open("POST", "/reply_new/", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.send("reply_text=" + replyText + "&image_id=" + image_id + "&comment_id=" + comment_id + "&csrfmiddlewaretoken=" + getCSRFToken());
+  xhr.send("reply_text=" + replyText + "&comment_id=" + comment_id + "&csrfmiddlewaretoken=" + getCSRFToken());
 }
 
 function getFollowers() {

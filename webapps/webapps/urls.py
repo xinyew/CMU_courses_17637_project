@@ -64,4 +64,9 @@ urlpatterns = [
         views.comment_new,
         name='comment_new'
     ),
+    path(
+        'reply_new/',
+        views.reply_new,
+        name='reply_new'
+    ),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
