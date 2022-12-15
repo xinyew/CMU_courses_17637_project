@@ -18,9 +18,15 @@ from django.urls import path, include
 from dallf import views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic.base import RedirectView
+from django.contrib.staticfiles.storage import staticfiles_storage
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path(
+        "favicon.ico",
+        RedirectView.as_view(url=staticfiles_storage.url("dallf/favicon.ico")),
+    ),
     path('', views.gallery, name='home'),
     path('', views.gallery, name='gallery'),  # alias
     path('oauth/', include('social_django.urls', namespace='social')),
