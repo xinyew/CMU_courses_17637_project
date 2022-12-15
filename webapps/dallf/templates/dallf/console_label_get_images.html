@@ -1,0 +1,9 @@
+<div class="container py-3" id="id_label_images">
+  <div class="row row-cols-4 g-3">
+    {% for image in images %}
+    <div class="col">
+      {% include "dallf/components/image.html" with id_suffix="_labels" %}
+    </div>
+    {% endfor %}
+  </div>
+</div>

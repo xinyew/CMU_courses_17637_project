@@ -18,7 +18,7 @@
           width="20"
           height="20"
           class="image_button image_button_active"
-          id="id_image_{{image.id}}_share_active_button" />
+          id="id_image_{{image.id}}_share_active_button{{id_suffix}}" />
       </a>
       {% endif %}
       <a href="{{image.file.url}}" target="_blank" class="image_button_bundle">
@@ -27,10 +27,10 @@
           width="20"
           height="20"
           class="image_button image_button_active"
-          id="id_image_{{image.id}}_zoom_active_button" />
+          id="id_image_{{image.id}}_zoom_active_button{{id_suffix}}" />
       </a>
       <a href="#!" class="image_button_bundle"
-        {% if image in request.user.favorites.all %}
+        {% if image in favorite_images %}
         data-image_button_bundle--show_active
         {% endif %}
         onclick="
@@ -44,7 +44,10 @@
           class="image_button image_button_active" />
       </a>
       <a href="#!" class="image_button_bundle" data-bs-toggle="modal"
-        data-bs-target="#id_image_{{image.id}}_label_popup">
+        data-bs-target="#id_image_{{image.id}}_label_popup{{id_suffix}}"
+        {% if image in labeled_images %}
+        data-image_button_bundle--show_active
+        {% endif %}>
         <img
           src="{% static 'dallf/label_active.png' %}"
           width="20"
@@ -60,16 +63,16 @@
     </div>
   </div>
   <button
-    id="id_image_{{image.id}}_label_button"
+    id="id_image_{{image.id}}_label_button{{id_suffix}}"
     type="button"
     data-bs-toggle="modal"
-    data-bs-target="#id_image_{{image.id}}_label_popup"
+    data-bs-target="#id_image_{{image.id}}_label_popup{{id_suffix}}"
     hidden>
     Label
   </button>
   <div
     class="modal"
-    id="id_image_{{image.id}}_label_popup"
+    id="id_image_{{image.id}}_label_popup{{id_suffix}}"
     tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
       <form class="modal-content"
@@ -80,7 +83,7 @@
         <div class="modal-header">
           <h1
             class="modal-title fs-5"
-            id="id_image_{{image.id}}_label_popup_title">
+            id="id_image_{{image.id}}_label_popup_title{{id_suffix}}">
             Adding Label
           </h1>
           <button

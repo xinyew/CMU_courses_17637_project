@@ -53,6 +53,10 @@ urlpatterns = [
         views.get_discussion,
         name='get_discussion'),
     path(
+        'labels/<int:label_id>/images/',
+        views.label_get_images,
+        name='label_get_images'),
+    path(
         'users/<int:user_id>/profile_image/',
         views.get_profile_image,
         name='get_profile_image')

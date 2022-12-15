@@ -66,7 +66,22 @@ function label(form, event, id) {
     contentType: false,
     method: "POST",
     data: data,
-    success: function () {
+    success: function (response_data) {
+      let template = document.createElement('template');
+      template.innerHTML = response_data;
+      let response_document = template.content;
+      // Honestly this looping idea should have been used for all our functions...
+      for (let response_elem of response_document.children) {
+        let orig_elem = document.getElementById(response_elem.id);
+        if (orig_elem !== null) {
+          orig_elem.replaceWith(response_elem);
+        } else {
+          let label_buttons = document.getElementById('id_label_buttons');
+          if (label_buttons !== null) {
+            label_buttons.prepend(response_elem);
+          }
+        }
+      }
     },
   });
 }

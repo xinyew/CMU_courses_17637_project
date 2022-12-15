@@ -1,5 +1,21 @@
 <div id="id_label_buttons" class="d-flex justify-content-center gap-3 text-center label_buttons">
   {% for label in labels %}
-  <button type="button" class="btn btn-sm btn-outline-secondary label_button">{{label.text}} <span class="badge text-bg-secondary">{{label.image_set.count}}</span></button>
+  <button
+    id="id_label_{{label.id}}"
+    onclick="
+      let id = this.dataset.label_id;
+      $.ajax(`{% url 'label_get_images' 0 %}`.replace('0', `${id}`), {
+        method: 'GET',
+        success: function (response_data) {
+          let template = document.createElement('template');
+          template.innerHTML = response_data;
+          let response_document = template.content;
+          document.getElementById('id_label_images').replaceWith(
+            response_document.getElementById('id_label_images')
+          );
+        },
+      })
+    "
+    data-label_id="{{label.id}}" type="button" class="btn btn-sm btn-outline-secondary label_button">{{label.text}} <span class="badge text-bg-secondary">{{label.image_set.count}}</span></button>
   {% endfor %}
 </div>

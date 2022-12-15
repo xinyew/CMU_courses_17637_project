@@ -144,17 +144,11 @@ Dall-F Console
       class="tab-pane fade"
       id="id_labels_pane"
       tabindex="0">
-      <!-- TODO Example -->
       <div class="container-fluid py-3 pt-5">
         <div class="row mb-5">
           <div id="id_label_buttons"></div>
         </div>
-        <div class="row row-cols-4 g-3">
-          {% for image in recent_images %}
-          <div class="col">
-            {% include "dallf/components/image.html" %}
-          </div>
-          {% endfor %}
+        <div id="id_label_images">
         </div>
       </div>
     </div>
