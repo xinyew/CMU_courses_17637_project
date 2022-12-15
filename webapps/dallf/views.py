@@ -1,7 +1,7 @@
 from http import HTTPStatus
 import json
 import os
-from django.http import HttpRequest, JsonResponse, HttpResponse, HttpResponseBadRequest,Http404
+from django.http import HttpRequest, JsonResponse, HttpResponse, HttpResponseBadRequest, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.files.base import ContentFile
 from django.contrib.auth.decorators import login_required
@@ -327,13 +327,16 @@ def others_profile(request):
         context["images"].append(image)
     return render(request, 'dallf/others_profile.html', context)
 
+
 @login_required
 def get_portrait(request, user_id):
     user = get_object_or_404(User, id=user_id)
     if not user:
         raise Http404
 
-    return HttpResponse(user.profile_image, content_type=user.profile_image_type)
+    return HttpResponse(
+        user.profile_image,
+        content_type=user.profile_image_type)
 
 
 @require_GET
@@ -345,6 +348,7 @@ def discussion_board(request, image_id):
         raise Http404
     context["image"] = image
     return render(request, 'dallf/discussion_board.html', context)
+
 
 @login_required
 def get_discussion(request, image_id):
@@ -417,8 +421,9 @@ def get_recent_activities(request, user_id):
 @login_required
 def comment_new(request):
     if 'comment_text' not in request.POST or 'image_id' not in request.POST or \
-        not request.POST['comment_text'] or not request.POST['image_id']:
-        return _my_json_error_response("You must enter something to comment.", status=400)
+            not request.POST['comment_text'] or not request.POST['image_id']:
+        return _my_json_error_response(
+            "You must enter something to comment.", status=400)
 
     try:
         id = int(request.POST['image_id'])
@@ -442,14 +447,16 @@ def comment_new(request):
 @require_POST
 @login_required
 def reply_new(request):
-    if 'reply_text' not in request.POST  or not request.POST['reply_text'] or \
-        'comment_id' not in request.POST or not request.POST['comment_id']:
-        return _my_json_error_response("You must enter something to reply.", status=400)
+    if 'reply_text' not in request.POST or not request.POST['reply_text'] or \
+            'comment_id' not in request.POST or not request.POST['comment_id']:
+        return _my_json_error_response(
+            "You must enter something to reply.", status=400)
 
     try:
         comment_id = int(request.POST['comment_id'])
     except Exception:
-        return _my_json_error_response("The comment id and comment id must be numeric", 400)
+        return _my_json_error_response(
+            "The comment id and comment id must be numeric", 400)
 
     comment = get_object_or_404(Comment, id=comment_id)
     if not comment:
@@ -462,6 +469,7 @@ def reply_new(request):
         date_created=dateformat.format(timezone.localtime(), "n/j/Y g:i A"))
     new_reply.save()
     return get_discussion(request, int(request.POST['image_id']))
+
 
 def _my_json_error_response(message, status):
     response_json = '{ "error": "' + message + '" }'
