@@ -363,8 +363,47 @@ function getFollowers() {
   xhr.send();
 }
 
-function updateProfilePage() {
+function followUnfollow(user_id) {
+  let xhr = new XMLHttpRequest()
+  xhr.onreadystatechange = function () {
+    if (this.readyState != 4) {
+      return
+    }
+    updateFollowStatus(xhr)
+  }
 
+  xhr.open("POST", "/follow_unfollow/" + user_id, true)
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.send("user_id=" + user_id + "&csrfmiddlewaretoken=" + getCSRFToken());
+}
+
+function updateFollowStatus(xhr) {
+  if (xhr.status == 200) {
+    let response = JSON.parse(xhr.responseText);
+    if (response.following) {
+      $('#id_profile_card_button').html('Unfollow')
+    } else {
+      $('#id_profile_card_button').html('Follow')
+    }
+    $('#id_follower_num').html(response.following_num)
+    return;
+  }
+
+  if (xhr.status == 0) {
+    displayError("Cannot connect to server");
+    return;
+  }
+
+  if (!xhr.getResponseHeader('content-type') == 'application/json') {
+    displayError("Received status:" + xhr.status);
+    return;
+  }
+
+  let response = JSON.parse(xhr.responseText);
+  if (response.hasOwnProperty('error')) {
+    displayError(response.error);
+    return;
+  }
 }
 
 function getCSRFToken() {

@@ -8,8 +8,13 @@
   id="id_profile_card_button"
   type="button"
   data-bs-toggle="modal"
-  data-bs-target="#id_edit_profile_popup">
+  data-bs-target="#id_edit_profile_popup"
+  onclick="followUnfollow({{user.id}})">
+  {% if user in request.user.following.all %}
+  Unfollow
+  {% else %}
   Follow
+  {% endif %}
 </button>
 
 {% endblock %}
