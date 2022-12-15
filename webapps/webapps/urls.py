@@ -35,7 +35,7 @@ urlpatterns = [
         views.console_get_labels,
         name='console_get_labels'),
     path('my_profile/', views.my_profile, name='my_profile'),
-    path('others_profile/', views.others_profile, name='others_profile'),
+    path('others_profile/<int:user_id>', views.others_profile, name='others_profile'),
     path('logout/', views.logout_action, name='logout'),
     # AJAX calls
     path(

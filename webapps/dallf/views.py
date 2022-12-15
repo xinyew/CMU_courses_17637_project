@@ -320,11 +320,11 @@ def my_profile(request):
 
 @require_GET
 @login_required
-def others_profile(request):
-    context = {}
-    context["images"] = []
-    for image in UploadedImage.objects.order_by('?')[:10]:
-        context["images"].append(image)
+def others_profile(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    if not user:
+        raise Http404
+    context = {'user': user}
     return render(request, 'dallf/others_profile.html', context)
 
 @login_required
