@@ -21,6 +21,8 @@ import requests
 from .models import UploadedImage, Label, User, Comment, Reply, accessible_by
 
 
+GALLERY_NUM_IMAGES = 40
+NUM_RECENT_IMAGES = 500
 # Utility methods for generation
 
 
@@ -93,7 +95,7 @@ class GenerateParameterSerializer(serializers.Serializer):
 def console(request: HttpRequest):
     context = {}
 
-    recent_images = request.user.image_set.all()[:40]
+    recent_images = request.user.image_set.all()[:NUM_RECENT_IMAGES]
 
     favorite_images = request.user.favorites.all()
     labeled_images = UploadedImage.objects.filter(labels__user=request.user)
@@ -134,7 +136,7 @@ def console_generate(request: HttpRequest):
 
     # Evaluate this query early
     recent_images = list(
-        request.user.image_set.all()[:40]
+        request.user.image_set.all()[:NUM_RECENT_IMAGES]
     )
     try:
         last_generated_images = generate_DallE(request)
@@ -198,7 +200,7 @@ def gallery(request: HttpRequest):
     context = {}
     context["images"] = \
         UploadedImage.objects.filter(published=True) \
-        .order_by('?')[:10]
+        .order_by('?')[:GALLERY_NUM_IMAGES]
     return render(request, 'dallf/gallery.html', context)
 
 
