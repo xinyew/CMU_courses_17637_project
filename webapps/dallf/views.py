@@ -327,6 +327,7 @@ def others_profile(request, user_id):
     if request.user.id == user_id:
         return redirect('my_profile')
     context = {}
+    context['user'] = user
     context["recent_pubs"] = []
     published_num = 0
     for image in user.image_set.all():
