@@ -44,6 +44,13 @@
     Recent posts
   </div>
   <div id="id_recent_posts">
+    <div class="row row-cols-4 g-3">
+      {% for image in recent_pubs %}
+      <div class="col">
+        {% include "dallf/components/image.html" %}
+      </div>
+      {% endfor %}
+    </div>
   </div>
 </div>
 

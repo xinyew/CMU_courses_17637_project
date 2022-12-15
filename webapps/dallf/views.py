@@ -328,7 +328,14 @@ def others_profile(request, user_id):
     user = get_object_or_404(User, id=user_id)
     if not user:
         raise Http404
-    context = {'user': user}
+    context = {}
+    context["recent_pubs"] = []
+    published_num = 0
+    for image in user.image_set.all():
+        if image.published is True:
+            published_num += 1
+            context["recent_pubs"].append(image)
+    context['published_num'] = published_num
     return render(request, 'dallf/others_profile.html', context)
 
 @login_required
