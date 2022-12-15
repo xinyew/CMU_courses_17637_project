@@ -341,7 +341,6 @@ def others_profile(request, user_id):
 @login_required
 def get_portrait(request, user_id):
     user = get_object_or_404(User, id=user_id)
-
     return HttpResponse(
         user.profile_image,
         content_type=user.profile_image_type)
