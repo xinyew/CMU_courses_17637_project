@@ -7,33 +7,33 @@
 </div>
 
 
+
+
 <div class="container" id="id_discussion_container">
   <div id="id_discussion_board_title">
     Discussions
   </div>
-  <div id="id_discussions_{{image.id}}" class="discussions">
-  </div>
-
   <div class="discussion_wrap container">
     <div class="input-group">
       <input
         type="text"
         class="form-control"
-        placeholder="Type your comment here">
+        placeholder="Type your comment here"
+        id="id_discussion_comment_text">
       <button
         class="btn btn-outline-secondary"
-        type="button">
+        type="button"
+        onclick="commentNew()">
         Comment
       </button>
     </div>
+  </div>
+  <div id="id_discussions" class="discussions">
   </div>
 </div>
 
 <script>
   function getDiscussion() {
-    // get the id of the only one element of discussions class from
-    // <div id="id_discussions_{{recent_images.0.id}}" class="discussions">
-
     let xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
       if (this.readyState != 4) {
@@ -41,9 +41,6 @@
       }
       updateDiscussionBoard(xhr);
     };
-    console.log()
-    console.log('/images/{{image.id}}/discussion')
-    console.log()
     xhr.open("GET", '/images/{{image.id}}/discussion', true);
     xhr.send();
   }

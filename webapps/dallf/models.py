@@ -106,7 +106,7 @@ class Comment(models.Model):
         on_delete=models.PROTECT,
         related_name="comments")
     text = models.TextField()
-    date_created = models.DateTimeField(auto_now_add=True)
+    date_created = models.CharField(max_length=50)
 
 
 class Reply(models.Model):

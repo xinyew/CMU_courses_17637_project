@@ -71,30 +71,11 @@ function label(form, event, id) {
   });
 }
 
-
-function getDiscussion() {
-  // get the id of the only one element of discussions class from
-  // <div id="id_discussions_{{recent_images.0.id}}" class="discussions">
-  let imageID = ($('.image_button_active')[0].id).split('_')[2];
-
-  let xhr = new XMLHttpRequest();
-  xhr.onreadystatechange = function () {
-    if (this.readyState != 4) {
-      return;
-    }
-    updateDiscussionBoard(xhr);
-  };
-  console.log()
-  console.log(`images/${imageID}/discussion`)
-  console.log()
-  xhr.open("GET", `/images/${imageID}/discussion`, true);
-  xhr.send();
-}
-
-
 function updateDiscussionBoard(xhr) {
+  console.log(xhr.status)
   if (xhr.status == 200) {
     let response = JSON.parse(xhr.responseText);
+    console.log(response)
     updateDiscussions(response);
     return;
   }
@@ -133,6 +114,7 @@ function updateDiscussions(response) {
         is_new_comment = false;
       }
     });
+    console.log(is_new_comment)
     if (is_new_comment) {
       $("#id_discussions").prepend(
         `
@@ -163,32 +145,15 @@ function updateDiscussions(response) {
                 type="text"
                 class="form-control"
                 id="id_discussion_${comment_id}_reply_text"
-                placeholder="Type your comment here">
+                placeholder="Type your reply here">
               <button
                 class="btn btn-outline-secondary"
                 type="button"
                 id="id_discussion_${comment_id}_reply_button"
                 onclick="replyNew(${image_id}, ${comment_id})">
-                Comment
+                Reply
               </button>
             </div>
-          </div>
-        </div>
-
-        <div class="discussion_wrap container">
-          <div class="input-group">
-            <input
-              type="text"
-              class="form-control"
-              id="id_discussion_comment_text"
-              placeholder="Type your comment here">
-            <button
-              class="btn btn-outline-secondary"
-              type="button"
-              id="id_discussion_comment_button"
-              onclick="commentNew(${image_id})">
-              Comment
-            </button>
           </div>
         </div>
         `
@@ -231,7 +196,8 @@ function updateDiscussions(response) {
   });
 }
 
-function commentNew(click_id) {
+function commentNew() {
+  let click_id = ($('.image_button_active')[0].id).split('_')[2];
   let commentTextInputID = '#id_discussion_comment_text';
   let commentTextElement = $(commentTextInputID);
   let commentText = commentTextElement.val();
@@ -244,10 +210,10 @@ function commentNew(click_id) {
       return;
     }
     updateDiscussionBoard(xhr);
-    xhr.open("POST", "/new_comment", true);
-    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhr.send("comment_text=" + commentText + "&image_id=" + click_id + "&csrfmiddlewaretoken=" + getCSRFToken());
   };
+  xhr.open("POST", "/comment_new/", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.send("comment_text=" + commentText + "&image_id=" + click_id + "&csrfmiddlewaretoken=" + getCSRFToken());
 }
 
 function replyNew(image_id, comment_id) {

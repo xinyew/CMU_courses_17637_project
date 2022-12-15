@@ -58,5 +58,10 @@ urlpatterns = [
     path(
         'users/<int:user_id>/profile_image/',
         views.get_profile_image,
-        name='get_profile_image')
+        name='get_profile_image'),
+    path(
+        'comment_new/',
+        views.comment_new,
+        name='comment_new'
+    ),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

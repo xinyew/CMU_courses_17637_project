@@ -319,7 +319,9 @@ def get_discussion(request, image_id):
         Comment.objects.get(pk=image_id)
     except:
        return HttpResponse(json.dumps(response_data), content_type='application/json')
-    for comment in Comment.objects.get(pk=image_id):
+    for comment in Comment.objects.all():
+        if comment.image.id != image_id:
+            continue
         new_comment = {
             'id': comment.id,
             'text': comment.text,
@@ -341,6 +343,7 @@ def get_discussion(request, image_id):
             }
             response_data['replies'].append(new_reply)
 
+    print(response_data)
     response_json = json.dumps(response_data)
     return HttpResponse(response_json, content_type='application/json')
 
@@ -378,15 +381,26 @@ def get_recent_activities(request, user_id):
     return HttpResponse(response_json, content_type='application/json')
 
 
-@require_POST
+# @require_POST
 @login_required
-def post_new_comment(request):
-    if 'discussion_reply_text' not in request.POST or not request.POST['discussion_reply_text']:
-        return _my_json_error_response(
-            message="You must enter something to comment",
-            status=400)
+def comment_new(request):
+    print(request.POST)
+    if 'comment_text' not in request.POST or 'image_id' not in request.POST or \
+        not request.POST['comment_text'] or not request.POST['image_id']:
+        return _my_json_error_response("You must enter something to comment.", status=400)
+
+    try:
+        id = int(request.POST['image_id'])
+    except Exception:
+        return _my_json_error_response("The image id must be numeric", 400)
+
+    image = get_object_or_404(UploadedImage, id=id)
+    if not image:
+        return _my_json_error_response("The image id does not exist", 400)
+
     new_comment = Comment(
-        text=request.POST['discussion_reply_text'],
+        image=image,
+        text=request.POST['comment_text'],
         user=request.user,
         date_created=dateformat.format(timezone.localtime(), "n/j/Y g:i A"))
     new_comment.save()
@@ -396,26 +410,22 @@ def post_new_comment(request):
 
 @require_POST
 @login_required
-def post_new_reply(request):
-    if 'reply_text' not in request.POST or not request.POST['reply_text']:
-        return _my_json_error_response(
-            message="You must enter something to reply",
-            status=400)
+def new_reply(request):
+    if 'comment_text' not in request.POST or 'image_id' not in request.POST or \
+        not request.POST['comment_text'] or not request.POST['image_id']:
+        return _my_json_error_response("You must enter something to comment.", status=400)
 
-    if 'comment_id' not in request.POST or not request.POST['comment_id']:
-        return _my_json_error_response(
-            message="You must specify the comment id to reply",
-            status=400)
     try:
-        id = int(request.POST['comment_id'])
+        id = int(request.POST['image_id'])
     except Exception:
-        return _my_json_error_response("The comment id must be numeric", 400)
-    if id > Comment.objects.all().order_by('-date_created')[0].id:
-        return _my_json_error_response("The comment id does not exist", 400)
+        return _my_json_error_response("The image id must be numeric", 400)
 
-    comment = get_object_or_404(Comment, id=request.POST['comment_id'])
+    if id > Comment.objects.all().order_by('-date_created')[0].id:
+        return _my_json_error_response("The image id does not exist", 400)
+
+    comment = get_object_or_404(Comment, id=request.POST['image_id'])
     new_reply = Reply(
-        text=request.POST['reply_text'],
+        text=request.POST['comment_text'],
         user=request.user,
         comment=comment,
         date_created=dateformat.format(timezone.localtime(), "n/j/Y g:i A"))
@@ -424,6 +434,7 @@ def post_new_reply(request):
 
 def _my_json_error_response(message, status):
     response_json = '{ "error": "' + message + '" }'
+    print(response_json)
     print(status)
     return HttpResponse(
         response_json,
