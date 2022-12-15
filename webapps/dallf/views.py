@@ -279,6 +279,8 @@ def my_profile(request):
         request.user.bio = request.POST['upload_bio']
     if request.FILES['upload_photo']:
         request.user.profile_image = request.FILES['upload_photo']
+        request.user.profile_image_type = request.FILES['upload_photo'].content_type
+
     request.user.save()
     return render(request, 'dallf/my_profile.html', {'user': request.user})
 
@@ -298,17 +300,7 @@ def get_portrait(request, user_id):
     if not user:
         raise Http404
 
-    return HttpResponse(user.profile_image, content_type='image/png')
-
-
-
-@require_GET
-@login_required
-def get_profile_image(request, user_id):
-    f = open(os.path.dirname(__file__) + '/static/dallf/not_found.jpg', 'rb')
-    image = f.read()
-    f.close()
-    return HttpResponse(image, content_type="image/jpeg")
+    return HttpResponse(user.profile_image, content_type=user.profile_image_type)
 
 
 @require_GET

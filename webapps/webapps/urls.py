@@ -56,10 +56,6 @@ urlpatterns = [
         views.discussion_board,
         name='discussion_board'),
     path(
-        'users/<int:user_id>/profile_image/',
-        views.get_profile_image,
-        name='get_profile_image'),
-    path(
         'comment_new/',
         views.comment_new,
         name='comment_new'
