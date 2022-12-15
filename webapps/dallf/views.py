@@ -304,9 +304,13 @@ def logout_action(request: HttpRequest):
 def my_profile(request):
     if request.method == 'GET':
         context = {}
-        context["images"] = []
-        for image in UploadedImage.objects.order_by('?')[:10]:
-            context["images"].append(image)
+        context["recent_pubs"] = []
+        published_num = 0
+        for image in request.user.image_set.all():
+            if image.published is True:
+                published_num += 1
+                context["recent_pubs"].append(image)
+        context['published_num'] = published_num
         return render(request, 'dallf/my_profile.html', context)
     if request.POST['upload_bio']:
         request.user.bio = request.POST['upload_bio']

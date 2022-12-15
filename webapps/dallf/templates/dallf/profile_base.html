@@ -14,17 +14,17 @@
         {% endif %}
       </div>
       <div class="ms-3 w-100">
-        <h4 class="mb-0 mt-0">Username</h4>
+        <h4 class="mb-0 mt-0">{{user.get_full_name}}</h4>
         <div
           class="p-2 mt-2 bg-primary d-flex justify-content-between rounded text-white profile_stats"
           id="id_profile_card_stats">
           <div class="d-flex flex-column">
             <span class="profile_stats_class">Posted</span>
-            <span class="profile_stats_number">38</span>
+            <span class="profile_stats_number">{{published_num}}</span>
           </div>
           <div class="d-flex flex-column">
             <span class="profile_stats_class">Followers</span>
-            <span class="profile_stats_number">980</span>
+            <span class="profile_stats_number">{{user.followers.all.count}}</span>
           </div>
           <div class="d-flex flex-column">
             {% block profile_button %}
