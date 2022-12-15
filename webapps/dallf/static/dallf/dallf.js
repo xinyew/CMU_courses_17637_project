@@ -75,7 +75,7 @@ function label(form, event, id) {
 function getDiscussion() {
   // get the id of the only one element of discussions class from
   // <div id="id_discussions_{{recent_images.0.id}}" class="discussions">
-  let imageID = ($('.discussions')[0].id).split('_')[2];
+  let imageID = ($('.image_button_active')[0].id).split('_')[2];
 
   let xhr = new XMLHttpRequest();
   xhr.onreadystatechange = function () {
@@ -84,7 +84,10 @@ function getDiscussion() {
     }
     updateDiscussionBoard(xhr);
   };
-  xhr.open("GET", `images/${imageID}/discussion`, true);
+  console.log()
+  console.log(`images/${imageID}/discussion`)
+  console.log()
+  xhr.open("GET", `/images/${imageID}/discussion`, true);
   xhr.send();
 }
 

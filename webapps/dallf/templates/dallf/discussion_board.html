@@ -11,7 +11,7 @@
   <div id="id_discussion_board_title">
     Discussions
   </div>
-  <div id="id_discussions_{{images.id}}" class="discussions">
+  <div id="id_discussions_{{image.id}}" class="discussions">
   </div>
 
   <div class="discussion_wrap container">
@@ -30,6 +30,23 @@
 </div>
 
 <script>
+  function getDiscussion() {
+    // get the id of the only one element of discussions class from
+    // <div id="id_discussions_{{recent_images.0.id}}" class="discussions">
+
+    let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+      if (this.readyState != 4) {
+        return;
+      }
+      updateDiscussionBoard(xhr);
+    };
+    console.log()
+    console.log('/images/{{image.id}}/discussion')
+    console.log()
+    xhr.open("GET", '/images/{{image.id}}/discussion', true);
+    xhr.send();
+  }
   window.onload = getDiscussion
   window.setInterval(getDiscussion, 5000);
 </script>
