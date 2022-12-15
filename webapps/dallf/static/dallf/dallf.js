@@ -380,7 +380,6 @@ function followUnfollow(user_id) {
 function updateFollowStatus(xhr) {
   if (xhr.status == 200) {
     let response = JSON.parse(xhr.responseText);
-    console.log(response)
     if (response.following) {
       $('#id_profile_card_button').html('Unfollow')
     } else {
