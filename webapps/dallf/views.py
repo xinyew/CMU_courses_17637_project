@@ -324,6 +324,8 @@ def my_profile(request):
 @login_required
 def others_profile(request, user_id):
     user = get_object_or_404(User, id=user_id)
+    if request.user.id == user_id:
+        return redirect('my_profile')
     context = {}
     context["recent_pubs"] = []
     published_num = 0
