@@ -24,7 +24,7 @@
           </div>
           <div class="d-flex flex-column">
             <span class="profile_stats_class">Followers</span>
-            <span class="profile_stats_number">{{user.followers.all.count}}</span>
+            <span class="profile_stats_number" id="id_follower_num">{{user.followers.all.count}}</span>
           </div>
           <div class="d-flex flex-column">
             {% block profile_button %}
@@ -76,6 +76,6 @@
     xhr.send();
   }
   window.onload = getRecent
-  window.setInterval(getDiscussion, 5000);
+  window.setInterval(getRecent, 5000);
 </script>
 {% endblock content %}

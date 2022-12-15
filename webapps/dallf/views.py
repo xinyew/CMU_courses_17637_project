@@ -420,7 +420,6 @@ def get_recent_activities(request, user_id):
             response_data['replies'].append(new_reply)
 
     response_json = json.dumps(response_data)
-    print(response_data)
     return HttpResponse(response_json, content_type='application/json')
 
 
@@ -473,6 +472,24 @@ def reply_new(request):
         date_created=dateformat.format(timezone.localtime(), "n/j/Y g:i A"))
     new_reply.save()
     return get_discussion(request, int(request.POST['image_id']))
+
+@require_POST
+def follow_unfollow(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    if not user:
+        raise Http404
+    if user not in request.user.following.all():
+        request.user.following.add(user)
+    else:
+        request.user.following.remove(user)
+    response_data = {}
+    response_data['following'] = user in request.user.following.all()
+    response_data['following_num'] = user.following.count()
+    response_json = json.dumps(response_data)
+
+    print(response_data)
+    return HttpResponse(response_json, content_type='application/json')
+
 
 def _my_json_error_response(message, status):
     response_json = '{ "error": "' + message + '" }'

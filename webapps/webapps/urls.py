@@ -78,5 +78,10 @@ urlpatterns = [
         'get_activities/<int:user_id>',
         views.get_recent_activities,
         name='get_activities'
+    ),
+    path(
+        'follow_unfollow/<int:user_id>',
+        views.follow_unfollow,
+        name='follow_unfollow'
     )
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
