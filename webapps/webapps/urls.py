@@ -35,7 +35,7 @@ urlpatterns = [
         views.console_get_labels,
         name='console_get_labels'),
     path('my_profile/', views.my_profile, name='my_profile'),
-    path('others_profile/', views.others_profile, name='others_profile'),
+    path('others_profile/<int:user_id>', views.others_profile, name='others_profile'),
     path('logout/', views.logout_action, name='logout'),
     # AJAX calls
     path(
@@ -74,4 +74,14 @@ urlpatterns = [
         views.get_portrait,
         name='get_portrait'
     ),
+    path(
+        'get_activities/<int:user_id>',
+        views.get_recent_activities,
+        name='get_activities'
+    ),
+    path(
+        'follow_unfollow/<int:user_id>',
+        views.follow_unfollow,
+        name='follow_unfollow'
+    )
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

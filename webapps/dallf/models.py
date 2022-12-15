@@ -26,6 +26,7 @@ class User(AbstractUser):
     # Set to False when image generation is finished.
     generation_ongoing = models.BooleanField(default=False)
     profile_image_type = models.CharField(max_length=15)
+    following = models.ManyToManyField('self', related_name="followers", symmetrical=False)
 
     def start_generation(self):
         """Call when generation starts to change User's state. May fail, raising
