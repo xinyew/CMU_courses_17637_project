@@ -12,6 +12,7 @@ from django.contrib.auth.views import logout_then_login
 from django.conf import settings
 from django.utils import timezone, dateformat
 from django import forms
+from django.templatetags.static import static
 
 from rest_framework import serializers
 
@@ -343,6 +344,8 @@ def others_profile(request, user_id):
 @login_required
 def get_portrait(request, user_id):
     user = get_object_or_404(User, id=user_id)
+    if user.profile_image == '':
+        return redirect(static('dallf/not_found.jpg'))
     return HttpResponse(
         user.profile_image,
         content_type=user.profile_image_type)
