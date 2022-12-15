@@ -416,3 +416,36 @@ function getCSRFToken() {
   }
   return "unknown";
 }
+
+function getLucky() {
+  let random = Math.floor(Math.random() * lucky_prompts.length)
+  $('#id_prompt_input_text').val(lucky_prompts[random])
+}
+
+const lucky_prompts = ["3D render of a cute tropical fish in an aquarium on a dark blue background, digital art",
+  "An armchair in the shape of an avocado",
+  "An oil painting by Matisse of a humanoid robot playing chess",
+  "An expressive oil painting of a basketball player dunking, depicted as an explosion of a nebula",
+  "A photo of a silhouette of a person in a color lit desert at night",
+  "A photo of a white fur monster standing in a purple room",
+  "A blue orange sliced in half laying on a blue floor in front of a blue wall",
+  "A 3D render of an astronaut walking in a green desert",
+  "A futuristic neon lit cyborg face",
+  "A computer from the 90s in the style of vaporwave",
+  "A cartoon of a monkey in space",
+  "A plush toy robot sitting against a yellow wall",
+  "A bowl of soup that is also a portal to another dimension, digital art",
+  "A van Gogh style painting of an American football player",
+  "A sea otter with a pearl earring by Johannes Vermeer",
+  "A hand drawn sketch of a Porsche 911",
+  "High quality photo of a monkey astronaut",
+  "A cyberpunk monster in a control room",
+  "A photo of Michelangelo's sculpture of David wearing headphones djing",
+  "An abstract painting of artificial intelligence",
+  "An Andy Warhol style painting of a french bulldog wearing sunglasses",
+  "A photo of a Samoyed dog with its tongue out hugging a white Siamese cat",
+  "A photo of a teddy bear on a skateboard in Times Square",
+  "An abstract oil painting of a river",
+  "A futuristic cyborg poster hanging in a neon lit subway station",
+  "An oil pastel drawing of an annoyed cat in a spaceship",
+  "A sunlit indoor lounge area with a pool with clear water and another pool with translucent pastel pink water, next to a big window, digital art"]
