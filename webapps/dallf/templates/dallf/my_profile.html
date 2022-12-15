@@ -30,35 +30,34 @@
           data-bs-dismiss="modal">
         </button>
       </div>
-      <div class="modal-body">
-        <div class="input-group" id="id_portrait_upload">
-          <input
-            type="file"
-            class="form-control"
-            id="inputGroupFile04">
+      <form
+        method="post"
+        action="{% url 'my_profile' %}"
+        enctype="multipart/form-data">
+        <div class="modal-body">
+          <div class="input-group" id="id_portrait_upload">
+            <input
+              type="file"
+              class="form-control"
+              name="upload_photo">
+          </div>
+          <div class="input-group">
+            <span class="input-group-text">
+              Bio
+            </span>
+            <textarea
+              class="form-control" name="upload_bio"></textarea>
+          </div>
         </div>
-        <div class="input-group">
-          <span class="input-group-text">
-            Bio
-          </span>
-          <textarea
-            class="form-control">
-                                            </textarea>
+        <div class="modal-footer">
+          <button
+            type="submit"
+            class="btn btn-outline-secondary btn_popup">
+            Save changes
+          </button>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-secondary btn_popup"
-          data-bs-dismiss="modal">
-          Close
-        </button>
-        <button
-          type="button"
-          class="btn btn-primary btn_popup">
-          Save changes
-        </button>
-      </div>
+        {% csrf_token %}
+      </form>
     </div>
   </div>
 </div>

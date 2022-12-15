@@ -36,7 +36,6 @@ urlpatterns = [
         name='console_get_labels'),
     path('my_profile/', views.my_profile, name='my_profile'),
     path('others_profile/', views.others_profile, name='others_profile'),
-    path('discussion_board/', views.discussion_board, name='discussion_board'),
     path('logout/', views.logout_action, name='logout'),
     # AJAX calls
     path(
@@ -57,7 +56,22 @@ urlpatterns = [
         views.label_get_images,
         name='label_get_images'),
     path(
-        'users/<int:user_id>/profile_image/',
-        views.get_profile_image,
-        name='get_profile_image')
+        'images/discussion_board/<int:image_id>',
+        views.discussion_board,
+        name='discussion_board'),
+    path(
+        'comment_new/',
+        views.comment_new,
+        name='comment_new'
+    ),
+    path(
+        'reply_new/',
+        views.reply_new,
+        name='reply_new'
+    ),
+    path(
+        'get_portrait/<int:user_id>',
+        views.get_portrait,
+        name='get_portrait'
+    ),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

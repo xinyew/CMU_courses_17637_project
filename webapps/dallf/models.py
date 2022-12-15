@@ -25,6 +25,7 @@ class User(AbstractUser):
         default=_last_generated_default)
     # Set to False when image generation is finished.
     generation_ongoing = models.BooleanField(default=False)
+    profile_image_type = models.CharField(max_length=15)
 
     def start_generation(self):
         """Call when generation starts to change User's state. May fail, raising
@@ -106,7 +107,7 @@ class Comment(models.Model):
         on_delete=models.PROTECT,
         related_name="comments")
     text = models.TextField()
-    date_created = models.DateTimeField(auto_now_add=True)
+    date_created = models.CharField(max_length=50)
 
 
 class Reply(models.Model):

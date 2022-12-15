@@ -3,18 +3,48 @@
 
 {% block content %}
 <div class="container mt-5 d-flex justify-content-center">
-  {% include "dallf/components/image.html" with image=recent_images.0 class='discussion_board_image' %}
+  {% include "dallf/components/image.html" with image=image class='discussion_board_image' %}
 </div>
+
+
 
 
 <div class="container" id="id_discussion_container">
   <div id="id_discussion_board_title">
     Discussions
   </div>
-  <div id="id_discussions_{{recent_images.0.id}}" class="discussions">
+  <div class="discussion_wrap container">
+    <div class="input-group">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Type your comment here"
+        id="id_discussion_comment_text">
+      <button
+        class="btn btn-outline-secondary"
+        type="button"
+        onclick="commentNew()">
+        Comment
+      </button>
+    </div>
   </div>
-
+  <div id="id_discussions" class="discussions">
+  </div>
 </div>
 
-
+<script>
+  function getDiscussion() {
+    let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+      if (this.readyState != 4) {
+        return;
+      }
+      updateDiscussionBoard(xhr);
+    };
+    xhr.open("GET", '/images/{{image.id}}/discussion', true);
+    xhr.send();
+  }
+  window.onload = getDiscussion
+  window.setInterval(getDiscussion, 5000);
+</script>
 {% endblock %}

@@ -86,24 +86,6 @@ function label(form, event, id) {
   });
 }
 
-
-function getDiscussion() {
-  // get the id of the only one element of discussions class from
-  // <div id="id_discussions_{{recent_images.0.id}}" class="discussions">
-  let imageID = ($('.discussions')[0].id).split('_')[2];
-
-  let xhr = new XMLHttpRequest();
-  xhr.onreadystatechange = function () {
-    if (this.readyState != 4) {
-      return;
-    }
-    updateDiscussionBoard(xhr);
-  };
-  xhr.open("GET", `images/${imageID}/discussion`, true);
-  xhr.send();
-}
-
-
 function updateDiscussionBoard(xhr) {
   if (xhr.status == 200) {
     let response = JSON.parse(xhr.responseText);
@@ -167,7 +149,7 @@ function updateDiscussions(response) {
               </div>
             </div>
           </div>
-          <div id="discussion_replies_${comment_id}" class="discussion_replies">
+          <div id="id_discussion_replies_${comment_id}" class="discussion_replies">
           </div>
           <div class="discussion_reply_input_group discussion_replies">
             <div class="input-group">
@@ -175,32 +157,15 @@ function updateDiscussions(response) {
                 type="text"
                 class="form-control"
                 id="id_discussion_${comment_id}_reply_text"
-                placeholder="Type your comment here">
+                placeholder="Type your reply here">
               <button
                 class="btn btn-outline-secondary"
                 type="button"
                 id="id_discussion_${comment_id}_reply_button"
-                onclick="replyNew(${image_id}, ${comment_id})">
-                Comment
+                onclick="replyNew(${comment_id})">
+                Reply
               </button>
             </div>
-          </div>
-        </div>
-
-        <div class="discussion_wrap container">
-          <div class="input-group">
-            <input
-              type="text"
-              class="form-control"
-              id="id_discussion_comment_text"
-              placeholder="Type your comment here">
-            <button
-              class="btn btn-outline-secondary"
-              type="button"
-              id="id_discussion_comment_button"
-              onclick="commentNew(${image_id})">
-              Comment
-            </button>
           </div>
         </div>
         `
@@ -208,6 +173,7 @@ function updateDiscussions(response) {
     }
   });
   $(response.replies).each(function () {
+    let comment_id = this.comment_id
     let is_new_reply = true;
     let reply_id = this.id;
     let new_reply_id = `id_discussion_reply_${reply_id}`;
@@ -243,7 +209,8 @@ function updateDiscussions(response) {
   });
 }
 
-function commentNew(click_id) {
+function commentNew() {
+  let click_id = ($('.image_button_active')[0].id).split('_')[2];
   let commentTextInputID = '#id_discussion_comment_text';
   let commentTextElement = $(commentTextInputID);
   let commentText = commentTextElement.val();
@@ -256,13 +223,14 @@ function commentNew(click_id) {
       return;
     }
     updateDiscussionBoard(xhr);
-    xhr.open("POST", "/new_comment", true);
-    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhr.send("comment_text=" + commentText + "&image_id=" + click_id + "&csrfmiddlewaretoken=" + getCSRFToken());
   };
+  xhr.open("POST", "/comment_new/", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.send("comment_text=" + commentText + "&image_id=" + click_id + "&csrfmiddlewaretoken=" + getCSRFToken());
 }
 
-function replyNew(image_id, comment_id) {
+function replyNew(comment_id) {
+  let image_id = ($('.image_button_active')[0].id).split('_')[2];
   let replyTextInputID = '#id_discussion_' + comment_id + '_reply_text';
   let replyTextElement = $(replyTextInputID);
   let replyText = replyTextElement.val();
@@ -275,10 +243,10 @@ function replyNew(image_id, comment_id) {
       return;
     }
     updateDiscussionBoard(xhr);
-    xhr.open("POST", "/new_reply", true);
-    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhr.send("reply_text=" + replyText + "&image_id=" + image_id + "&comment_id=" + comment_id + "&csrfmiddlewaretoken=" + getCSRFToken());
   };
+  xhr.open("POST", "/reply_new/", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.send("image_id=" + image_id + "&reply_text=" + replyText + "&comment_id=" + comment_id + "&csrfmiddlewaretoken=" + getCSRFToken());
 }
 
 function getFollowers() {

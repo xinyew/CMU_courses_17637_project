@@ -1,7 +1,7 @@
 from http import HTTPStatus
 import json
 import os
-from django.http import HttpRequest, JsonResponse, HttpResponse, HttpResponseBadRequest
+from django.http import HttpRequest, JsonResponse, HttpResponse, HttpResponseBadRequest,Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.files.base import ContentFile
 from django.contrib.auth.decorators import login_required
@@ -300,14 +300,22 @@ def logout_action(request: HttpRequest):
 # TODO check validation for the below
 
 
-@require_GET
 @login_required
 def my_profile(request):
-    context = {}
-    context["images"] = []
-    for image in UploadedImage.objects.order_by('?')[:10]:
-        context["images"].append(image)
-    return render(request, 'dallf/my_profile.html', context)
+    if request.method == 'GET':
+        context = {}
+        context["images"] = []
+        for image in UploadedImage.objects.order_by('?')[:10]:
+            context["images"].append(image)
+        return render(request, 'dallf/my_profile.html', context)
+    if request.POST['upload_bio']:
+        request.user.bio = request.POST['upload_bio']
+    if request.FILES['upload_photo']:
+        request.user.profile_image = request.FILES['upload_photo']
+        request.user.profile_image_type = request.FILES['upload_photo'].content_type
+
+    request.user.save()
+    return render(request, 'dallf/my_profile.html', {'user': request.user})
 
 
 @require_GET
@@ -319,33 +327,37 @@ def others_profile(request):
         context["images"].append(image)
     return render(request, 'dallf/others_profile.html', context)
 
+@login_required
+def get_portrait(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    if not user:
+        raise Http404
+
+    return HttpResponse(user.profile_image, content_type=user.profile_image_type)
+
 
 @require_GET
 @login_required
-def discussion_board(request):
+def discussion_board(request, image_id):
     context = {}
-    context["images"] = []
-    for image in UploadedImage.objects.order_by('?')[:10]:
-        context["images"].append(image)
+    image = get_object_or_404(UploadedImage, pk=image_id)
+    if not image:
+        raise Http404
+    context["image"] = image
     return render(request, 'dallf/discussion_board.html', context)
 
-
-@require_GET
-@login_required
-def get_profile_image(request, user_id):
-    f = open(os.path.dirname(__file__) + '/static/dallf/not_found.jpg', 'rb')
-    image = f.read()
-    f.close()
-    return HttpResponse(image, content_type="image/jpeg")
-
-
-@require_GET
 @login_required
 def get_discussion(request, image_id):
     response_data = {}
     response_data['comments'] = []
     response_data['replies'] = []
-    for comment in Comment.objects.get(pk=image_id):
+    try:
+        Comment.objects.get(pk=image_id)
+    except:
+       return HttpResponse(json.dumps(response_data), content_type='application/json')
+    for comment in Comment.objects.all():
+        if comment.image.id != image_id:
+            continue
         new_comment = {
             'id': comment.id,
             'text': comment.text,
@@ -406,50 +418,57 @@ def get_recent_activities(request, user_id):
 
 @require_POST
 @login_required
-def post_new_comment(request):
-    if 'discussion_reply_text' not in request.POST or not request.POST['discussion_reply_text']:
-        return _my_json_error_response(
-            message="You must enter something to comment",
-            status=400)
+def comment_new(request):
+    if 'comment_text' not in request.POST or 'image_id' not in request.POST or \
+        not request.POST['comment_text'] or not request.POST['image_id']:
+        return _my_json_error_response("You must enter something to comment.", status=400)
+
+    try:
+        id = int(request.POST['image_id'])
+    except Exception:
+        return _my_json_error_response("The image id must be numeric", 400)
+
+    image = get_object_or_404(UploadedImage, id=id)
+    if not image:
+        return _my_json_error_response("The image id does not exist", 400)
+
     new_comment = Comment(
-        text=request.POST['discussion_reply_text'],
+        image=image,
+        text=request.POST['comment_text'],
         user=request.user,
         date_created=dateformat.format(timezone.localtime(), "n/j/Y g:i A"))
     new_comment.save()
 
-    return get_discussion(request)
+    return get_discussion(request, id)
 
 
 @require_POST
 @login_required
-def post_new_reply(request):
-    if 'reply_text' not in request.POST or not request.POST['reply_text']:
-        return _my_json_error_response(
-            message="You must enter something to reply",
-            status=400)
+def reply_new(request):
+    if 'reply_text' not in request.POST  or not request.POST['reply_text'] or \
+        'comment_id' not in request.POST or not request.POST['comment_id']:
+        return _my_json_error_response("You must enter something to reply.", status=400)
 
-    if 'comment_id' not in request.POST or not request.POST['comment_id']:
-        return _my_json_error_response(
-            message="You must specify the comment id to reply",
-            status=400)
     try:
-        id = int(request.POST['comment_id'])
+        comment_id = int(request.POST['comment_id'])
     except Exception:
-        return _my_json_error_response("The comment id must be numeric", 400)
-    if id > Comment.objects.all().order_by('-date_created')[0].id:
+        return _my_json_error_response("The comment id and comment id must be numeric", 400)
+
+    comment = get_object_or_404(Comment, id=comment_id)
+    if not comment:
         return _my_json_error_response("The comment id does not exist", 400)
 
-    comment = get_object_or_404(Comment, id=request.POST['comment_id'])
     new_reply = Reply(
         text=request.POST['reply_text'],
         user=request.user,
         comment=comment,
         date_created=dateformat.format(timezone.localtime(), "n/j/Y g:i A"))
     new_reply.save()
-
+    return get_discussion(request, int(request.POST['image_id']))
 
 def _my_json_error_response(message, status):
     response_json = '{ "error": "' + message + '" }'
+    print(response_json)
     print(status)
     return HttpResponse(
         response_json,
