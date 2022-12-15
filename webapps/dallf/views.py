@@ -342,7 +342,6 @@ def get_discussion(request, image_id):
             }
             response_data['replies'].append(new_reply)
 
-    print(response_data)
     response_json = json.dumps(response_data)
     return HttpResponse(response_json, content_type='application/json')
 

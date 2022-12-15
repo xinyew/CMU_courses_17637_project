@@ -7,7 +7,11 @@
   <div class="profile_card p-3 mt-5">
     <div class="d-flex align-items-center">
       <div class="image">
+        {% if not user.profile_image %}
         <img src="{% static 'dallf/not_found.jpg' %}" class="rounded" width="155">
+        {% else %}
+        <img src="{% url 'portrait_photo' user.id %}" class="rounded" width="155">
+        {% endif %}
       </div>
       <div class="ms-3 w-100">
         <h4 class="mb-0 mt-0">Username</h4>
