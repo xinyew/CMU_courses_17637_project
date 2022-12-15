@@ -17,7 +17,9 @@ from environs import Env
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = Env()
-env.read_env(BASE_DIR.parent / '.env.development')
+env.read_env()  # reads from .env in closest outer directory by default
+
+development = env.bool('DEVELOPMENT', default=False)
 
 
 # Quick-start development settings - unsuitable for production
@@ -28,6 +30,8 @@ SECRET_KEY = env.str('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG", default=False)
+if not development:
+    assert not DEBUG
 
 ALLOWED_HOSTS = []
 
@@ -83,12 +87,23 @@ WSGI_APPLICATION = 'webapps.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if development:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'OPTIONS': {'charset': 'utf8mb4'},
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'django',
+            'USER': '',
+            'PASSWORD': '',
+        },
+    }
 
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.google.GoogleOAuth2',
