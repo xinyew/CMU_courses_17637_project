@@ -216,7 +216,8 @@ function commentNew() {
   xhr.send("comment_text=" + commentText + "&image_id=" + click_id + "&csrfmiddlewaretoken=" + getCSRFToken());
 }
 
-function replyNew(image_id, comment_id) {
+function replyNew() {
+  let image_id = ($('.image_button_active')[0].id).split('_')[2];
   let replyTextInputID = '#id_discussion_' + comment_id + '_reply_text';
   let replyTextElement = $(replyTextInputID);
   let replyText = replyTextElement.val();
@@ -229,10 +230,10 @@ function replyNew(image_id, comment_id) {
       return;
     }
     updateDiscussionBoard(xhr);
-    xhr.open("POST", "/new_reply", true);
-    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhr.send("reply_text=" + replyText + "&image_id=" + image_id + "&comment_id=" + comment_id + "&csrfmiddlewaretoken=" + getCSRFToken());
   };
+  xhr.open("POST", "/new_reply", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.send("reply_text=" + replyText + "&image_id=" + image_id + "&comment_id=" + comment_id + "&csrfmiddlewaretoken=" + getCSRFToken());
 }
 
 function getFollowers() {
