@@ -309,7 +309,6 @@ def discussion_board(request, image_id):
     context["image"] = image
     return render(request, 'dallf/discussion_board.html', context)
 
-@require_GET
 @login_required
 def get_discussion(request, image_id):
     response_data = {}
@@ -404,7 +403,7 @@ def comment_new(request):
         date_created=dateformat.format(timezone.localtime(), "n/j/Y g:i A"))
     new_comment.save()
 
-    return get_discussion(request)
+    return get_discussion(request, id)
 
 
 @require_POST
@@ -429,8 +428,7 @@ def reply_new(request):
         comment=comment,
         date_created=dateformat.format(timezone.localtime(), "n/j/Y g:i A"))
     new_reply.save()
-    print(comment.replys)
-    return get_discussion(request)
+    return get_discussion(request, int(request.POST['image_id']))
 
 def _my_json_error_response(message, status):
     response_json = '{ "error": "' + message + '" }'

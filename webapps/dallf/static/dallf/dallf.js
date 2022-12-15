@@ -72,10 +72,8 @@ function label(form, event, id) {
 }
 
 function updateDiscussionBoard(xhr) {
-  console.log(xhr.status)
   if (xhr.status == 200) {
     let response = JSON.parse(xhr.responseText);
-    console.log(response)
     updateDiscussions(response);
     return;
   }
@@ -114,7 +112,6 @@ function updateDiscussions(response) {
         is_new_comment = false;
       }
     });
-    console.log(is_new_comment)
     if (is_new_comment) {
       $("#id_discussions").prepend(
         `
@@ -137,7 +134,7 @@ function updateDiscussions(response) {
               </div>
             </div>
           </div>
-          <div id="discussion_replies_${comment_id}" class="discussion_replies">
+          <div id="id_discussion_replies_${comment_id}" class="discussion_replies">
           </div>
           <div class="discussion_reply_input_group discussion_replies">
             <div class="input-group">
@@ -161,6 +158,7 @@ function updateDiscussions(response) {
     }
   });
   $(response.replies).each(function () {
+    let comment_id = this.comment_id
     let is_new_reply = true;
     let reply_id = this.id;
     let new_reply_id = `id_discussion_reply_${reply_id}`;
@@ -217,6 +215,7 @@ function commentNew() {
 }
 
 function replyNew(comment_id) {
+  let image_id = ($('.image_button_active')[0].id).split('_')[2];
   let replyTextInputID = '#id_discussion_' + comment_id + '_reply_text';
   let replyTextElement = $(replyTextInputID);
   let replyText = replyTextElement.val();
@@ -232,7 +231,7 @@ function replyNew(comment_id) {
   };
   xhr.open("POST", "/reply_new/", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.send("reply_text=" + replyText + "&comment_id=" + comment_id + "&csrfmiddlewaretoken=" + getCSRFToken());
+  xhr.send("image_id=" + image_id + "&reply_text=" + replyText + "&comment_id=" + comment_id + "&csrfmiddlewaretoken=" + getCSRFToken());
 }
 
 function getFollowers() {
